@@ -1,0 +1,226 @@
+html, body {
+	height: 100%;
+	margin: 0;
+}
+
+.terminal ::selection {
+	background: #0080ff;
+}
+
+.terminal {
+	min-height: 100%;
+	position: relative;
+	width: 100%;
+  font-size: 14px;
+  line-height: 1.3;
+  font-weight: normal;
+}
+
+.terminal .container {
+	padding: 1em 1.5em 1em 1em;
+	position: relative;
+}
+
+.terminal .container output {
+	clear: both;
+	width: 100%;
+  /*color:cadetblue;*/
+}
+
+.terminal .container output pre {
+	margin: 0;
+}
+
+.terminal .cmdline {
+	background-color: transparent;
+	border: none;
+	color: inherit;
+	font: inherit;
+	margin: 0;
+	width: 100%;
+}
+
+.terminal .cmdline:focus {
+  outline: none;
+}
+
+.terminal .hidden {
+	display: none;
+}
+
+.terminal output table.input-line td:last-child {
+	padding-left: 1px;
+}
+
+.terminal .prompt {
+	line-height: 20px;
+	margin-right: 7px;
+	white-space: nowrap;
+}
+
+.terminal table.input-line {
+	border-collapse: collapse;
+	border-spacing: 0;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+}
+
+.terminal table.input-line td {
+	margin: 0;
+	padding: 0;
+}
+
+.terminal output table.input-line td {
+  padding: 5px 0;
+}
+
+.terminal .container table:nth-last-child(1) {
+  margin-top: 25px;
+}
+
+.terminal .cmderror {
+  color: firebrick;
+}
+
+.terminal .prefix {
+  margin-left: 20px;
+  color: dimgray;
+}
+
+.terminal .answer {
+  color: chartreuse;
+}
+
+.terminal output .prompt {
+  display: none;
+}
+
+/* Interlaced theme */
+
+.terminal-interlaced {
+	color: #ccc;
+	font-family: 'Source Code Pro', monospace;
+}
+
+.terminal-interlaced a {
+	color: #ccc;
+}
+
+.terminal-interlaced a.external {
+  background: none repeat scroll 0% 0% #333;
+	padding-right: 13px;
+	outline: none;
+}
+
+.terminal-interlaced .background {
+  background: none repeat scroll 0% 0% #333;
+	height: 100%;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
+.terminal-interlaced .background .interlace {	
+  background: none repeat scroll 0% 0% #333;
+	height: 100%;
+	left: 0;
+	opacity: 0.15;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 100%;
+	z-index: 10;
+}
+
+.terminal-interlaced .container output pre {
+	color: #ccc;
+	font-family: 'Source Code Pro', monospace;
+}
+
+.terminal-interlaced .prompt {
+	color: #ccc;
+}
+
+/* Modern theme */
+
+.terminal-modern {
+	color: white;
+	font-family: 'Source Code Pro', monospace;
+}
+
+.terminal-modern a {
+	color: #fff;
+}
+
+.terminal-modern a.external {	background:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAKCAMAAAC67D+PAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAA9QTFRFzs7OqKio0NDQ////////DlgqrAAAAAV0Uk5T/////wD7tg5TAAAAN0lEQVR42izLyQ0AMAgDQYPpv+b4yD7QEBGcYoI0yN454Sqy9KnfTUufQpB7c/9AM1RlE58AAwBEcAE4zo3mOAAAAABJRU5ErkJggg==") no-repeat scroll right center transparent;
+	padding-right: 13px;
+	outline: none;
+}
+
+.terminal-modern .background {
+	background: #000;
+	height: 100%;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
+.terminal-modern .background .interlace {
+	display: none;
+}
+
+.terminal-modern .container {
+	text-shadow: none;
+}
+
+.terminal-modern .container output pre {
+	color: white;
+	font-family: 'Source Code Pro', monospace;
+}
+
+.terminal-modern .prompt {
+	color: #fc0;
+}
+
+/* White theme */
+
+.terminal-white {
+	color: black;
+	font-family: 'Source Code Pro', monospace;
+}
+
+.terminal-white a {
+	color: #000;
+}
+
+.terminal-white .background {
+	background: #fff;
+	height: 100%;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
+.terminal-white .background .interlace {
+	display: none;
+}
+
+.terminal-white .container {
+	text-shadow: none;
+}
+
+.terminal-white .container output pre {
+	color: black;
+	font-family: 'Source Code Pro', monospace;
+}
+
+.terminal-white .prompt {
+	color: #02f;
+}
