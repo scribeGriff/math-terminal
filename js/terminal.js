@@ -3,6 +3,7 @@
    The original license can be found here: https://github.com/SDA/terminal/blob/master/LICENSE
 */
 
+/* global math:false, katex: false */
 /* jshint node: true, browser: true */
 
 (function (global, undefined) {
@@ -148,7 +149,7 @@
       var input = line.querySelector('input.cmdline');
       input.autofocus = false;
       input.readOnly = true;
-      input.insertAdjacentHTML('beforebegin', input.value);
+      input.insertAdjacentHTML('beforebegin', katex.renderToString(math.parse(input.value).toTex()));
       input.parentNode.removeChild(input);
       _output.appendChild(line);
 

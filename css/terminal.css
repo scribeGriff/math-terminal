@@ -11,8 +11,6 @@ html, body {
 	min-height: 100%;
 	position: relative;
 	width: 100%;
-  font-size: 14px;
-  line-height: 1.3;
   font-weight: normal;
 }
 
@@ -24,7 +22,6 @@ html, body {
 .terminal .container output {
 	clear: both;
 	width: 100%;
-  /*color:cadetblue;*/
 }
 
 .terminal .container output pre {
@@ -72,7 +69,7 @@ html, body {
 }
 
 .terminal output table.input-line td {
-  padding: 5px 0;
+  padding: 5px;
 }
 
 .terminal .container table:nth-last-child(1) {
@@ -84,7 +81,7 @@ html, body {
 }
 
 .terminal .prefix {
-  margin-left: 20px;
+  margin-left: 25px;
   color: dimgray;
 }
 
