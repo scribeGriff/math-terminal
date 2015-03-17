@@ -65,11 +65,7 @@ html, body {
 
 .terminal table.input-line td {
 	margin: 0;
-	padding: 0;
-}
-
-.terminal output table.input-line td {
-  padding: 5px 0;
+	padding: 5px 0;
 }
 
 .terminal .container table:nth-last-child(1) {

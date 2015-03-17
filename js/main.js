@@ -68,9 +68,9 @@
             // TODO: Need some logic for formatting.
             formres = math.format(result, 8);
             katstr = katex.renderToString(formres);
-            return '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">' + katstr + '</span>';
+            return preans + katstr + sufans;
           } catch(error) {
-            return '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">' + formres + '</span>';
+            return preans + formres + sufans;
           }
       }
     }

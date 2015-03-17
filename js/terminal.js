@@ -132,7 +132,7 @@
       // Only handle the Enter key.
       if (e.keyCode != 13) return;
 
-      var cmd, args;
+      var cmd, args, line, input;
       var cmdline = this.value;
 
       // Save shell history.
@@ -143,18 +143,27 @@
       }
 
       // Duplicate current input and append to output section.
-      var line = this.parentNode.parentNode.parentNode.parentNode.cloneNode(true);
+      line = this.parentNode.parentNode.parentNode.parentNode.cloneNode(true);
       line.removeAttribute('id');
       line.classList.add('line');
-      var input = line.querySelector('input.cmdline');
+
+      input = line.querySelector('input.cmdline');
+      if (input.value === '') return;
       input.autofocus = false;
       input.readOnly = true;
-      // Check if only letters, could be command or variable name.
-      // TODO: Just check specific command names.
-      if (!input.value.match(/^help[ ]?[a-zA-Z]*|clear[ ]?[a-zA-Z]*|theme[ ]?[a-zA-Z]*$/)) {
-        input.insertAdjacentHTML('beforebegin', katex.renderToString(math.parse(input.value).toTex()));
-      } else {
+
+      // Check if a valid built-in command name.  If not, try to format as tex
+      // and render with KaTex.
+      if (input.value.match(/^help[ ]?[a-zA-Z]*|clear[ ]?[a-zA-Z]*|theme[ ]?[a-zA-Z]*$/)) {
         input.insertAdjacentHTML('beforebegin', input.value);
+      } else {
+        try {
+          var rendstr = katex.renderToString(math.parse(input.value).toTex());
+          input.insertAdjacentHTML('beforebegin', rendstr);
+          //input.insertAdjacentHTML('beforebegin', katex.renderToString(math.parse(input.value).toTex()));
+        } catch(error) {
+          input.insertAdjacentHTML('beforebegin', input.value);
+        }
       }
       input.parentNode.removeChild(input);
       _output.appendChild(line);
