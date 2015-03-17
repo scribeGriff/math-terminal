@@ -149,7 +149,13 @@
       var input = line.querySelector('input.cmdline');
       input.autofocus = false;
       input.readOnly = true;
-      input.insertAdjacentHTML('beforebegin', katex.renderToString(math.parse(input.value).toTex()));
+      // Check if only letters, could be command or variable name.
+      // TODO: Just check specific command names.
+      if (!input.value.match(/^help[ ]?[a-zA-Z]*|clear[ ]?[a-zA-Z]*|theme[ ]?[a-zA-Z]*$/)) {
+        input.insertAdjacentHTML('beforebegin', katex.renderToString(math.parse(input.value).toTex()));
+      } else {
+        input.insertAdjacentHTML('beforebegin', input.value);
+      }
       input.parentNode.removeChild(input);
       _output.appendChild(line);
 
@@ -175,7 +181,9 @@
           if (ext.execute) response = ext.execute(cmd, args);
           if (response !== false) break;
         }
-        if (response === false) response = '<i class="prefix fa fa-angle-double-right"></i> </span><span class="cmderror">' + cmd + ': command not found</span>';
+        if (response === false) {
+          response = '<i class="prefix fa fa-angle-double-right"></i> </span><span class="cmderror">' + cmd + ': No such variable or command</span>';
+        }
         output(response);
       }
 

@@ -69,11 +69,11 @@ html, body {
 }
 
 .terminal output table.input-line td {
-  padding: 5px;
+  padding: 5px 0;
 }
 
 .terminal .container table:nth-last-child(1) {
-  margin-top: 25px;
+  /*margin-top: 25px;*/
 }
 
 .terminal .cmderror {
@@ -90,7 +90,7 @@ html, body {
 }
 
 .terminal output .prompt {
-  display: none;
+  /*display: none;*/
 }
 
 /* Interlaced theme */
