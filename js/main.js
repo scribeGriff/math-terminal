@@ -11,6 +11,18 @@
   var preans = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">';
   var sufans = '</span>';
 
+  var helpinfo = [
+    '<table class="ink-table">',
+    '<tr><td>clear</td><td class="answer">clears command window</td></tr>',
+    '<tr><td>clear vars</td><td class="answer">clears workspace variables</td></tr>',
+    '<tr><td>clear all</td><td class="answer">clears window and variables</td></tr>',
+    '<tr><td>help</td><td class="answer">displays this help screen</td></tr>',
+    '<tr><td>help <em>command</em></td><td class="answer">displays a link to Math.js <em>command</em> documentation</td></tr>',
+    '<tr><td>theme</td><td class="answer">displays current theme</td></tr>',
+    '<tr><td>theme <em>name</em></td><td class="answer">change to theme <em>name</em></td></tr>',
+    '</table>'
+  ].join('');
+
   // Convert the 'terminal' DOM element into a live terminal.
   // This example defines several custom commands for the terminal.
   var terminal = new Terminal('terminal', {}, {
@@ -34,7 +46,14 @@
           return '';
 
         case 'help':
-          return 'Commands: clear, help, theme, ver or version<br>More help available <a class="external" href="http://github.com/SDA/terminal" target="_blank">here</a>';
+          if (args && args[0]) {
+            if (args.length > 1) {
+              return preans + 'Too many arguments' + sufans;
+            } else {
+              return preans + '<a href="http://mathjs.org/docs/reference/functions/' + args[0] + '.html" target="_blank">' + args[0] + ' docs at mathjs.org</a>' + sufans;
+            }
+          }
+          return helpinfo;
 
         case 'theme':
           if (args && args[0]) {
