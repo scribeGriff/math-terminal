@@ -160,7 +160,6 @@
         try {
           var rendstr = katex.renderToString(math.parse(input.value).toTex());
           input.insertAdjacentHTML('beforebegin', rendstr);
-          //input.insertAdjacentHTML('beforebegin', katex.renderToString(math.parse(input.value).toTex()));
         } catch(error) {
           input.insertAdjacentHTML('beforebegin', input.value);
         }
@@ -213,10 +212,19 @@
 
     return {
       clear: clear,
-      setPrompt: function(prompt) { _prompt.innerHTML = prompt + options.separator; },
-      getPrompt: function() { return _prompt.innerHTML.replace(new RegExp(options.separator + '$'), ''); },
-      setTheme: function(theme) { _terminal.classList.remove('terminal-' + options.theme); options.theme = theme; _terminal.classList.add('terminal-' + options.theme); },
-      getTheme: function() { return options.theme; }
+      setPrompt: function(prompt) { 
+        _prompt.innerHTML = prompt + options.separator; 
+      },
+      getPrompt: function() { 
+        return _prompt.innerHTML.replace(new RegExp(options.separator + '$'), ''); 
+      },
+      setTheme: function(theme) {
+        _terminal.classList.remove('terminal-' + options.theme); 
+        options.theme = theme; _terminal.classList.add('terminal-' + options.theme); 
+      },
+      getTheme: function() {
+        return options.theme; 
+      }
     };
   };
 
