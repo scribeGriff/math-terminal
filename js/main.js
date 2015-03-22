@@ -59,7 +59,7 @@
           if (args && args[0]) {
             if (args.length > 1) {
               return preans + 'Too many arguments' + sufans;
-            } else if (args[0].match(/^interlaced|modern|white|monokai|github$/)) { 
+            } else if (args[0].match(/^interlaced|monokai|github|xcode|obsidian$/)) { 
               terminal.setTheme(args[0]); 
               return ''; 
             } else return preans + 'Invalid theme' + sufans;

@@ -16,7 +16,7 @@
       welcome: '',
       prompt: '',
       separator: '<i class="fa fa-angle-right"></i>',
-      theme: 'interlaced'
+      theme: 'monokai'
     };
 
     var options = uoptions || defaults;
@@ -36,7 +36,7 @@
     _terminal.classList.add('terminal');
     _terminal.classList.add('terminal-' + options.theme);
     _terminal.insertAdjacentHTML('beforeEnd', [
-      '<div class="background"><div class="interlace"></div></div>',
+      '<div class="background"></div>',
       '<div class="container">',
       '<output></output>',
       '<table class="input-line">',
