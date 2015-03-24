@@ -3,8 +3,9 @@ html, body {
 	margin: 0;
 }
 
-.terminal ::selection {
-	background: #0080ff;
+/* Force the default behavior of the font-awesome icons. */
+.fa {
+  font-size: inherit;
 }
 
 .terminal {
@@ -12,6 +13,7 @@ html, body {
 	position: relative;
 	width: 100%;
   font-weight: normal;
+	font-family: 'Source Code Pro', monospace;
 }
 
 .terminal .container {
@@ -24,10 +26,6 @@ html, body {
 	width: 100%;
 }
 
-.terminal .container output pre {
-	margin: 0;
-}
-
 .terminal .cmdline {
 	background-color: transparent;
 	border: none;
@@ -38,7 +36,7 @@ html, body {
 }
 
 .terminal .cmdline:focus {
-  outline: none;
+  outline: 0;
 }
 
 .terminal .hidden {
@@ -67,6 +65,10 @@ html, body {
 	padding: 5px 0;
 }
 
+.terminal table.line td {
+  padding: 6px 0;
+}
+
 .terminal .cmderror {
   color: firebrick;
 }
@@ -82,6 +84,10 @@ html, body {
 
 .terminal table.ink-table tr th, table.ink-table tr td {
   border-bottom: none;
+}
+
+.terminal table.ink-table {
+  margin-left: 3px;
 }
 
 /* Interlaced theme */
@@ -111,11 +117,6 @@ html, body {
 	width: 100%;
 }
 
-.terminal-interlaced .container output pre {
-	color: #ccc;
-	font-family: 'Source Code Pro', monospace;
-}
-
 .terminal-interlaced .prompt {
 	color: #ccc;
 }
@@ -124,7 +125,6 @@ html, body {
 
 .terminal-monokai {
 	color: #F8F8F2;
-	font-family: 'Source Code Pro', monospace;
 }
 
 .terminal-monokai .answer {
@@ -145,6 +145,16 @@ html, body {
 	width: 100%;
 }
 
+.terminal-monokai ::-moz-selection {
+  color: #e6db74;
+  background: #75715e;
+}
+
+.terminal-monokai ::selection {
+  color: #e6db74;
+  background: #75715e;
+}
+
 .terminal-monokai .prefix {
   color: #a8a8a2;
 }
@@ -161,15 +171,14 @@ html, body {
 
 .terminal-github {
 	color: #333;
-	font-family: 'Source Code Pro', monospace;
 }
 
 .terminal-github .answer {
-  color: #000080;
+  color: #0086b3
 }
 
 .terminal-github a {
-  color: #0086b3;
+  color: #000080;
 }
 
 .terminal-github .background {
@@ -180,6 +189,16 @@ html, body {
 	position: absolute;
 	top: 0;
 	width: 100%;
+}
+
+.terminal-github ::-moz-selection {
+  color: #dfd;
+  background: #458;
+}
+
+.terminal-github ::selection {
+  color: #dfd;
+  background: #458;
 }
 
 .terminal-github .prefix {
@@ -198,11 +217,10 @@ html, body {
 
 .terminal-xcode {
 	color: black;
-	font-family: 'Source Code Pro', monospace;
 }
 
 .terminal-xcode .answer {
-  color: #008;
+  color: #1c00cf;
 }
 
 .terminal-xcode a {
@@ -219,8 +237,18 @@ html, body {
 	width: 100%;
 }
 
+.terminal-xcode ::-moz-selection {
+  color: #c5af75;
+  background: #643820;
+}
+
+.terminal-xcode ::selection {
+  color: #c5af75;
+  background: #643820;
+}
+
 .terminal-xcode .prefix {
-  color: #660;
+  color: #9b703f;
 }
 
 .terminal-xcode .prompt {
@@ -235,7 +263,6 @@ html, body {
 
 .terminal-obsidian {
 	color: #e0e2e4;
-	font-family: 'Source Code Pro', monospace;
 }
 
 .terminal-obsidian .answer {
@@ -254,6 +281,16 @@ html, body {
 	position: absolute;
 	top: 0;
 	width: 100%;
+}
+
+.terminal-obsidian ::-moz-selection {
+  color:  #557182;
+  background:  #e8e2b7;
+}
+
+.terminal-obsidian ::selection {
+  color: #557182;
+  background: #e8e2b7;
 }
 
 .terminal-obsidian .prefix {
