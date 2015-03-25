@@ -16,6 +16,15 @@ html, body {
 	font-family: 'Source Code Pro', monospace;
 }
 
+.terminal .background {
+	height: 100%;
+	left: 0;
+	pointer-events: none;
+	position: absolute;
+	top: 0;
+	width: 100%;
+}
+
 .terminal .container {
 	padding: 1em 1.5em 1em 1em;
 	position: relative;
@@ -43,13 +52,17 @@ html, body {
 	display: none;
 }
 
-.terminal output table.input-line td:last-child {
-	padding-left: 1px;
-}
-
 .terminal .prompt {
 	margin-right: 7px;
 	white-space: nowrap;
+}
+
+.terminal .prefix {
+  margin-left: 25px;
+}
+
+.terminal output table.input-line td:last-child {
+	padding-left: 1px;
 }
 
 .terminal table.input-line {
@@ -69,15 +82,6 @@ html, body {
   padding: 6px 0;
 }
 
-.terminal .cmderror {
-  color: firebrick;
-}
-
-.terminal .prefix {
-  margin-left: 25px;
-  color: dimgray;
-}
-
 .terminal table.ink-table {
   background: transparent;
 }
@@ -88,37 +92,6 @@ html, body {
 
 .terminal table.ink-table {
   margin-left: 3px;
-}
-
-/* Interlaced theme */
-
-.terminal-interlaced .answer {
-  color: chartreuse;
-}
-
-.terminal-interlaced {
-	color: #ccc;
-	font-family: 'Source Code Pro', monospace;
-}
-
-.terminal-interlaced a.external {
-  background: none repeat scroll 0% 0% #333;
-	padding-right: 13px;
-	outline: none;
-}
-
-.terminal-interlaced .background {
-  background: none repeat scroll 0% 0% #333;
-	height: 100%;
-	left: 0;
-	pointer-events: none;
-	position: absolute;
-	top: 0;
-	width: 100%;
-}
-
-.terminal-interlaced .prompt {
-	color: #ccc;
 }
 
 /* Monokai theme */
@@ -137,12 +110,6 @@ html, body {
 
 .terminal-monokai .background {
 	background: #272822;
-	height: 100%;
-	left: 0;
-	pointer-events: none;
-	position: absolute;
-	top: 0;
-	width: 100%;
 }
 
 .terminal-monokai ::-moz-selection {
@@ -183,12 +150,6 @@ html, body {
 
 .terminal-github .background {
 	background: #f8f8f8;
-	height: 100%;
-	left: 0;
-	pointer-events: none;
-	position: absolute;
-	top: 0;
-	width: 100%;
 }
 
 .terminal-github ::-moz-selection {
@@ -229,12 +190,6 @@ html, body {
 
 .terminal-xcode .background {
 	background: #fff;
-	height: 100%;
-	left: 0;
-	pointer-events: none;
-	position: absolute;
-	top: 0;
-	width: 100%;
 }
 
 .terminal-xcode ::-moz-selection {
@@ -275,12 +230,6 @@ html, body {
 
 .terminal-obsidian .background {
 	background: #282b2e;
-	height: 100%;
-	left: 0;
-	pointer-events: none;
-	position: absolute;
-	top: 0;
-	width: 100%;
 }
 
 .terminal-obsidian ::-moz-selection {
@@ -303,4 +252,124 @@ html, body {
 
 .terminal-obsidian .cmderror {
   color: #ec7600;
+}
+
+/* Visual Studio theme */
+
+.terminal-vs {
+	color: black;
+}
+
+.terminal-vs .answer {
+  color: #008000;
+}
+
+.terminal-vs a {
+  color: #00f;
+}
+
+.terminal-vs .background {
+	background: white;
+}
+
+.terminal-vs ::-moz-selection {
+  color: white;
+  background: #00b0e8;
+}
+
+.terminal-vs ::selection {
+  color: #557182;
+  background: #00b0e8;
+}
+
+.terminal-vs .prefix {
+  color: #557182;
+}
+
+.terminal-vs .prompt {
+  color: #2b91af;
+}
+
+.terminal-vs .cmderror {
+  color: #a31515;
+}
+
+/* Arta theme */
+
+.terminal-arta {
+	color: #fff;
+}
+
+.terminal-arta .answer {
+  color: #00cc66;
+}
+
+.terminal-arta a {
+  color: #32aaee;
+}
+
+.terminal-arta .background {
+	background: #222;
+}
+
+.terminal-arta ::-moz-selection {
+  color: #444;
+  background: #ffcc33;
+}
+
+.terminal-arta ::selection {
+  color: #444;
+  background: #ffcc33;
+}
+
+.terminal-arta .prefix {
+  color: #aaa;
+}
+
+.terminal-arta .prompt {
+  color: #6644aa;
+}
+
+.terminal-arta .cmderror {
+  color: #bb1166;
+}
+
+/* Railcasts theme */
+
+.terminal-railcasts {
+	color: #e6e1dc;
+}
+
+.terminal-railcasts .answer {
+  color: #519f50;
+}
+
+.terminal-railcasts a {
+  color: #6d9cbe;
+}
+
+.terminal-railcasts .background {
+	background: #232323;
+}
+
+.terminal-railcasts ::-moz-selection {
+  color: #d0d0ff;
+  background: #bc9458;
+}
+
+.terminal-railcasts ::selection {
+  color: #444;
+  background: #ffcc33;
+}
+
+.terminal-railcasts .prefix {
+  color: #4a410d;
+}
+
+.terminal-railcasts .prompt {
+  color: #a5c261;
+}
+
+.terminal-railcasts .cmderror {
+  color: #da4939;
 }
