@@ -9,11 +9,11 @@ html, body {
 }
 
 .terminal {
+	font-family: 'Source Code Pro', monospace;
+  font-weight: normal;
 	min-height: 100%;
 	position: relative;
 	width: 100%;
-  font-weight: normal;
-	font-family: 'Source Code Pro', monospace;
 }
 
 .terminal .background {
@@ -113,13 +113,13 @@ html, body {
 }
 
 .terminal-monokai ::-moz-selection {
-  color: #e6db74;
   background: #75715e;
+  color: #e6db74;
 }
 
 .terminal-monokai ::selection {
-  color: #e6db74;
   background: #75715e;
+  color: #e6db74;
 }
 
 .terminal-monokai .prefix {
@@ -153,13 +153,13 @@ html, body {
 }
 
 .terminal-github ::-moz-selection {
-  color: #dfd;
   background: #458;
+  color: #dfd;
 }
 
 .terminal-github ::selection {
-  color: #dfd;
   background: #458;
+  color: #dfd;
 }
 
 .terminal-github .prefix {
@@ -193,13 +193,13 @@ html, body {
 }
 
 .terminal-xcode ::-moz-selection {
-  color: #c5af75;
   background: #643820;
+  color: #c5af75;
 }
 
 .terminal-xcode ::selection {
-  color: #c5af75;
   background: #643820;
+  color: #c5af75;
 }
 
 .terminal-xcode .prefix {
@@ -233,13 +233,13 @@ html, body {
 }
 
 .terminal-obsidian ::-moz-selection {
-  color:  #557182;
   background:  #e8e2b7;
+  color:  #557182;
 }
 
 .terminal-obsidian ::selection {
-  color: #557182;
   background: #e8e2b7;
+  color: #557182;
 }
 
 .terminal-obsidian .prefix {
@@ -273,13 +273,13 @@ html, body {
 }
 
 .terminal-vs ::-moz-selection {
-  color: white;
   background: #00b0e8;
+  color: white;
 }
 
 .terminal-vs ::selection {
-  color: #557182;
   background: #00b0e8;
+  color: #557182;
 }
 
 .terminal-vs .prefix {
@@ -313,13 +313,13 @@ html, body {
 }
 
 .terminal-arta ::-moz-selection {
-  color: #444;
   background: #ffcc33;
+  color: #444;
 }
 
 .terminal-arta ::selection {
-  color: #444;
   background: #ffcc33;
+  color: #444;
 }
 
 .terminal-arta .prefix {
@@ -353,13 +353,13 @@ html, body {
 }
 
 .terminal-railcasts ::-moz-selection {
-  color: #d0d0ff;
   background: #bc9458;
+  color: #d0d0ff;
 }
 
 .terminal-railcasts ::selection {
-  color: #444;
   background: #ffcc33;
+  color: #444;
 }
 
 .terminal-railcasts .prefix {

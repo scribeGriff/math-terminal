@@ -10,6 +10,7 @@
   var parser = new math.parser();
   var preans = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">';
   var sufans = '</span>';
+  var precision = 8;  // default value.
 
   var helpinfo = [
     '<table class="ink-table">',
@@ -18,8 +19,10 @@
     '<tr><td>clear all</td><td class="answer">clears window and variables</td></tr>',
     '<tr><td>help</td><td class="answer">displays this help screen</td></tr>',
     '<tr><td>help <em>command</em></td><td class="answer">displays a link to Math.js <em>command</em> documentation</td></tr>',
+    '<tr><td>precision</td><td class="answer">displays number of significant digits in formatted answer</td></tr>',
+    '<tr><td>precision  <em>value</em></td><td class="answer">set precision of answer to <em>[0 - 16]</em> significant digits</td></tr>',
     '<tr><td>theme</td><td class="answer">displays current theme</td></tr>',
-    '<tr><td>theme <em>name</em></td><td class="answer">change to theme <em>name</em></td></tr>',
+    '<tr><td>theme <em>name</em></td><td class="answer">change to theme <em>name</em> (monokai, github, xcode, obsidian, vs, arta, railcasts)</td></tr>',
     '</table>'
   ].join('');
 
@@ -65,7 +68,18 @@
             } else return preans + 'Invalid theme' + sufans;
           }
           return preans + terminal.getTheme() + sufans;
-
+          
+        case 'precision':
+          if (args && args[0]) {
+            if (args.length > 1) {
+              return preans + 'Too many arguments' + sufans;
+            } else if (args[0].match(/^([0-9]|1[0-6])$/)) { 
+              precision = parseInt(args[0]);
+              return ''; 
+            } else return preans + 'Invalid precision value' + sufans;
+          }
+          return preans + precision + sufans;
+          
         case 'ver':
         case 'version':
           return '1.0.0';
@@ -84,8 +98,7 @@
           }
           // Check for Katex format of solution.
           try {
-            // TODO: Need some logic for formatting.
-            formres = math.format(result, 8);
+            formres = math.format(result, precision);
             katstr = katex.renderToString(formres);
             return preans + katstr + sufans;
           } catch(error) {

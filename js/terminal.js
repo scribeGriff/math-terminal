@@ -154,7 +154,7 @@
 
       // Check if a valid built-in command name.  If not, try to format as tex
       // and render with KaTex.
-      if (input.value.match(/^help[ ]?[a-zA-Z]*|clear[ ]?[a-zA-Z]*|theme[ ]?[a-zA-Z]*$/)) {
+      if (input.value.match(/^help[ ]?[a-zA-Z]*|clear[ ]?[a-zA-Z]*|theme[ ]?[a-zA-Z]*|precision[ ]?[(?:\d*\.)?\d+]*$/)) {
         input.insertAdjacentHTML('beforebegin', input.value);
       } else {
         try {
@@ -220,7 +220,8 @@
       },
       setTheme: function(theme) {
         _terminal.classList.remove('terminal-' + options.theme); 
-        options.theme = theme; _terminal.classList.add('terminal-' + options.theme); 
+        options.theme = theme; 
+        _terminal.classList.add('terminal-' + options.theme); 
       },
       getTheme: function() {
         return options.theme; 
