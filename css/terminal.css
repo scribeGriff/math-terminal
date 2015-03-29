@@ -1,19 +1,23 @@
-html, body {
-	height: 100%;
-	margin: 0;
-}
-
 /* Force the default behavior of the font-awesome icons. */
 .fa {
   font-size: inherit;
 }
 
+/* Override for inks page layout */
+.ink-grid {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  max-width: none;
+}
+
+.datagraph {
+  padding: 30px;
+}
+
 .terminal {
 	font-family: 'Source Code Pro', monospace;
   font-weight: normal;
-	min-height: 100%;
-	position: relative;
-	width: 100%;
 }
 
 .terminal .background {
@@ -26,7 +30,7 @@ html, body {
 }
 
 .terminal .container {
-	padding: 1em 1.5em 1em 1em;
+	padding: 1em 1.5em;
 	position: relative;
 }
 

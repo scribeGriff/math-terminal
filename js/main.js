@@ -1,10 +1,31 @@
-/* global math: false, katex: false, Terminal: false */
+/* global math: false, katex: false, Terminal: false, document: false, vis: false */
 (function () {
   "use: strict";
 
   // Configures Math.js to use big numbers as the default number.
   math.config({
     number: 'bignumber'  // Default type of number: 'number' (default) or 'bignumber'
+  });
+
+  /* Taking vis for a spin with a plot command */
+  math.import({
+    plot: function (data) {
+      var container = document.getElementById('datagraph');
+      var items = [
+        {x: '2014-06-11', y: 10},
+        {x: '2014-06-12', y: 25},
+        {x: '2014-06-13', y: 30},
+        {x: '2014-06-14', y: 10},
+        {x: '2014-06-15', y: 15},
+        {x: '2014-06-16', y: 30}
+      ];
+      var dataset = new vis.DataSet(items);
+      var options = {
+        start: '2014-06-10',
+        end: '2014-06-18',
+      };
+      var graph2d = new vis.Graph2d(container, dataset, options);
+    }
   });
 
   var parser = new math.parser();
@@ -68,7 +89,7 @@
             } else return preans + 'Invalid theme' + sufans;
           }
           return preans + terminal.getTheme() + sufans;
-          
+
         case 'precision':
           if (args && args[0]) {
             if (args.length > 1) {
@@ -79,7 +100,7 @@
             } else return preans + 'Invalid precision value' + sufans;
           }
           return preans + precision + sufans;
-          
+
         case 'ver':
         case 'version':
           return '1.0.0';
@@ -89,20 +110,27 @@
           // Check for valid Math.js command.
           try {
             line = '';
-            if (args) line = args.join(" ");
+            if (args) {
+              line = args.join(" ");
+            }
             command = cmd + line;
             result = parser.eval(command);
           } catch(error) {
             // Unknown command.
             return false;
           }
-          // Check for Katex format of solution.
-          try {
-            formres = math.format(result, precision);
-            katstr = katex.renderToString(formres);
-            return preans + katstr + sufans;
-          } catch(error) {
-            return preans + formres + sufans;
+          if (command.match(/^plot.*$/)) {
+            // Generate plot but don't return any result for now.
+            return '';
+          } else {
+            // Check for Katex format of solution.
+            try {
+              formres = math.format(result, precision);
+              katstr = katex.renderToString(formres);
+              return preans + katstr + sufans;
+            } catch(error) {
+              return preans + formres + sufans;
+            }
           }
       }
     }
