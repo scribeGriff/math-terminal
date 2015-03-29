@@ -154,7 +154,7 @@
 
       // Check if a valid built-in command name.  If not, try to format as tex
       // and render with KaTex.
-      if (input.value.match(/^help[ ]?[a-zA-Z]*|clear[ ]?[a-zA-Z]*|theme[ ]?[a-zA-Z]*|precision[ ]?[(?:\d*\.)?\d+]*$/)) {
+      if (input.value.match(/^help.*|clear.*|theme.*|precision.*|plot.*$/i)) {
         input.insertAdjacentHTML('beforebegin', input.value);
       } else {
         try {
