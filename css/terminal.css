@@ -5,13 +5,17 @@
 
 /* Override for inks page layout */
 .ink-grid {
-  padding: 0;
   margin: 0;
-  width: 100%;
   max-width: none;
+  padding: 0;
+  width: 100%;
 }
 
 .datagraph {
+  min-height: 600px;
+}
+
+.datagraph-container {
   padding: 30px;
 }
 

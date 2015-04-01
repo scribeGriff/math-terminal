@@ -1,4 +1,5 @@
-/* global math: false, katex: false, Terminal: false, document: false, vis: false */
+/* global math: false, katex: false, Terminal: false, document: false, vis: false, c3: false */
+/* jshint node: true, browser: true */
 (function () {
   "use: strict";
 
@@ -7,24 +8,45 @@
     number: 'bignumber'  // Default type of number: 'number' (default) or 'bignumber'
   });
 
-  /* Taking vis for a spin with a plot command */
+  /* Taking c3 for a spin with a plot command */
   math.import({
     plot: function (data) {
-      var container = document.getElementById('datagraph');
-      var items = [
-        {x: '2014-06-11', y: 10},
-        {x: '2014-06-12', y: 25},
-        {x: '2014-06-13', y: 30},
-        {x: '2014-06-14', y: 10},
-        {x: '2014-06-15', y: 15},
-        {x: '2014-06-16', y: 30}
-      ];
-      var dataset = new vis.DataSet(items);
-      var options = {
-        start: '2014-06-10',
-        end: '2014-06-18',
-      };
-      var graph2d = new vis.Graph2d(container, dataset, options);
+      var chart2 = c3.generate({
+        bindto: '#datagraph',
+        data: {
+          x: 'x',
+          columns: [
+            ['x', 30, 50, 100, 230, 300, 310],
+            ['data1', 30, 200, 100, 400, 150, 250],
+            ['data2', 130, 300, 200, 300, 250, 450]
+          ]
+        },
+        zoom: {
+          enabled: true
+        },
+        padding: {
+          right: 20
+        }
+      });
+      setTimeout(function () {
+        chart2.load({
+          columns: [
+            ['data1', 100, 250, 150, 200, 100, 350]
+          ]
+        });
+      }, 1000);
+      setTimeout(function () {
+        chart2.load({
+          columns: [
+            ['data3', 80, 150, 100, 180, 80, 150]
+          ]
+        });
+      }, 1500);
+      setTimeout(function () {
+        chart2.unload({
+          ids: 'data2'
+        });
+      }, 2000);
     }
   });
 
