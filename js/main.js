@@ -1,54 +1,7 @@
-/* global math: false, katex: false, Terminal: false, document: false, vis: false, c3: false */
+/* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false */
 /* jshint node: true, browser: true */
 (function () {
   "use: strict";
-
-  // Configures Math.js to use big numbers as the default number.
-  math.config({
-    number: 'bignumber'  // Default type of number: 'number' (default) or 'bignumber'
-  });
-
-  /* Taking c3 for a spin with a plot command */
-  math.import({
-    plot: function (data) {
-      var chart2 = c3.generate({
-        bindto: '#datagraph',
-        data: {
-          x: 'x',
-          columns: [
-            ['x', 30, 50, 100, 230, 300, 310],
-            ['data1', 30, 200, 100, 400, 150, 250],
-            ['data2', 130, 300, 200, 300, 250, 450]
-          ]
-        },
-        zoom: {
-          enabled: true
-        },
-        padding: {
-          right: 20
-        }
-      });
-      setTimeout(function () {
-        chart2.load({
-          columns: [
-            ['data1', 100, 250, 150, 200, 100, 350]
-          ]
-        });
-      }, 1000);
-      setTimeout(function () {
-        chart2.load({
-          columns: [
-            ['data3', 80, 150, 100, 180, 80, 150]
-          ]
-        });
-      }, 1500);
-      setTimeout(function () {
-        chart2.unload({
-          ids: 'data2'
-        });
-      }, 2000);
-    }
-  });
 
   var parser = new math.parser();
   var preans = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">';
@@ -68,6 +21,75 @@
     '<tr><td>theme <em>name</em></td><td class="answer">change to theme <em>name</em> (monokai, github, xcode, obsidian, vs, arta, railcasts)</td></tr>',
     '</table>'
   ].join('');
+
+  // Configures Math.js to use big numbers as the default number.
+  math.config({
+    number: 'bignumber'  // Default type of number: 'number' (default) or 'bignumber'
+  });
+
+  math.import({
+    plot: function (args) {
+      var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"];
+      var buffer;
+      var data = [];
+      for (var j = 0, lenj = arguments[0]._data.length; j < lenj; j++) {
+        buffer = [];
+        for (var k = 0, lenk = arguments.length; k < lenk; k++) {
+          if (j >= arguments[k]._data.length) {
+            buffer.push(null);
+          } else {
+            buffer.push(arguments[k]._data[j]);
+          }
+        }
+        data.push(buffer);
+      }
+      
+      console.log(data);
+
+      var chart = webix.ui({
+        view: "chart",
+        container: "chartDiv",
+        type: "spline",
+        value: "#data1#",
+        line: {
+          color: colors[1],
+          width: 3
+        },
+        tooltip: {
+          template: "#data1#"
+        },
+        eventRadius: 10,
+        radius: 0,
+        border: true,
+        xAxis: {
+          template: "#data0#"
+        },
+        yAxis: {}
+      });
+
+      if (data.length > 2) {
+        for (var i = 2, len = data.length; i < len; i++) {
+          chart.addSeries({
+            value: "#data" + i + "#",
+            line: {
+              color: colors[i],
+              width: 3
+            },
+            tooltip: {
+              template: "#data" + i + "#" //tooltip
+            },
+            eventRadius: 10
+          });
+        }
+      }
+
+      chart.parse(data, "jsarray");
+
+      webix.event(window, "resize", function () {
+        chart.adjust();
+      });
+    }
+  });
 
   // Convert the 'terminal' DOM element into a live terminal.
   // This example defines several custom commands for the terminal.
