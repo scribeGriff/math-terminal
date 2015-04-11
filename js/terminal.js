@@ -160,8 +160,13 @@
         try {
           var rendstr = katex.renderToString(math.parse(input.value).toTex());
           input.insertAdjacentHTML('beforebegin', rendstr);
+          // This part is a kluge since KaTex doesn't have full support of Tex yet.
         } catch(error) {
-          input.insertAdjacentHTML('beforebegin', input.value);
+          try {
+            input.insertAdjacentHTML('beforebegin', katex.renderToString(input.value));
+          } catch(error2) {
+            input.insertAdjacentHTML('beforebegin', input.value);
+          }
         }
       }
       input.parentNode.removeChild(input);

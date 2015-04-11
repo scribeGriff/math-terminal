@@ -7,6 +7,8 @@
   var preans = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">';
   var sufans = '</span>';
   var precision = 8;  // default value.
+  var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"];
+  var chart = null;
 
   var helpinfo = [
     '<table class="ink-table">',
@@ -22,31 +24,37 @@
     '</table>'
   ].join('');
 
+  // Parse the data for the various chart functions function.
+  var parseData = function(args) {
+    var buffer;
+    var data = [];
+    for (var j = 0, lenj = arguments[0]._data.length; j < lenj; j++) {
+      buffer = [];
+      for (var k = 0, lenk = arguments.length; k < lenk; k++) {
+        if (j >= arguments[k]._data.length) {
+          buffer.push(null);
+        } else {
+          buffer.push(arguments[k]._data[j]);
+        }
+      }
+      data.push(buffer);
+    }
+    return data;
+  };
+
   // Configures Math.js to use big numbers as the default number.
   math.config({
     number: 'bignumber'  // Default type of number: 'number' (default) or 'bignumber'
   });
 
   math.import({
-    plot: function (args) {
-      var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"];
-      var buffer;
-      var data = [];
-      for (var j = 0, lenj = arguments[0]._data.length; j < lenj; j++) {
-        buffer = [];
-        for (var k = 0, lenk = arguments.length; k < lenk; k++) {
-          if (j >= arguments[k]._data.length) {
-            buffer.push(null);
-          } else {
-            buffer.push(arguments[k]._data[j]);
-          }
-        }
-        data.push(buffer);
-      }
-      
-      console.log(data);
+    plot: function(args) {
+      if (chart) chart.destructor();
 
-      var chart = webix.ui({
+      var data = parseData.apply(null, arguments);
+
+      chart = webix.ui({
+        id: "lineChart",
         view: "chart",
         container: "chartDiv",
         type: "spline",
