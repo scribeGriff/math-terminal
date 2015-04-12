@@ -6,9 +6,10 @@
   var parser = new math.parser();
   var preans = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">';
   var sufans = '</span>';
-  var precision = 8;  // default value.
+  var precision = 8;  // default output format significant digits.
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"];
   var chart = null;
+  var points;
 
   var helpinfo = [
     '<table class="ink-table">',
@@ -42,61 +43,122 @@
     return data;
   };
 
+  // Creates a chart from the provided data and specified type.
+  var createChart = function(data, type, usePoints) {
+    var itemRadius = usePoints ? 4 : 0;
+
+    var chartProto = webix.ui({
+      id: "lineChart",
+      view: "chart",
+      container: "chartDiv",
+      type: type,
+      value: "#data1#",
+      item: {
+        color: colors[1],
+        radius: itemRadius
+      },
+      line: {
+        color: colors[1],
+        width: 3
+      },
+      tooltip: {
+        template: "#data1#"
+      },
+      eventRadius: 10,
+      radius: 0,
+      border: true,
+      xAxis: {
+        template: "#data0#"
+      },
+      yAxis: {}
+    });
+
+    if (data.length > 2) {
+      for (var i = 2, len = data.length; i < len; i++) {
+        chartProto.addSeries({
+          value: "#data" + i + "#",
+          item: {
+            color: colors[i],
+            radius: itemRadius
+          },
+          line: {
+            color: colors[i],
+            width: 3
+          },
+          tooltip: {
+            template: "#data" + i + "#"
+          },
+          eventRadius: 10
+        });
+      }
+    }
+
+    chartProto.parse(data, "jsarray");
+
+    return chartProto;
+  };
+
+
   // Configures Math.js to use big numbers as the default number.
   math.config({
     number: 'bignumber'  // Default type of number: 'number' (default) or 'bignumber'
   });
 
+  // Import chart commands to mathjs.
   math.import({
-    plot: function(args) {
+    // Draws a curve through each data point but doesn't draw specific points.
+    curve: function(args) {
+      points = false;
       if (chart) chart.destructor();
 
       var data = parseData.apply(null, arguments);
 
-      chart = webix.ui({
-        id: "lineChart",
-        view: "chart",
-        container: "chartDiv",
-        type: "spline",
-        value: "#data1#",
-        line: {
-          color: colors[1],
-          width: 3
-        },
-        tooltip: {
-          template: "#data1#"
-        },
-        eventRadius: 10,
-        radius: 0,
-        border: true,
-        xAxis: {
-          template: "#data0#"
-        },
-        yAxis: {}
+      chart = createChart(data, "spline", points);
+
+      webix.event(window, "resize", function () {
+        chart.adjust();
       });
+    },
+    // Draws a line to each data point but doesn't draw specific points.
+    line: function(args) {
+      points = false;
+      if (chart) chart.destructor();
 
-      if (data.length > 2) {
-        for (var i = 2, len = data.length; i < len; i++) {
-          chart.addSeries({
-            value: "#data" + i + "#",
-            line: {
-              color: colors[i],
-              width: 3
-            },
-            tooltip: {
-              template: "#data" + i + "#" //tooltip
-            },
-            eventRadius: 10
-          });
-        }
-      }
+      var data = parseData.apply(null, arguments);
 
-      chart.parse(data, "jsarray");
+      chart = createChart(data, "line", points);
+
+      webix.event(window, "resize", function () {
+        chart.adjust();
+      });
+    },
+    // Draws a curve through each data point and draws specific points.
+    curvepts: function(args) {
+      points = true;
+      if (chart) chart.destructor();
+
+      var data = parseData.apply(null, arguments);
+
+      chart = createChart(data, "spline", points);
+
+      webix.event(window, "resize", function () {
+        chart.adjust();
+      });
+    },
+    // Draws a line through each data point and draws specific points.
+    linepts: function(args) {
+      points = true;
+      if (chart) chart.destructor();
+
+      var data = parseData.apply(null, arguments);
+
+      chart = createChart(data, "line", points);
 
       webix.event(window, "resize", function () {
         chart.adjust();
       });
     }
+    
   });
 
   // Convert the 'terminal' DOM element into a live terminal.
@@ -171,7 +233,7 @@
             // Unknown command.
             return false;
           }
-          if (command.match(/^plot.*$/)) {
+          if (command.match(/^line.*|linepts.*|curve.*|curvepts.*$/)) {
             // Generate plot but don't return any result for now.
             return '';
           } else {

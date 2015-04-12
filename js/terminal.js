@@ -153,14 +153,14 @@
       input.readOnly = true;
 
       // Check if a valid built-in command name.  If not, try to format as tex
-      // and render with KaTex.
-      if (input.value.match(/^help.*|clear.*|theme.*|precision.*|plot.*$/i)) {
+      // and render with KaTeX.
+      if (input.value.match(/^help.*|clear.*|theme.*|precision.*|line.*|linepts.*|curve.*|curvepts.*$/i)) {
         input.insertAdjacentHTML('beforebegin', input.value);
       } else {
         try {
           var rendstr = katex.renderToString(math.parse(input.value).toTex());
           input.insertAdjacentHTML('beforebegin', rendstr);
-          // This part is a kluge since KaTex doesn't have full support of Tex yet.
+          // This part is a kluge since KaTex doesn't have full support of TeX yet.
         } catch(error) {
           try {
             input.insertAdjacentHTML('beforebegin', katex.renderToString(input.value));
