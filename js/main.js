@@ -232,22 +232,15 @@
           return '1.0.0';
 
         default:
-          var line, command, result, katstr, formres;
+          var result, katstr, formres;
           // Check for valid Math.js command.
           try {
-            console.log(cmd);
-            line = '';
-            if (args) {
-              line = args.join(" ");
-            }
-            command = cmd + line;
-            console.log(command);
-            result = parser.eval(command);
+            result = parser.eval(cmd);
           } catch(error) {
             // Unknown command.
             return false;
           }
-          if (command.match(/^line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/)) {
+          if (cmd.match(/^line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/)) {
             // Generate plot but don't return any result for now.
             return '';
           } else {

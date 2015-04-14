@@ -180,12 +180,18 @@
 
       // Parse out command, args, and trim off whitespace.
       if (cmdline && cmdline.trim()) {
-        console.log(cmdline);
-        args = cmdline.split(' ').filter(function(val, i) {
-          return val;
-        });
-        cmd = args[0];
-        args = args.splice(1); // Remove cmd from arg list.
+        // If command line starts with a predefined console function, parse arguments, if any.
+        if (cmdline.match(/^help.*|clear.*|theme.*|precision.*$/i)) {
+          args = cmdline.split(' ').filter(function(val, i) {
+            return val;
+          });
+          cmd = args[0];
+          // Remove cmd from arg list.
+          args = args.splice(1);
+        // Otherwise, just pass the entire command line as the command.
+        } else {
+          cmd = cmdline;
+        }
       }
 
       if (cmd) {
