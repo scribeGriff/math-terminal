@@ -10,6 +10,9 @@
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"];
   var chart = null;
   var points;
+  
+  var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts$/;
+  var matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/;
 
   var helpinfo = [
     '<table class="ink-table">',
@@ -209,7 +212,7 @@
           if (args && args[0]) {
             if (args.length > 1) {
               return preans + 'Too many arguments' + sufans;
-            } else if (args[0].match(/^monokai|github|xcode|obsidian|vs|arta|railcasts$/)) { 
+            } else if (args[0].match(matchThemes)) { 
               terminal.setTheme(args[0]); 
               return ''; 
             } else return preans + 'Invalid theme' + sufans;
@@ -240,8 +243,8 @@
             // Unknown command.
             return false;
           }
-          if (cmd.match(/^line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/)) {
-            // Generate plot but don't return any result for now.
+          if (cmd.match(matchChartCmds)) {
+            // Generate chart but don't return any result for now.
             return '';
           } else {
             // Check for Katex format of solution.

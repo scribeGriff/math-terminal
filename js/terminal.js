@@ -24,6 +24,9 @@
     options.prompt = options.prompt || defaults.prompt;
     options.separator = options.separator || defaults.separator;
     options.theme = options.theme || defaults.theme;
+    
+    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/i;
+    var matchConsoleCmds = /^help.*|clear.*|theme.*|precision.*$/i;
 
     var extensions = Array.prototype.slice.call(arguments, 2);
 
@@ -154,7 +157,7 @@
 
       // Check if a valid built-in command name.  If not, try to format as tex
       // and render with KaTeX.
-      if (input.value.match(/^help.*|clear.*|theme.*|precision.*|line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/i)) {
+      if (input.value.match(matchAllBuiltIns)) {
         input.insertAdjacentHTML('beforebegin', input.value);
       } else {
         try {
@@ -181,7 +184,7 @@
       // Parse out command, args, and trim off whitespace.
       if (cmdline && cmdline.trim()) {
         // If command line starts with a predefined console function, parse arguments, if any.
-        if (cmdline.match(/^help.*|clear.*|theme.*|precision.*$/i)) {
+        if (cmdline.match(matchConsoleCmds)) {
           args = cmdline.split(' ').filter(function(val, i) {
             return val;
           });
