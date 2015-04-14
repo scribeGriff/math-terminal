@@ -154,7 +154,7 @@
 
       // Check if a valid built-in command name.  If not, try to format as tex
       // and render with KaTeX.
-      if (input.value.match(/^help.*|clear.*|theme.*|precision.*|line.*|linepts.*|curve.*|curvepts.*$/i)) {
+      if (input.value.match(/^help.*|clear.*|theme.*|precision.*|line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/i)) {
         input.insertAdjacentHTML('beforebegin', input.value);
       } else {
         try {
@@ -180,6 +180,7 @@
 
       // Parse out command, args, and trim off whitespace.
       if (cmdline && cmdline.trim()) {
+        console.log(cmdline);
         args = cmdline.split(' ').filter(function(val, i) {
           return val;
         });

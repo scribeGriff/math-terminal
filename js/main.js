@@ -157,8 +157,20 @@
       webix.event(window, "resize", function () {
         chart.adjust();
       });
+    },
+    xaxis: function(xaxisTitle) {
+      if (chart) {
+        chart.config.xAxis.title = xaxisTitle;
+        chart.refresh();
+      }
+    },
+    yaxis: function(yaxisTitle) {
+      if (chart) {
+        chart.config.xAxis.title = yaxisTitle;
+        chart.refresh();
+      }
     }
-    
+
   });
 
   // Convert the 'terminal' DOM element into a live terminal.
@@ -223,17 +235,19 @@
           var line, command, result, katstr, formres;
           // Check for valid Math.js command.
           try {
+            console.log(cmd);
             line = '';
             if (args) {
               line = args.join(" ");
             }
             command = cmd + line;
+            console.log(command);
             result = parser.eval(command);
           } catch(error) {
             // Unknown command.
             return false;
           }
-          if (command.match(/^line.*|linepts.*|curve.*|curvepts.*$/)) {
+          if (command.match(/^line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/)) {
             // Generate plot but don't return any result for now.
             return '';
           } else {
