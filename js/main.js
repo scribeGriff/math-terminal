@@ -166,7 +166,7 @@
     },
     yaxis: function(yaxisTitle) {
       if (chart) {
-        chart.config.xAxis.title = yaxisTitle;
+        chart.config.yAxis.title = yaxisTitle;
         chart.refresh();
       }
     }
