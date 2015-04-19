@@ -1,28 +1,47 @@
+html,
+body {
+  height: 100%;
+}
+
 /* Force the default behavior of the font-awesome icons. */
 .fa {
   font-size: inherit;
 }
 
-/* Override for inks page layout */
+/* Override for inks default page layout */
 .ink-grid {
+  height: 100%;
   margin: 0;
   max-width: none;
   padding: 0;
   width: 100%;
-  height: 100vh;
+}
+
+.terminal-container {
+  min-height: 50%;
+  overflow-y: auto;
+}
+
+.chart-container {
+  min-height: 50%;
 }
 
 .datagraph {
-  height: 90vh;
+  height: 90%;
+  width: 90%;
+}
+
+@media (max-width: 960px) {
+  .terminal-container {
+    max-height: 50%;
+  }
+  .chart-container {
+    max-height: 50%;
+  }
 }
 
 .webix_view {
   background-color: transparent;
-}
-
-.datagraph-container {
-  padding: 5vh;
-  height: 90vh;
 }
 
 .terminal {
@@ -30,10 +49,9 @@
   font-weight: normal;
 }
 
-.terminal .background {
+.terminal-background {
   height: 100%;
   left: 0;
-  pointer-events: none;
   position: absolute;
   top: 0;
   width: 100%;
@@ -122,7 +140,7 @@
   color: #66D9EF;
 }
 
-.terminal-monokai .background {
+.terminal-monokai-background {
   background: #272822;
 }
 
@@ -162,7 +180,7 @@
   color: #000080;
 }
 
-.terminal-github .background {
+.terminal-github-background {
   background: #f8f8f8;
 }
 
@@ -202,7 +220,7 @@
   color: #3f6e74;
 }
 
-.terminal-xcode .background {
+.terminal-xcode-background {
   background: #fff;
 }
 
@@ -242,7 +260,7 @@
   color: #668bb0;
 }
 
-.terminal-obsidian .background {
+.terminal-obsidian-background {
   background: #282b2e;
 }
 
@@ -282,7 +300,7 @@
   color: #00f;
 }
 
-.terminal-vs .background {
+.terminal-vs-background {
   background: white;
 }
 
@@ -322,7 +340,7 @@
   color: #32aaee;
 }
 
-.terminal-arta .background {
+.terminal-arta-background {
   background: #222;
 }
 
@@ -362,7 +380,7 @@
   color: #6d9cbe;
 }
 
-.terminal-railcasts .background {
+.terminal-railcasts-background {
   background: #232323;
 }
 

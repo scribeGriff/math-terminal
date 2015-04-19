@@ -39,19 +39,20 @@
     _terminal.classList.add('terminal');
     _terminal.classList.add('terminal-' + options.theme);
     _terminal.insertAdjacentHTML('beforeEnd', [
-      '<div class="background"></div>',
       '<div class="container">',
       '<output></output>',
       '<table class="input-line">',
       '<tr><td nowrap><div class="prompt">' + options.prompt + options.separator + '</div></td><td width="100%"><input class="cmdline" autofocus /></td></tr>',
       '</table>',
       '</div>'].join(''));
+    var _mathterm = document.querySelector('.terminal-background');
+    _mathterm.classList.add('terminal-' + options.theme + '-background');
     var _container = _terminal.querySelector('.container');
     var _inputLine = _container.querySelector('.input-line');
     var _cmdLine = _container.querySelector('.input-line .cmdline');
     var _output = _container.querySelector('output');
     var _prompt = _container.querySelector('.prompt');
-    var _background = document.querySelector('.background');
+    //var _background = document.querySelector('.background');
 
     // Hackery to resize the interlace background image as the container grows.
     _output.addEventListener('DOMSubtreeModified', function(e) {
@@ -217,7 +218,7 @@
     function clear() {
       _output.innerHTML = '';
       _cmdLine.value = '';
-      _background.style.minHeight = '';
+      //_background.style.minHeight = '';
     }
 
     function output(html) {
@@ -234,9 +235,11 @@
         return _prompt.innerHTML.replace(new RegExp(options.separator + '$'), ''); 
       },
       setTheme: function(theme) {
-        _terminal.classList.remove('terminal-' + options.theme); 
+        _terminal.classList.remove('terminal-' + options.theme);
+        _mathterm.classList.remove('terminal-' + options.theme + '-background');
         options.theme = theme; 
-        _terminal.classList.add('terminal-' + options.theme); 
+        _terminal.classList.add('terminal-' + options.theme);
+        _mathterm.classList.add('terminal-' + options.theme + '-background');
       },
       getTheme: function() {
         return options.theme; 

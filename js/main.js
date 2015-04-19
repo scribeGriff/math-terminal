@@ -53,7 +53,7 @@
     var chartProto = webix.ui({
       id: "lineChart",
       view: "chart",
-      container: "chartDiv",
+      container: "chart-div",
       type: type,
       value: "#data1#",
       item: {
