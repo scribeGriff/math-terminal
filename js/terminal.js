@@ -52,15 +52,6 @@
     var _cmdLine = _container.querySelector('.input-line .cmdline');
     var _output = _container.querySelector('output');
     var _prompt = _container.querySelector('.prompt');
-    //var _background = document.querySelector('.background');
-
-    // Hackery to resize the interlace background image as the container grows.
-    _output.addEventListener('DOMSubtreeModified', function(e) {
-      // Works best with the scroll into view wrapped in a setTimeout.
-      setTimeout(function() {
-        _cmdLine.scrollIntoView();
-      }, 0);
-    }, false);
 
     if (options.welcome) {
       output(options.welcome);

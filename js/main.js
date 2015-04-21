@@ -10,7 +10,7 @@
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"];
   var chart = null;
   var points;
-  
+
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts$/;
   var matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/;
 
