@@ -24,7 +24,7 @@
     options.prompt = options.prompt || defaults.prompt;
     options.separator = options.separator || defaults.separator;
     options.theme = options.theme || defaults.theme;
-    
+
     var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/i;
     var matchConsoleCmds = /^help.*|clear.*|theme.*|precision.*$/i;
 
@@ -42,11 +42,13 @@
       '<div class="container">',
       '<output></output>',
       '<table class="input-line">',
-      '<tr><td nowrap><div class="prompt">' + options.prompt + options.separator + '</div></td><td width="100%"><input class="cmdline" autofocus /></td></tr>',
+      '<tr><td nowrap><div class="prompt">' + options.prompt + options.separator + '</div></td><td width="100%"><input class="cmdline" id="autocomp" autofocus /></td></tr>',
       '</table>',
       '</div>'].join(''));
     var _mathterm = document.querySelector('.terminal-background');
     _mathterm.classList.add('terminal-' + options.theme + '-background');
+    var _chartcont = document.querySelector('.chart-container');
+    _chartcont.classList.add('chart-' + options.theme);
     var _container = _terminal.querySelector('.container');
     var _inputLine = _container.querySelector('.input-line');
     var _cmdLine = _container.querySelector('.input-line .cmdline');
@@ -183,7 +185,7 @@
           cmd = args[0];
           // Remove cmd from arg list.
           args = args.splice(1);
-        // Otherwise, just pass the entire command line as the command.
+          // Otherwise, just pass the entire command line as the command.
         } else {
           cmd = cmdline;
         }
@@ -214,7 +216,7 @@
 
     function output(html) {
       _output.insertAdjacentHTML('beforeEnd', html);
-      _cmdLine.scrollIntoView();
+      _cmdLine.scrollIntoView(false);
     }
 
     return {

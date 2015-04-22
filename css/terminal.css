@@ -24,7 +24,6 @@ body {
 }
 
 .chart-container {
-  box-shadow: 5px -5px 5px #272822;
   display: flex;
   height: 100%;
   z-index: 100;
@@ -168,6 +167,10 @@ body {
 
 .terminal-monokai .cmderror {
   color: #F92672;
+}
+
+.chart-monokai {
+  box-shadow: 0 -12px 5px -5px #272822;
 }
 
 /* Github theme */
@@ -408,4 +411,31 @@ body {
 
 .terminal-railcasts .cmderror {
   color: #da4939;
+}
+
+.terminal-monokai::-webkit-scrollbar {
+  width: 8px;
+}
+
+.terminal-monokai::-webkit-scrollbar-button {
+  height:5px;
+  width: 8px;
+}
+
+.terminal-monokai::-webkit-scrollbar-track {
+  background: transparent;
+  /*background:#eee;
+  border: thin solid lightgray;
+  box-shadow: 0px 0px 3px #dfdfdf inset;
+  border-radius:10px;*/
+}
+
+.terminal-monokai::-webkit-scrollbar-thumb {
+  background:#999;
+  border: thin solid gray;
+  border-radius:10px;
+}
+
+.terminal-monokai::-webkit-scrollbar-thumb:hover {
+  background:#7d7d7d;
 }

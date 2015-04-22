@@ -1,4 +1,4 @@
-/* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false */
+/* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false, Awesomplete: false */
 /* jshint node: true, browser: true */
 (function () {
   "use: strict";
@@ -9,7 +9,7 @@
   var precision = 8;  // default output format significant digits.
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"];
   var chart = null;
-  var points;
+  var points, cmdinput, awesomplete;
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts$/;
   var matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/;
@@ -27,6 +27,12 @@
     '<tr><td>theme <em>name</em></td><td class="answer">change to theme <em>name</em> (monokai, github, xcode, obsidian, vs, arta, railcasts)</td></tr>',
     '</table>'
   ].join('');
+
+  window.onload = function() {
+    cmdinput = document.getElementById("autocomp");
+    awesomplete = new Awesomplete(cmdinput);
+    awesomplete.list = ["help", "theme", "clear", "precision", "line(", "linepts(", "curve(", "curvepts(", "square(", "cube("];
+  };
 
   // Parse the data for the various chart functions function.
   var parseData = function(args) {
