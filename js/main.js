@@ -28,11 +28,14 @@
     '</table>'
   ].join('');
 
-  window.onload = function() {
+  /*window.onload = function() {
     cmdinput = document.getElementById("autocomp");
     awesomplete = new Awesomplete(cmdinput);
+    // This was clobbering the autofocus attribute in FF so fix was to focus in JS.
+    cmdinput.focus();
+    // TODO: Move list to an external file and read with ajax.
     awesomplete.list = ["help", "theme", "clear", "precision", "line(", "linepts(", "curve(", "curvepts(", "square(", "cube("];
-  };
+  };*/
 
   // Parse the data for the various chart functions function.
   var parseData = function(args) {

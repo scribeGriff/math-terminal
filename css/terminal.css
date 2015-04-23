@@ -17,16 +17,22 @@ body {
   width: 100%;
 }
 
+.all-auto {
+  flex: 1 1 450px;
+}
+
 .terminal-container {
-  height: 100%;
+  background-color:darkslategray;
+  border-radius: 5px;
+  margin: 20px 10px 20px 20px;
   overflow-y: auto;
-  z-index: 0;
 }
 
 .chart-container {
+  background-color:dimgray;
+  border-radius: 5px;
   display: flex;
-  height: 100%;
-  z-index: 100;
+  margin: 20px 20px 20px 10px;
 }
 
 .datagraph {
@@ -36,10 +42,12 @@ body {
 
 @media (max-width: 960px) {
   .terminal-container {
-    height: 50%;
+    height: 47%;
+    margin: 2% 2% 1% 2%;
   }
   .chart-container {
-    height: 50%;
+    height: 47%;
+    margin: 1% 2% 2% 2%;
   }
 }
 
@@ -213,6 +221,10 @@ body {
   color: #d14;
 }
 
+.chart-github {
+  box-shadow: 0 -12px 5px -5px #f8f8f8;
+}
+
 /* XCode theme */
 
 .terminal-xcode {
@@ -251,6 +263,10 @@ body {
 
 .terminal-xcode .cmderror {
   color: #c41a16;
+}
+
+.chart-xcode {
+  box-shadow: 0 -12px 5px -5px #fff;
 }
 
 /* Obsidian theme */
@@ -293,6 +309,10 @@ body {
   color: #ec7600;
 }
 
+.chart-obsidian {
+  box-shadow: 0 -12px 5px -5px #282b2e;
+}
+
 /* Visual Studio theme */
 
 .terminal-vs {
@@ -331,6 +351,10 @@ body {
 
 .terminal-vs .cmderror {
   color: #a31515;
+}
+
+.chart-vs {
+  box-shadow: 0 -12px 5px -5px white;
 }
 
 /* Arta theme */
@@ -373,6 +397,10 @@ body {
   color: #bb1166;
 }
 
+.chart-arta {
+  box-shadow: 0 -12px 5px -5px #222;
+}
+
 /* Railcasts theme */
 
 .terminal-railcasts {
@@ -413,6 +441,13 @@ body {
   color: #da4939;
 }
 
+.chart-railcasts {
+  box-shadow: 0 -12px 5px -5px #232323;
+}
+
+/* Custom webkit scrollbars */
+
+/* monokai theme */
 .terminal-monokai::-webkit-scrollbar {
   width: 8px;
 }

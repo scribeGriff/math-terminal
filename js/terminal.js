@@ -34,6 +34,12 @@
     var _histpos = _history.length;
     var _histtemp = '';
 
+    var ffOptions = false, sUsrAg = navigator.userAgent;
+
+    if (sUsrAg.indexOf("Firefox") > -1) {
+      ffOptions = true;
+    }
+
     // Create terminal and cache DOM nodes;
     var _terminal = document.getElementById(containerID);
     _terminal.classList.add('terminal');
@@ -206,17 +212,25 @@
 
       // Show the command line.
       _inputLine.classList.remove('hidden');
+      if (ffOptions) {
+        _inputLine.scrollIntoView({ block: "end", behavior: "smooth" });
+      } else {
+        _inputLine.scrollIntoView();
+      }
     }
 
     function clear() {
       _output.innerHTML = '';
       _cmdLine.value = '';
-      //_background.style.minHeight = '';
     }
 
     function output(html) {
       _output.insertAdjacentHTML('beforeEnd', html);
-      _cmdLine.scrollIntoView(false);
+      if (ffOptions) {
+        _inputLine.scrollIntoView({ block: "end", behavior: "smooth" });
+      } else {
+        _inputLine.scrollIntoView();
+      }
     }
 
     return {
@@ -230,9 +244,11 @@
       setTheme: function(theme) {
         _terminal.classList.remove('terminal-' + options.theme);
         _mathterm.classList.remove('terminal-' + options.theme + '-background');
+        _chartcont.classList.remove('chart-' + options.theme);
         options.theme = theme; 
         _terminal.classList.add('terminal-' + options.theme);
         _mathterm.classList.add('terminal-' + options.theme + '-background');
+        _chartcont.classList.add('chart-' + options.theme);
       },
       getTheme: function() {
         return options.theme; 
