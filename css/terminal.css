@@ -22,17 +22,19 @@ body {
 }
 
 .terminal-container {
-  background-color:darkslategray;
+  align-self: center;
   border-radius: 5px;
-  margin: 20px 10px 20px 20px;
+  height: 96%;
+  margin: 0 1% 0 2%;
   overflow-y: auto;
 }
 
 .chart-container {
-  background-color:dimgray;
+  align-self: center;
   border-radius: 5px;
   display: flex;
-  margin: 20px 20px 20px 10px;
+  height: 96%;
+  margin: 0 2% 0 1%;
 }
 
 .datagraph {
@@ -43,11 +45,11 @@ body {
 @media (max-width: 960px) {
   .terminal-container {
     height: 47%;
-    margin: 2% 2% 1% 2%;
+    margin: 0 2% 0 2%;
   }
   .chart-container {
     height: 47%;
-    margin: 1% 2% 2% 2%;
+    margin: 0 2% 0 2%;
   }
 }
 
@@ -63,6 +65,7 @@ body {
 .terminal-background {
   height: 100%;
   left: 0;
+  overflow: hidden;
   position: absolute;
   top: 0;
   width: 100%;
@@ -140,6 +143,8 @@ body {
 /* Monokai theme */
 
 .terminal-monokai {
+  background: #272822;
+  border: 1px solid black;
   color: #F8F8F2;
 }
 
@@ -152,7 +157,7 @@ body {
 }
 
 .terminal-monokai-background {
-  background: #272822;
+  background: #3E4438;
 }
 
 .terminal-monokai ::-moz-selection {
@@ -178,7 +183,8 @@ body {
 }
 
 .chart-monokai {
-  box-shadow: 0 -12px 5px -5px #272822;
+  background: #272822;
+  border: 1px solid black;
 }
 
 /* Github theme */
@@ -443,6 +449,50 @@ body {
 
 .chart-railcasts {
   box-shadow: 0 -12px 5px -5px #232323;
+}
+
+/* Chalkboard theme */
+
+.terminal-chalkboard {
+  color: #F8F8F2;
+}
+
+.terminal-chalkboard .answer {
+  color: #A6E22E;
+}
+
+.terminal-chalkboard a {
+  color: #66D9EF;
+}
+
+.terminal-chalkboard-background {
+  background: darkslategray;
+}
+
+.terminal-chalkboard ::-moz-selection {
+  background: #75715e;
+  color: #e6db74;
+}
+
+.terminal-chalkboard ::selection {
+  background: #75715e;
+  color: #e6db74;
+}
+
+.terminal-chalkboard .prefix {
+  color: #a8a8a2;
+}
+
+.terminal-chalkboard .prompt {
+  color: #FD971F;
+}
+
+.terminal-chalkboard .cmderror {
+  color: #F92672;
+}
+
+.chart-chalkboard {
+  box-shadow: 0 -12px 5px -5px #272822;
 }
 
 /* Custom webkit scrollbars */
