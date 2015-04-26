@@ -190,6 +190,8 @@ body {
 /* Github theme */
 
 .terminal-github {
+  background: #f8f8f8;
+  border: 1px solid #303438;
   color: #333;
 }
 
@@ -202,7 +204,7 @@ body {
 }
 
 .terminal-github-background {
-  background: #f8f8f8;
+  background: #767F88;
 }
 
 .terminal-github ::-moz-selection {
@@ -228,12 +230,15 @@ body {
 }
 
 .chart-github {
-  box-shadow: 0 -12px 5px -5px #f8f8f8;
+  background: #f8f8f8;
+  border: 1px solid #303438;
 }
 
 /* XCode theme */
 
 .terminal-xcode {
+  background: #fff;
+  border: 1px solid #1C140D;
   color: black;
 }
 
@@ -246,7 +251,7 @@ body {
 }
 
 .terminal-xcode-background {
-  background: #fff;
+  background: #515151;
 }
 
 .terminal-xcode ::-moz-selection {
@@ -272,12 +277,15 @@ body {
 }
 
 .chart-xcode {
-  box-shadow: 0 -12px 5px -5px #fff;
+  background: #fff;
+  border: 1px solid #1C140D;
 }
 
 /* Obsidian theme */
 
 .terminal-obsidian {
+  background: #282b2e;
+  border: 1px solid #734E4E;
   color: #e0e2e4;
 }
 
@@ -290,7 +298,7 @@ body {
 }
 
 .terminal-obsidian-background {
-  background: #282b2e;
+  background: #323B39;
 }
 
 .terminal-obsidian ::-moz-selection {
@@ -316,12 +324,15 @@ body {
 }
 
 .chart-obsidian {
-  box-shadow: 0 -12px 5px -5px #282b2e;
+  background: #282b2e;
+  border: 1px solid #734E4E;
 }
 
 /* Visual Studio theme */
 
 .terminal-vs {
+  background: white;
+  border: 1px solid #A1C1BE;
   color: black;
 }
 
@@ -334,7 +345,7 @@ body {
 }
 
 .terminal-vs-background {
-  background: white;
+  background: #59554E;
 }
 
 .terminal-vs ::-moz-selection {
@@ -360,12 +371,15 @@ body {
 }
 
 .chart-vs {
-  box-shadow: 0 -12px 5px -5px white;
+  background: white;
+  border: 1px solid #A1C1BE;
 }
 
 /* Arta theme */
 
 .terminal-arta {
+  background: #222;
+  border: 1px solid #921129;
   color: #fff;
 }
 
@@ -378,7 +392,7 @@ body {
 }
 
 .terminal-arta-background {
-  background: #222;
+  background: #756657;
 }
 
 .terminal-arta ::-moz-selection {
@@ -404,12 +418,15 @@ body {
 }
 
 .chart-arta {
-  box-shadow: 0 -12px 5px -5px #222;
+  background: #222;
+  border: 1px solid #921129;
 }
 
 /* Railcasts theme */
 
 .terminal-railcasts {
+  background: #232323;
+  border: 1px solid #111E17;
   color: #e6e1dc;
 }
 
@@ -422,7 +439,7 @@ body {
 }
 
 .terminal-railcasts-background {
-  background: #232323;
+  background: #4B4545;
 }
 
 .terminal-railcasts ::-moz-selection {
@@ -448,12 +465,15 @@ body {
 }
 
 .chart-railcasts {
-  box-shadow: 0 -12px 5px -5px #232323;
+  background: #232323;
+  border: 1px solid #111E17;
 }
 
 /* Chalkboard theme */
 
 .terminal-chalkboard {
+  background: darkslategray;
+  border: 1px solid #1A2E2E;
   color: #F8F8F2;
 }
 
@@ -466,7 +486,7 @@ body {
 }
 
 .terminal-chalkboard-background {
-  background: darkslategray;
+  background: #151C1C;
 }
 
 .terminal-chalkboard ::-moz-selection {
@@ -492,22 +512,25 @@ body {
 }
 
 .chart-chalkboard {
-  box-shadow: 0 -12px 5px -5px #272822;
+  background: darkslategray;
+  border: 1px solid #1A2E2E;
 }
 
-/* Custom webkit scrollbars */
+/* Custom webkit scrollbars
+   for example, monokai theme
+   .terminal-monokai::-webkit-scrollbar
+*/
 
-/* monokai theme */
-.terminal-monokai::-webkit-scrollbar {
+::-webkit-scrollbar {
   width: 8px;
 }
 
-.terminal-monokai::-webkit-scrollbar-button {
+::-webkit-scrollbar-button {
   height:5px;
   width: 8px;
 }
 
-.terminal-monokai::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: transparent;
   /*background:#eee;
   border: thin solid lightgray;
@@ -515,12 +538,12 @@ body {
   border-radius:10px;*/
 }
 
-.terminal-monokai::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
   background:#999;
   border: thin solid gray;
   border-radius:10px;
 }
 
-.terminal-monokai::-webkit-scrollbar-thumb:hover {
+::-webkit-scrollbar-thumb:hover {
   background:#7d7d7d;
 }

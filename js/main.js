@@ -1,4 +1,4 @@
-/* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false, Awesomplete: false */
+/* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false, Awesomplete: false, AutoComplete: false */
 /* jshint node: true, browser: true */
 (function () {
   "use: strict";
@@ -11,7 +11,7 @@
   var chart = null;
   var points, cmdinput, awesomplete;
 
-  var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts$/;
+  var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard$/;
   var matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/;
 
   var helpinfo = [
@@ -24,13 +24,19 @@
     '<tr><td>precision</td><td class="answer">displays number of significant digits in formatted answer</td></tr>',
     '<tr><td>precision  <em>value</em></td><td class="answer">set precision of answer to <em>[0 - 16]</em> significant digits</td></tr>',
     '<tr><td>theme</td><td class="answer">displays current theme</td></tr>',
-    '<tr><td>theme <em>name</em></td><td class="answer">change to theme <em>name</em> (monokai, github, xcode, obsidian, vs, arta, railcasts)</td></tr>',
+    '<tr><td>theme <em>name</em></td><td class="answer">change to theme <em>name</em> (monokai, github, xcode, obsidian, vs, arta, railcasts, chalkboard)</td></tr>',
     '</table>'
   ].join('');
 
   /*window.onload = function() {
+    AutoComplete();
+  };*/
+
+  /*window.onload = function() {
     cmdinput = document.getElementById("autocomp");
-    awesomplete = new Awesomplete(cmdinput);
+    awesomplete = new Awesomplete(cmdinput, {
+      autoFirst: true
+    });
     // This was clobbering the autofocus attribute in FF so fix was to focus in JS.
     cmdinput.focus();
     // TODO: Move list to an external file and read with ajax.

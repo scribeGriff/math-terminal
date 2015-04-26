@@ -48,7 +48,7 @@
       '<div class="container">',
       '<output></output>',
       '<table class="input-line">',
-      '<tr><td nowrap><div class="prompt">' + options.prompt + options.separator + '</div></td><td width="100%"><input class="cmdline" id="autocomp" autofocus /></td></tr>',
+      '<tr><td nowrap><div class="prompt">' + options.prompt + options.separator + '</div></td><td width="100%"><input data-autocomplete="commands.json" class="cmdline" id="autocomp" autofocus /></td></tr>',
       '</table>',
       '</div>'].join(''));
     var _mathterm = document.querySelector('.terminal-background');
