@@ -1,4 +1,4 @@
-/* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false, Awesomplete: false, AutoComplete: false */
+/* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false, Awesomplete: false, awesomplete: false */
 /* jshint node: true, browser: true */
 (function () {
   "use: strict";
@@ -9,7 +9,7 @@
   var precision = 8;  // default output format significant digits.
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"];
   var chart = null;
-  var points, cmdinput, awesomplete;
+  var points, cmdinput, autocompleter;
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard$/;
   var matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/;
@@ -28,20 +28,18 @@
     '</table>'
   ].join('');
 
-  /*window.onload = function() {
-    AutoComplete();
-  };*/
-
-  /*window.onload = function() {
-    cmdinput = document.getElementById("autocomp");
-    awesomplete = new Awesomplete(cmdinput, {
-      autoFirst: true
-    });
-    // This was clobbering the autofocus attribute in FF so fix was to focus in JS.
-    cmdinput.focus();
-    // TODO: Move list to an external file and read with ajax.
-    awesomplete.list = ["help", "theme", "clear", "precision", "line(", "linepts(", "curve(", "curvepts(", "square(", "cube("];
-  };*/
+  window.onload = function() {
+    if (awesomplete) {
+      cmdinput = document.getElementById("autocomp");
+      autocompleter = new Awesomplete(cmdinput, {
+        autoFirst: true
+      });
+      // This was clobbering the autofocus attribute in FF so fix was to focus in JS.
+      cmdinput.focus();
+      // TODO: Move list to an external file and read with ajax.
+      autocompleter.list = ["help", "theme", "clear", "precision", "line(", "linepts(", "curve(", "curvepts(", "square(", "cube("];
+    }
+  };
 
   // Parse the data for the various chart functions function.
   var parseData = function(args) {

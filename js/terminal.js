@@ -6,6 +6,9 @@
 /* global math:false, katex: false */
 /* jshint node: true, browser: true */
 
+// For debugging autocomplete and later perhaps as an option to disable.
+var awesomplete = false;
+
 (function (global, undefined) {
   "use: strict";
 
@@ -48,7 +51,7 @@
       '<div class="container">',
       '<output></output>',
       '<table class="input-line">',
-      '<tr><td nowrap><div class="prompt">' + options.prompt + options.separator + '</div></td><td width="100%"><input data-autocomplete="commands.json" class="cmdline" id="autocomp" autofocus /></td></tr>',
+      '<tr><td nowrap><div class="prompt">' + options.prompt + options.separator + '</div></td><td width="100%"><input class="cmdline" id="autocomp" autofocus /></td></tr>',
       '</table>',
       '</div>'].join(''));
     var _mathterm = document.querySelector('.terminal-background');
@@ -135,7 +138,7 @@
       // Only handle the Enter key.
       if (e.keyCode != 13) return;
 
-      var cmd, args, line, input;
+      var cmd, args, line, input, acdiv;
       var cmdline = this.value;
 
       // Save shell history.
@@ -146,7 +149,12 @@
       }
 
       // Duplicate current input and append to output section.
-      line = this.parentNode.parentNode.parentNode.parentNode.cloneNode(true);
+      if(awesomplete) {
+        line = this.parentNode.parentNode.parentNode.parentNode.parentNode.cloneNode(true);
+      } else {
+        line = this.parentNode.parentNode.parentNode.parentNode.cloneNode(true);
+      }
+
       line.removeAttribute('id');
       line.classList.add('line');
 
@@ -157,22 +165,45 @@
 
       // Check if a valid built-in command name.  If not, try to format as tex
       // and render with KaTeX.
+      // With awesomplete, we now have an extra layer of heirarchy with the added div.
       if (input.value.match(matchAllBuiltIns)) {
-        input.insertAdjacentHTML('beforebegin', input.value);
+        if (awesomplete) {
+          input.parentNode.insertAdjacentHTML('beforebegin', input.value);
+        } else {
+          input.insertAdjacentHTML('beforebegin', input.value);
+        }
       } else {
         try {
           var rendstr = katex.renderToString(math.parse(input.value).toTex());
-          input.insertAdjacentHTML('beforebegin', rendstr);
+          if (awesomplete) {
+            input.parentNode.insertAdjacentHTML('beforebegin', rendstr);
+          } else {
+            input.insertAdjacentHTML('beforebegin', rendstr);
+          }
           // This part is a kluge since KaTex doesn't have full support of TeX yet.
         } catch(error) {
           try {
-            input.insertAdjacentHTML('beforebegin', katex.renderToString(input.value));
+            if (awesomplete) {
+              input.parentNode.insertAdjacentHTML('beforebegin', katex.renderToString(input.value));
+            } else {
+              input.insertAdjacentHTML('beforebegin', katex.renderToString(input.value));
+            }
           } catch(error2) {
-            input.insertAdjacentHTML('beforebegin', input.value);
+            if (awesomplete) {
+              input.parentNode.insertAdjacentHTML('beforebegin', input.value);
+            } else {
+              input.insertAdjacentHTML('beforebegin', input.value);
+            }
           }
         }
       }
-      input.parentNode.removeChild(input);
+      // With awesomplete, need to get rid of the added div that wraps the input tag.
+      if (awesomplete) {
+        acdiv = line.querySelector('.awesomplete');
+        acdiv.parentNode.removeChild(acdiv);
+      } else {
+        input.parentNode.removeChild(input);
+      }
       _output.appendChild(line);
 
       // Hide command line until we're done processing input.
