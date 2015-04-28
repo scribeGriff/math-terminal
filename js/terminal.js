@@ -3,11 +3,8 @@
    The original license can be found here: https://github.com/SDA/terminal/blob/master/LICENSE
 */
 
-/* global math:false, katex: false */
+/* global math:false, katex: false, awesomplete: false, acIsOpen: false */
 /* jshint node: true, browser: true */
-
-// For debugging autocomplete and later perhaps as an option to disable.
-var awesomplete = false;
 
 (function (global, undefined) {
   "use: strict";
@@ -137,6 +134,10 @@ var awesomplete = false;
     function processNewCommand(e) {
       // Only handle the Enter key.
       if (e.keyCode != 13) return;
+
+      // If autocomplete list is open, let awesomplete
+      // handle Enter key.
+      if (awesomplete && acIsOpen) return;
 
       var cmd, args, line, input, acdiv;
       var cmdline = this.value;

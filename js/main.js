@@ -1,5 +1,12 @@
-/* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false, Awesomplete: false, awesomplete: false */
+/* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false, Awesomplete: false */
 /* jshint node: true, browser: true */
+
+/* globals */
+/* For debugging autocomplete and later perhaps as an option to disable. */
+var awesomplete = true;
+/* Detect when autocomplete menu is open to prevent terminal behavior on Enter key. */
+var acIsOpen = false;
+
 (function () {
   "use: strict";
 

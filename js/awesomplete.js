@@ -5,8 +5,9 @@
  * MIT license
  */
 
-/* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false, Awesomplete: false, self: false */
-/* jshint node: true, browser: true */
+/* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false, Awesomplete: false, self: false, 
+   awesomplete: false, acIsOpen: true */
+/* jshint node: true, browser: true, loopfunc: true */
 
 (function () {
 
@@ -149,6 +150,7 @@ _.prototype = {
 	},
 
 	close: function () {
+    acIsOpen = false;
 		this.ul.setAttribute("hidden", "");
 		this.index = -1;
 
@@ -156,6 +158,7 @@ _.prototype = {
 	},
 
 	open: function () {
+    acIsOpen = true;
 		this.ul.removeAttribute("hidden");
 
 		if (this.autoFirst && this.index === -1) {
