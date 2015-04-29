@@ -26,6 +26,7 @@ body {
   border-radius: 5px;
   height: 96%;
   margin: 0 1% 0 2%;
+  overflow-x: hidden;
   overflow-y: auto;
 }
 

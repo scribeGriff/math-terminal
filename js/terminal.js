@@ -109,14 +109,14 @@
           _histtemp = this.value;
         }
 
-        if (e.keyCode == 38) {
+        if (e.keyCode == 38 && !acIsOpen) {
           // Up arrow key.
           _histpos--;
           if (_histpos < 0) {
             _histpos = 0;
           }
         }
-        else if (e.keyCode == 40) {
+        else if (e.keyCode == 40 && !acIsOpen) {
           // Down arrow key.
           _histpos++;
           if (_histpos > _history.length) {
