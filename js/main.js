@@ -39,12 +39,19 @@ var acIsOpen = false;
     if (awesomplete) {
       cmdinput = document.getElementById("autocomp");
       autocompleter = new Awesomplete(cmdinput, {
-        autoFirst: true
+        autoFirst: true, 
+        filter: function(text, input) {
+          return Awesomplete.FILTER_CONTAINS(text, input.match(/\b\w{2,}\b$/)[0]);
+        },
+        replace: function(text) {
+          var before = this.input.value.match(/^.+ \s*|/)[0];
+          this.input.value = before + text;
+        }	
       });
       // This was clobbering the autofocus attribute in FF so fix was to focus in JS.
       cmdinput.focus();
       // TODO: Move list to an external file and read with ajax.
-      autocompleter.list = ["help", "theme", "clear", "precision", "line(", "linepts(", "curve(", "curvepts(", "square(", "cube("];
+      autocompleter.list = ["help", "theme", "clear", "precision", "line", "linepts", "curve", "curvepts", "square", "cube"];
     }
   };
 
