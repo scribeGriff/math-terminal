@@ -517,6 +517,53 @@ body {
   border: 1px solid #1A2E2E;
 }
 
+/* dark theme */
+
+.terminal-dark {
+  background: #040004;
+  border: 1px solid #040004;
+  color: #F8F8F2;
+}
+
+.terminal-dark .answer {
+  color: #C8FF00;
+}
+
+.terminal-dark a {
+  color: #66D9EF;
+}
+
+.terminal-dark-background {
+  background: #413D3D;
+}
+
+.terminal-dark ::-moz-selection {
+  background: #75715e;
+  color: #e6db74;
+}
+
+.terminal-dark ::selection {
+  background: #75715e;
+  color: #e6db74;
+}
+
+.terminal-dark .prefix {
+  color: #a8a8a2;
+}
+
+.terminal-dark .prompt {
+  color: #FD971F;
+}
+
+.terminal-dark .cmderror {
+  color: #FA023C;
+}
+
+.chart-dark {
+  background: #040004;
+  border: 1px solid #040004;
+}
+
 /* Custom webkit scrollbars
    for example, monokai theme
    .terminal-monokai::-webkit-scrollbar

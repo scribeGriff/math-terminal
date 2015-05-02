@@ -12,13 +12,14 @@ var acIsOpen = false;
 
   var parser = new math.parser();
   var preans = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">';
+  var preerr = '<i class="prefix fa fa-angle-double-right"></i> <span class="cmderr">';
   var sufans = '</span>';
   var precision = 8;  // default output format significant digits.
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"];
   var chart = null;
   var points, cmdinput, autocompleter;
 
-  var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard$/;
+  var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/;
   var matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/;
 
   var helpinfo = [
@@ -26,12 +27,13 @@ var acIsOpen = false;
     '<tr><td>clear</td><td class="answer">clears command window</td></tr>',
     '<tr><td>clear vars</td><td class="answer">clears workspace variables</td></tr>',
     '<tr><td>clear all</td><td class="answer">clears window and variables</td></tr>',
+    '<tr><td>clear chart</td><td class="answer">clears current chart</td></tr>',
     '<tr><td>help</td><td class="answer">displays this help screen</td></tr>',
-    '<tr><td>help <em>command</em></td><td class="answer">displays a link to Math.js <em>command</em> documentation</td></tr>',
+    '<tr><td>help <em>command</em></td><td class="answer">displays Math.js <em>command</em> documentation</td></tr>',
     '<tr><td>precision</td><td class="answer">displays number of significant digits in formatted answer</td></tr>',
     '<tr><td>precision  <em>value</em></td><td class="answer">set precision of answer to <em>[0 - 16]</em> significant digits</td></tr>',
     '<tr><td>theme</td><td class="answer">displays current theme</td></tr>',
-    '<tr><td>theme <em>name</em></td><td class="answer">change to theme <em>name</em> (monokai, github, xcode, obsidian, vs, arta, railcasts, chalkboard)</td></tr>',
+    '<tr><td>theme <em>name</em></td><td class="answer">change to theme <em>name</em> (monokai, github, xcode, obsidian, vs, arta, railcasts, chalkboard, dark)</td></tr>',
     '</table>'
   ].join('');
 
@@ -217,7 +219,7 @@ var acIsOpen = false;
         case 'clear':
           if (args && args[0]) {
             if (args.length > 1) {
-              return preans + 'Too many arguments' + sufans;
+              return preerr + 'Too many arguments' + sufans;
             }
             else if (args[0] === 'vars') {
               parser.clear();
@@ -226,7 +228,12 @@ var acIsOpen = false;
               parser.clear();
               terminal.clear();
               return '';
-            } else return preans + 'Invalid clear argument' + sufans;
+            } else if (args[0] === 'chart') {
+              if (chart) chart.destructor();
+              return '';
+            } else {
+              return preerr + 'Invalid clear argument' + sufans;
+            }
           }
           terminal.clear();
           return '';
@@ -234,14 +241,14 @@ var acIsOpen = false;
         case 'help':
           if (args && args[0]) {
             if (args.length > 1) {
-              return preans + 'Too many arguments' + sufans;
+              return preerr + 'Too many arguments' + sufans;
             } else {
               try {
                 var helpStr = math.help(args[0]).toString();
                 return preans + helpStr + sufans + '<br>' + preans + '<a href="http://mathjs.org/docs/reference/functions/' + args[0] + '.html" target="_blank">' + args[0] + ' docs at mathjs.org</a>' + sufans;
               } catch(error) {
                 // Unknown command.
-                return preans + 'Unknown command: ' + args[0] + sufans;
+                return preerr + 'Unknown command: ' + args[0] + sufans;
               }
             }
           }
@@ -250,22 +257,26 @@ var acIsOpen = false;
         case 'theme':
           if (args && args[0]) {
             if (args.length > 1) {
-              return preans + 'Too many arguments' + sufans;
+              return preerr + 'Too many arguments' + sufans;
             } else if (args[0].match(matchThemes)) { 
               terminal.setTheme(args[0]); 
               return ''; 
-            } else return preans + 'Invalid theme' + sufans;
+            } else {
+              return preerr + 'Invalid theme' + sufans;
+            }
           }
           return preans + terminal.getTheme() + sufans;
 
         case 'precision':
           if (args && args[0]) {
             if (args.length > 1) {
-              return preans + 'Too many arguments' + sufans;
+              return preerr + 'Too many arguments' + sufans;
             } else if (args[0].match(/^([0-9]|1[0-6])$/)) { 
               precision = parseInt(args[0]);
               return ''; 
-            } else return preans + 'Invalid precision value' + sufans;
+            } else {
+              return preerr + 'Invalid precision value' + sufans;
+            }
           }
           return preans + precision + sufans;
 
