@@ -48,10 +48,13 @@ var acIsOpen = false;
           this.input.value = before + text;
         }	
       });
-      // This was clobbering the autofocus attribute in FF so fix was to focus in JS.
+      // Awesomplete was clobbering the autofocus attribute in FF so fix was to focus in JS.
       cmdinput.focus();
-      // TODO: Move list to an external file and read with ajax.
-      autocompleter.list = ["help", "theme", "clear", "precision", "line", "linepts", "curve", "curvepts", "square", "cube"];
+      
+      /* Reference : http://docs.webix.com/helpers__ajax_operations.html */
+      webix.ajax("data/aclist.json").then(function(aclist) {
+        autocompleter.list = aclist.json();
+      });
     }
   };
 
@@ -230,7 +233,13 @@ var acIsOpen = false;
             if (args.length > 1) {
               return preans + 'Too many arguments' + sufans;
             } else {
-              return preans + '<a href="http://mathjs.org/docs/reference/functions/' + args[0] + '.html" target="_blank">' + args[0] + ' docs at mathjs.org</a>' + sufans;
+              try {
+                var helpStr = math.help(args[0]).toString();
+                return preans + helpStr + sufans + '<br>' + preans + '<a href="http://mathjs.org/docs/reference/functions/' + args[0] + '.html" target="_blank">' + args[0] + ' docs at mathjs.org</a>' + sufans;
+              } catch(error) {
+                // Unknown command.
+                return preans + 'Unknown command: ' + args[0] + sufans;
+              }
             }
           }
           return helpinfo;
