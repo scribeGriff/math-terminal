@@ -41,7 +41,10 @@ var acIsOpen = false;
       autocompleter = new Awesomplete(cmdinput, {
         autoFirst: true, 
         filter: function(text, input) {
-          return Awesomplete.FILTER_CONTAINS(text, input.match(/\b\w{2,}\b$/)[0]);
+          var matchInput = input.match(/\b\w{2,}\b$/);
+          if (matchInput !== null) {
+            return Awesomplete.FILTER_CONTAINS(text, matchInput[0]);
+          }
         },
         replace: function(text) {
           var before = this.input.value.match(/^.+ \s*|/)[0];
@@ -50,7 +53,7 @@ var acIsOpen = false;
       });
       // Awesomplete was clobbering the autofocus attribute in FF so fix was to focus in JS.
       cmdinput.focus();
-      
+
       /* Reference : http://docs.webix.com/helpers__ajax_operations.html */
       webix.ajax("data/aclist.json").then(function(aclist) {
         autocompleter.list = aclist.json();
