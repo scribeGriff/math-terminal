@@ -18,6 +18,7 @@ var acIsOpen = false;
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"];
   var chart = null;
   var points, cmdinput, autocompleter;
+  var parseData, createChart, terminal;
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/;
   var matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/;
@@ -62,80 +63,6 @@ var acIsOpen = false;
       });
     }
   };
-
-  // Parse the data for the various chart functions function.
-  var parseData = function(args) {
-    var buffer;
-    var data = [];
-    for (var j = 0, lenj = arguments[0]._data.length; j < lenj; j++) {
-      buffer = [];
-      for (var k = 0, lenk = arguments.length; k < lenk; k++) {
-        if (j >= arguments[k]._data.length) {
-          buffer.push(null);
-        } else {
-          buffer.push(arguments[k]._data[j]);
-        }
-      }
-      data.push(buffer);
-    }
-    return data;
-  };
-
-  // Creates a chart from the provided data and specified type.
-  var createChart = function(data, type, usePoints) {
-    var itemRadius = usePoints ? 4 : 0;
-
-    var chartProto = webix.ui({
-      id: "lineChart",
-      view: "chart",
-      container: "chart-div",
-      type: type,
-      value: "#data1#",
-      item: {
-        color: colors[1],
-        radius: itemRadius
-      },
-      line: {
-        color: colors[1],
-        width: 3
-      },
-      tooltip: {
-        template: "#data1#"
-      },
-      eventRadius: 10,
-      radius: 0,
-      border: true,
-      xAxis: {
-        template: "#data0#"
-      },
-      yAxis: {}
-    });
-
-    if (data.length > 2) {
-      for (var i = 2, len = data.length; i < len; i++) {
-        chartProto.addSeries({
-          value: "#data" + i + "#",
-          item: {
-            color: colors[i],
-            radius: itemRadius
-          },
-          line: {
-            color: colors[i],
-            width: 3
-          },
-          tooltip: {
-            template: "#data" + i + "#"
-          },
-          eventRadius: 10
-        });
-      }
-    }
-
-    chartProto.parse(data, "jsarray");
-
-    return chartProto;
-  };
-
 
   // Configures Math.js to use big numbers as the default number.
   math.config({
@@ -213,7 +140,7 @@ var acIsOpen = false;
 
   // Convert the 'terminal' DOM element into a live terminal.
   // This example defines several custom commands for the terminal.
-  var terminal = new Terminal('terminal', {}, {
+  terminal = new Terminal('terminal', {}, {
     execute: function(cmd, args) {
       switch (cmd) {
         case 'clear':
@@ -309,4 +236,77 @@ var acIsOpen = false;
       }
     }
   });
+
+  // Parse the data for the various chart functions function.
+  parseData = function parseData(args) {
+    var buffer;
+    var data = [];
+    for (var j = 0, lenj = arguments[0]._data.length; j < lenj; j++) {
+      buffer = [];
+      for (var k = 0, lenk = arguments.length; k < lenk; k++) {
+        if (j >= arguments[k]._data.length) {
+          buffer.push(null);
+        } else {
+          buffer.push(arguments[k]._data[j]);
+        }
+      }
+      data.push(buffer);
+    }
+    return data;
+  };
+
+  // Creates a chart from the provided data and specified type.
+  createChart = function createChart(data, type, usePoints) {
+    var itemRadius = usePoints ? 4 : 0;
+
+    var chartProto = webix.ui({
+      id: "lineChart",
+      view: "chart",
+      container: "chart-div",
+      type: type,
+      value: "#data1#",
+      item: {
+        color: colors[1],
+        radius: itemRadius
+      },
+      line: {
+        color: colors[1],
+        width: 3
+      },
+      tooltip: {
+        template: "#data1#"
+      },
+      eventRadius: 10,
+      radius: 0,
+      border: true,
+      xAxis: {
+        template: "#data0#"
+      },
+      yAxis: {}
+    });
+
+    if (data.length > 2) {
+      for (var i = 2, len = data.length; i < len; i++) {
+        chartProto.addSeries({
+          value: "#data" + i + "#",
+          item: {
+            color: colors[i],
+            radius: itemRadius
+          },
+          line: {
+            color: colors[i],
+            width: 3
+          },
+          tooltip: {
+            template: "#data" + i + "#"
+          },
+          eventRadius: 10
+        });
+      }
+    }
+
+    chartProto.parse(data, "jsarray");
+
+    return chartProto;
+  };
 }());
