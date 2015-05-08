@@ -8,13 +8,19 @@
   var radix2, dft, iradix2, idft, formatData;
 
   math.import({
-    // Computes the fft of an array of arbitrary length.
+    /**
+     * Computes the FFT of an array of arbitrary length.
+     * @param   {Array}  redata real data or complex data
+     * @param   {Array}  imdata imaginary data (optional)
+     * @param   {Number} N      Order of FFT (optional)
+     * @returns {Array}  FFT of input data as a complex array.
+     */
     fft: function fft(redata, imdata, N) {
       var _n, _cxdata;
 
       _cxdata = formatData(redata, imdata, N);
       _n = _cxdata.length;
-      
+
       if ((_n & -_n) === _n) {
         // If true, use O(nlogn) algorithm,
         return radix2(_cxdata);
@@ -23,12 +29,19 @@
         return dft(_cxdata);
       }
     },
+    /**
+     * Computes the inverse FFT of an array of arbitrary length.
+     * @param   {Array}  redata real data or complex data
+     * @param   {Array}  imdata imaginary data (optional)
+     * @param   {Number} N      order of IFFT (optional)
+     * @returns {Array}  IFFT of input data as a complex array
+     */
     ifft: function ifft(redata, imdata, N) {
       var _n, _cxdata;
 
       _cxdata = formatData(redata, imdata, N);
       _n = _cxdata.length;
-      
+
       if ((_n & -_n) === _n) {
         // If true, use O(nlogn) algorithm,
         return iradix2(_cxdata);
@@ -41,6 +54,13 @@
     wrap: true
   });
 
+  /**
+   * Formats the input data for FFT/IFFT
+   * @param   {Array}  redata real data or complex data
+   * @param   {Array}  imdata imaginary data
+   * @param   {Number} N      optional: number of points of FFT/IFFT
+   * @returns {Array}  Array of complex numbers representing input data
+   */
   formatData = function formatData(redata, imdata, N) {
     var len, _redata, _imdata, _n, _cxdata;
     len = redata.length;
@@ -75,6 +95,11 @@
     return _cxdata; 
   };
 
+  /**
+   * Performs an O(nlogn) radix2 fft on the input data.
+   * @param   {Array} _data complex array for FFT calculation
+   * @returns {Array} transformed version of _data
+   */
   radix2 = function radix2(_data) {
     var _n = _data.length;
     if (_n === 1) return _data;
@@ -105,6 +130,12 @@
     return y;
   };
 
+  /**
+   * Performs a "brute force" discrete fourier transform of the input data as 
+   * given by the expression: X(k) = sumN [x(n) * WN(nk)]
+   * @param   {Array} _data complex array for DFT calculation
+   * @returns {Array} transformed version of _data
+   */
   dft = function dft(_data) {
     var _n = _data.length;
     var y = new Array(_n);
@@ -119,7 +150,12 @@
     }
     return y;
   };
-  
+
+  /**
+   * Performs an O(nlogn) radix2 inverse FFT on the input data.
+   * @param   {Array} _data complex array for IFFT calculation
+   * @returns {Array} inverse transformed version of _data
+   */
   iradix2 = function iradix2(_data) {
     var _n = _data.length;
     var x = new Array(_n);
@@ -137,8 +173,26 @@
     }
     return y;
   };
-  
+
+  /**
+   * Performs a "brute force" discrete inverse fourier transform of the input data 
+   * as given by the expression: x(n) = 1/N * sum(k)[X(k) * WN(-nk)]
+   * @param   {Array} _data complex array for IFFT calculation
+   * @returns {Array} inverse transformed version of _data
+   */
   idft = function idft(_data) {
+    var _n = _data.length;
+    var y = new Array(_n);
+    for (var k = 0; k < _n; k++) {
+      var q = math.complex(0, 0);
+      for (var j = 0; j < _n; j++) {
+        var kth = 2 * k * j * math.PI / _n;
+        var wk = math.complex(math.cos(kth), math.sin(kth));
+        q = math.add(q, (math.multiply(wk, _data[j])));
+      }
+      y[k] = math.multiply(q, 1 / _n);
+    }
+    return y;
   };
 
 }());
