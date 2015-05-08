@@ -5,52 +5,80 @@
 
 (function () {
 
-  var radix2, dft;
+  var radix2, dft, iradix2, idft, formatData;
 
   math.import({
     // Computes the fft of an array of arbitrary length.
     fft: function fft(redata, imdata, N) {
-      var len, _redata, _imdata, _n, _cxdata;
-      len = redata.length;
+      var _n, _cxdata;
+
+      _cxdata = formatData(redata, imdata, N);
+      _n = _cxdata.length;
       
+      if ((_n & -_n) === _n) {
+        // If true, use O(nlogn) algorithm,
+        return radix2(_cxdata);
+      } else {
+        // else use O(n^2) algorithm.
+        return dft(_cxdata);
+      }
+    },
+    ifft: function ifft(redata, imdata, N) {
+      var _n, _cxdata;
+
+      _cxdata = formatData(redata, imdata, N);
+      _n = _cxdata.length;
+      
+      if ((_n & -_n) === _n) {
+        // If true, use O(nlogn) algorithm,
+        return iradix2(_cxdata);
+      } else {
+        // else use O(n^2) algorithm.
+        return idft(_cxdata);
+      }
+    }
+  }, {
+    wrap: true
+  });
+
+  formatData = function formatData(redata, imdata, N) {
+    var len, _redata, _imdata, _n, _cxdata;
+    len = redata.length;
+
+    if (typeof redata[0] === 'number') {
       if (N !== undefined && N !== len) {
         _n = N;
         if (N > len) {
           _redata = redata.fill(0, len - 1, N -1);
-        _imdata = imdata !== undefined ? imdata.fill(0, len - 1, N -1) : new Array(len).fill(0);
+          _imdata = imdata !== undefined ? imdata.fill(0, len - 1, N -1) : new Array(len).fill(0);
         } else {
           _redata = redata.slice(0, N);
-        _imdata = imdata !== undefined ? imdata.slice(0, N) : new Array(len).fill(0);
+          _imdata = imdata !== undefined ? imdata.slice(0, N) : new Array(len).fill(0);
         }
       } else {
         _n = len;
         _redata = redata;
         _imdata = imdata !== undefined ? imdata : new Array(len).fill(0);
       }
-      
+
       // Generate a complex array from real and imaginary data.
       _cxdata = new Array(_n);
       for (var i = 0; i < _n; i++) {
         _cxdata[i] = (math.complex(_redata[i], _imdata[i]));
       }
-        
-      if ((_n & -_n) === _n) {
-        // If true, use O(nlogn) algorithm,
-        //return radix2(_cxdata);
-      } else {
-        // else use O(n^2) algorithm.
-        //return dft(_cxdata);
-      }
-      return _cxdata;
+    } else {
+      // Assume redata is already complex.
+      // TODO:  What to do about imdata and N?
+      _n = len;
+      _cxdata = redata;
     }
-  }, {
-    wrap: true
-  });
+    return _cxdata; 
+  };
 
   radix2 = function radix2(_data) {
     var _n = _data.length;
     if (_n === 1) return _data;
-    
+
     // Perform fft of even terms recursively.
     var even = new Array(_n >> 1);
     for (var ke = 0; ke < _n/2; ke++) {
@@ -90,6 +118,27 @@
       y[k] = q;
     }
     return y;
+  };
+  
+  iradix2 = function iradix2(_data) {
+    var _n = _data.length;
+    var x = new Array(_n);
+    // Take the conjugate of the input data.
+    for (var i = 0; i < _n; i++) {
+      x[i] = math.conj(_data[i]);
+    }
+
+    // Compute an FFT of the conjugated data.
+    var y = math.fft(x);
+
+    // Take the conjugate again of the transformed data and scale by 1/N.
+    for (var j = 0; j < _n; j++) {
+      y[j] = math.multiply(math.conj(y[j]), 1 / _n);
+    }
+    return y;
+  };
+  
+  idft = function idft(_data) {
   };
 
 }());
