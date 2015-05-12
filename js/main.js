@@ -22,6 +22,7 @@ var acIsOpen = false;
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/;
   var matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/;
+  var matchWaveGenCmds = /sine.*$/;
 
   var helpinfo = [
     '<table class="ink-table">',
@@ -154,6 +155,7 @@ var acIsOpen = false;
             } else if (args[0] === 'all') {
               parser.clear();
               terminal.clear();
+              if (chart) chart.destructor();
               return '';
             } else if (args[0] === 'chart') {
               if (chart) chart.destructor();
@@ -223,6 +225,11 @@ var acIsOpen = false;
           if (cmd.match(matchChartCmds)) {
             // Generate chart but don't return any result for now.
             return '';
+          } else if (cmd.match(/[;]$/)) {
+            // Suppress the empty array symbol if line ends in a ;
+            return '';
+          } else if (cmd.match(matchWaveGenCmds)) {
+            return 'generated waveform';
           } else {
             // Check for Katex format of solution.
             try {
@@ -237,31 +244,38 @@ var acIsOpen = false;
     }
   });
 
-  // Parse the data for the various chart functions function.
+  // Parse the data for the various chart functions.
   parseData = function parseData(args) {
-    var buffer;
-    var data = [];
-    for (var j = 0, lenj = arguments[0]._data.length; j < lenj; j++) {
-      buffer = [];
-      for (var k = 0, lenk = arguments.length; k < lenk; k++) {
+    console.time("data parsing time");
+    var lenj = arguments[0]._data.length,
+        lenk = arguments.length,
+        data = new Array(lenj),
+        buffer;
+    for (var j = 0; j < lenj; j++) {
+      buffer = new Array(lenk);
+      for (var k = 0; k < lenk; k++) {
         if (j >= arguments[k]._data.length) {
-          buffer.push(null);
+          buffer[k] = null;
         } else {
-          buffer.push(arguments[k]._data[j]);
+          buffer[k] = arguments[k]._data[j];
         }
       }
-      data.push(buffer);
+      data[j] = buffer;
     }
+    console.timeEnd("data parsing time");
     return data;
   };
 
   // Creates a chart from the provided data and specified type.
   createChart = function createChart(data, type, usePoints) {
+    console.time("chart creation time");
     var itemRadius = usePoints ? 4 : 0;
 
     var chartProto = webix.ui({
       id: "lineChart",
       view: "chart",
+      data: data,
+      datatype: "jsarray",
       container: "chart-div",
       type: type,
       value: "#data1#",
@@ -273,14 +287,15 @@ var acIsOpen = false;
         color: colors[1],
         width: 3
       },
-      tooltip: {
-        template: "#data1#"
-      },
-      eventRadius: 10,
       radius: 0,
       border: true,
       xAxis: {
-        template: "#data0#"
+        template: function(obj){
+          return (obj.data0 % 20 ? "" : obj.data0);
+        },
+        lines: function(obj){
+          return (obj.data0 % 20 ? false:true);
+        }
       },
       yAxis: {}
     });
@@ -296,16 +311,11 @@ var acIsOpen = false;
           line: {
             color: colors[i],
             width: 3
-          },
-          tooltip: {
-            template: "#data" + i + "#"
-          },
-          eventRadius: 10
+          }
         });
       }
     }
-
-    chartProto.parse(data, "jsarray");
+    console.timeEnd("chart creation time");
 
     return chartProto;
   };

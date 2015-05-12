@@ -26,7 +26,6 @@ body {
   border-radius: 5px;
   height: 96%;
   margin: 0 1% 0 2%;
-  overflow-x: hidden;
   overflow-y: auto;
 }
 
@@ -569,7 +568,7 @@ body {
    .terminal-monokai::-webkit-scrollbar
 */
 
-::-webkit-scrollbar {
+/*::-webkit-scrollbar {
   width: 8px;
 }
 
@@ -583,7 +582,7 @@ body {
   /*background:#eee;
   border: thin solid lightgray;
   box-shadow: 0px 0px 3px #dfdfdf inset;
-  border-radius:10px;*/
+  border-radius:10px;
 }
 
 ::-webkit-scrollbar-thumb {
@@ -594,4 +593,4 @@ body {
 
 ::-webkit-scrollbar-thumb:hover {
   background:#7d7d7d;
-}
+}*/
