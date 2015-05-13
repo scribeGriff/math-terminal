@@ -65,6 +65,7 @@
     var len, _redata, _imdata, _n, _cxdata;
     len = redata.length;
 
+    // TODO: array.fill() mutates the original.  needs corrected below.
     if (typeof redata[0] === 'number') {
       if (N !== undefined && N !== len) {
         _n = N;

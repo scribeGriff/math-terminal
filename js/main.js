@@ -70,6 +70,8 @@ var acIsOpen = false;
     number: 'bignumber'  // Default type of number: 'number' (default) or 'bignumber'
   });
 
+  //TODO: add wrap: true and then fix parseData (don't use ._data)
+  // and then return js array from wavegens.
   // Import chart commands to mathjs.
   math.import({
     // Draws a curve through each data point but doesn't draw specific points.
