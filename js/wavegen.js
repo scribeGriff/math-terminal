@@ -17,7 +17,7 @@
         t = 1 - (i / samples_length);
         samples[i] = amplitude * Math.sin(frequency * 2 * Math.PI * t);
       }
-      return math.matrix(samples);
+      return samples;
     },
     square: function square(amp, freq, slength) {
     }

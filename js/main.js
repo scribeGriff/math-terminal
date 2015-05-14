@@ -1,6 +1,8 @@
 /* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false, Awesomplete: false */
 /* jshint node: true, browser: true */
 
+// TODO: Chart.resize() and chart.update() fail miserably with increasing data size.
+
 /* globals */
 /* For debugging autocomplete and later perhaps as an option to disable. */
 var awesomplete = true;
@@ -65,13 +67,6 @@ var acIsOpen = false;
     }
   };
 
-  // Configures Math.js to use big numbers as the default number.
-  math.config({
-    number: 'bignumber'  // Default type of number: 'number' (default) or 'bignumber'
-  });
-
-  //TODO: add wrap: true and then fix parseData (don't use ._data)
-  // and then return js array from wavegens.
   // Import chart commands to mathjs.
   math.import({
     // Draws a curve through each data point but doesn't draw specific points.
@@ -138,7 +133,8 @@ var acIsOpen = false;
         chart.refresh();
       }
     }
-
+  }, {
+    wrap: true
   });
 
   // Convert the 'terminal' DOM element into a live terminal.
@@ -213,7 +209,7 @@ var acIsOpen = false;
 
         case 'ver':
         case 'version':
-          return '1.0.0';
+          return '1.5.2';
 
         default:
           var result, katstr, formres;
@@ -249,17 +245,17 @@ var acIsOpen = false;
   // Parse the data for the various chart functions.
   parseData = function parseData(args) {
     console.time("data parsing time");
-    var lenj = arguments[0]._data.length,
+    var lenj = arguments[0].length,
         lenk = arguments.length,
         data = new Array(lenj),
         buffer;
     for (var j = 0; j < lenj; j++) {
       buffer = new Array(lenk);
       for (var k = 0; k < lenk; k++) {
-        if (j >= arguments[k]._data.length) {
+        if (j >= arguments[k].length) {
           buffer[k] = null;
         } else {
-          buffer[k] = arguments[k]._data[j];
+          buffer[k] = arguments[k][j];
         }
       }
       data[j] = buffer;
@@ -271,7 +267,8 @@ var acIsOpen = false;
   // Creates a chart from the provided data and specified type.
   createChart = function createChart(data, type, usePoints) {
     console.time("chart creation time");
-    var itemRadius = usePoints ? 4 : 0;
+    var itemRadius = usePoints ? 4 : 0,
+        mod = Math.trunc(data.length / 5);
 
     var chartProto = webix.ui({
       id: "lineChart",
@@ -293,10 +290,10 @@ var acIsOpen = false;
       border: true,
       xAxis: {
         template: function(obj){
-          return (obj.data0 % 20 ? "" : obj.data0);
+          return (obj.data0 % mod ? "" : obj.data0);
         },
         lines: function(obj){
-          return (obj.data0 % 20 ? false:true);
+          return (obj.data0 % mod ? false:true);
         }
       },
       yAxis: {}
