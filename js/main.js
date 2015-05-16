@@ -1,4 +1,4 @@
-/* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false, Awesomplete: false */
+/* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false, Awesomplete: false, Ink: false */
 /* jshint node: true, browser: true */
 
 // TODO: Chart.resize() and chart.update() fail miserably with increasing data size.

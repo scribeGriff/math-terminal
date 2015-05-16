@@ -18,14 +18,15 @@ body {
 }
 
 .all-auto {
-  flex: 1 1 460px;
+  flex: 1 1 450px;
 }
 
 .terminal-container {
   align-self: center;
   border-radius: 5px;
   height: 96%;
-  margin: 0 5px 0 10px;
+  margin: 0 10px 0 20px;
+  max-width: 50%;
   overflow-y: auto;
 }
 
@@ -34,7 +35,8 @@ body {
   border-radius: 5px;
   display: flex;
   height: 96%;
-  margin: 0 10px 0 5px;
+  margin: 0 20px 0 10px;
+  max-width: 50%;
 }
 
 .datagraph {
@@ -45,11 +47,13 @@ body {
 @media (max-width: 960px) {
   .terminal-container {
     height: 47%;
-    margin: 0 10px 0 10px;
+    margin: 0 20px 0 20px;
+    max-width: 100%;
   }
   .chart-container {
     height: 47%;
-    margin: 0 10px 0 10px;
+    margin: 0 20px 0 20px;
+    max-width: 100%;
   }
 }
 
