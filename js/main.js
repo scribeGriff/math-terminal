@@ -268,25 +268,32 @@ var acIsOpen = false;
   createChart = function createChart(data, type, usePoints) {
     console.time("chart creation time");
     var itemRadius = usePoints ? 4 : 0,
-        mod = Math.trunc(data.length / 5);
+        mod = Math.trunc(data.length / 5),
+        series = new Array(data[0].length - 1),
+        len = data[0].length,
+        chartProto;
 
-    var chartProto = webix.ui({
+    for (var i = 1; i < len; i++) {
+      series[i - 1] = {
+        value: "#data" + i + "#",
+        item: {
+          color: colors[i],
+          radius: itemRadius
+        },
+        line: {
+          color: colors[i],
+          width: 3
+        }
+      };
+    }
+
+    chartProto = webix.ui({
       id: "lineChart",
       view: "chart",
       data: data,
       datatype: "jsarray",
       container: "chart-div",
       type: type,
-      value: "#data1#",
-      item: {
-        color: colors[1],
-        radius: itemRadius
-      },
-      line: {
-        color: colors[1],
-        width: 3
-      },
-      radius: 0,
       border: true,
       xAxis: {
         template: function(obj){
@@ -296,24 +303,10 @@ var acIsOpen = false;
           return (obj.data0 % mod ? false:true);
         }
       },
-      yAxis: {}
+      yAxis: {},
+      series: series
     });
 
-    if (data.length > 2) {
-      for (var i = 2, len = data.length; i < len; i++) {
-        chartProto.addSeries({
-          value: "#data" + i + "#",
-          item: {
-            color: colors[i],
-            radius: itemRadius
-          },
-          line: {
-            color: colors[i],
-            width: 3
-          }
-        });
-      }
-    }
     console.timeEnd("chart creation time");
 
     return chartProto;
