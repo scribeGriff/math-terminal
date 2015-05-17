@@ -7,19 +7,42 @@
 
   math.import({
 
-    sine: function sine(amp, freq, slength) {
-      var amplitude = amp !== undefined ? amp : 1,
-          frequency = freq !== undefined ? freq : 440,
-          samples_length = slength !== undefined ? slength : 441,
-          samples = new Array(samples_length),
-          t;
-      for (var i = 0; i < samples_length; i++) {
-        t = 1 - (i / samples_length);
-        samples[i] = amplitude * Math.sin(frequency * 2 * Math.PI * t);
+    sinewave: function sinewave(amp, cycles, slength) {
+      var _amplitude = amp !== undefined ? amp : 1,
+          _cycles = cycles !== undefined ? cycles : 1,
+          _samples_length = slength !== undefined ? slength : 500,
+          _samples = new Array(_samples_length),
+          _sample = 0,
+          _step = Math.PI * 2 * _cycles / _samples_length;
+      
+      for (var i = 0; i < _samples_length; i++) {
+        _samples[i] = _amplitude * Math.sin(_sample);
+        _sample += _step;
       }
-      return samples;
+
+      return _samples;
     },
-    square: function square(amp, freq, slength) {
+    
+    squarewave: function squarewave(amp, cycles, slength, scale) {
+      var _amplitude = amp !== undefined ? amp : 1,
+          _cycles = cycles !== undefined ? cycles : 1,
+          _samples_length = slength !== undefined ? slength : 500,
+          _amplify = scale !== undefined ? scale : 20,
+          _samples = new Array(_samples_length),
+          _sample = 0, _preamp,
+          _step = Math.PI * 2 * _cycles / _samples_length;
+      
+      for (var i = 0; i < _samples_length; i++) {
+        _preamp = _amplitude * Math.sin(_sample);
+        if (_amplify * Math.abs(_preamp) > _amplitude) {
+          _samples[i] = Math.sign(_preamp) * _amplitude;
+        } else {
+          _samples[i] = _amplify * _preamp;
+        }
+        _sample += _step;
+      }
+
+      return _samples;
     }
   }, {
     wrap: true
