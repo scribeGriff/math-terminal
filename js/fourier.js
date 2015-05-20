@@ -49,6 +49,43 @@
         // else use O(n^2) algorithm.
         return idft(_cxdata);
       }
+    },
+
+    // This might be a bit slow yet, but functional.
+    fsps: function fsps(data, kval, cycles, fraction) {
+      var L = data.length,
+          y = new Array(L),
+          re = new Array(L),
+          im = new Array(L),
+          _cycles, _fraction, N, coeff;
+      
+      _cycles = cycles !== undefined ? cycles : 1;
+      _fraction = fraction !== undefined ? fraction : 1;
+      //User may define a period less than the length of the waveform.
+      N = Math.trunc(L * _fraction / _cycles);
+      //The Fourier series coefficients are computed using a FFT.
+      coeff = math.fft(data.slice(0, N));
+      console.log(coeff.length);
+      for (var n = 0; n < L; n++) {
+        var q = math.complex(0, 0);
+        for (var k = 1; k <= kval; k++) {
+          var kth = 2 * n * k * Math.PI / N;
+          var wk = math.complex(Math.cos(kth), Math.sin(kth));
+          q = math.add(q, math.multiply(wk, coeff[k]));
+        }
+        y[n] = math.add(math.multiply(coeff[0], 1 / N), math.multiply(q, 2 / N));
+        re[n] = y[n].re;
+        im[n] = y[n].im;
+      }
+      // Having trouble returning multiple values to mathjs,
+      // either with objects or arrays.  Just returning real
+      // values for now.
+      /*return {
+        complex: y, 
+        re: re, 
+        im:im
+      };*/
+      return re;
     }
   }, {
     wrap: true
