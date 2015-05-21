@@ -57,35 +57,45 @@
           y = new Array(L),
           re = new Array(L),
           im = new Array(L),
-          _cycles, _fraction, N, coeff;
-      
+          _kval, _cycles, _fraction,
+          N, coeff, q, kth, wk, kp;
+
+      _kval = kval !== undefined ? kval : 3;
       _cycles = cycles !== undefined ? cycles : 1;
       _fraction = fraction !== undefined ? fraction : 1;
       //User may define a period less than the length of the waveform.
       N = Math.trunc(L * _fraction / _cycles);
+      kp = 2 * Math.PI / N;
       //The Fourier series coefficients are computed using a FFT.
       coeff = math.fft(data.slice(0, N));
-      console.log(coeff.length);
       for (var n = 0; n < L; n++) {
-        var q = math.complex(0, 0);
-        for (var k = 1; k <= kval; k++) {
-          var kth = 2 * n * k * Math.PI / N;
-          var wk = math.complex(Math.cos(kth), Math.sin(kth));
+        q = math.complex(0, 0);
+        for (var k = 1; k <= _kval; k++) {
+          kth = kp * n * k;
+          wk = math.complex(Math.cos(kth), Math.sin(kth));
           q = math.add(q, math.multiply(wk, coeff[k]));
         }
         y[n] = math.add(math.multiply(coeff[0], 1 / N), math.multiply(q, 2 / N));
         re[n] = y[n].re;
         im[n] = y[n].im;
       }
-      // Having trouble returning multiple values to mathjs,
-      // either with objects or arrays.  Just returning real
-      // values for now.
-      /*return {
+      
+      /*this.getReal = function() {
+        return math.eval("real", this);
+      }*/
+
+      // To retrieve the data from within the console:
+      // fs = fsps(signal);
+      // fsreal = eval("real", fs);
+      // fsimag = eval("imag", fs);
+      // fscomplex = eval("complex", fs);
+      // TODO: consider a wrapper for this?
+      // ex: fsreal = getReal(fs);
+      return {
         complex: y, 
-        re: re, 
-        im:im
-      };*/
-      return re;
+        real: re, 
+        imag:im
+      };
     }
   }, {
     wrap: true

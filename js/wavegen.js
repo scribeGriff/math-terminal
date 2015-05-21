@@ -6,13 +6,20 @@
 "use strict";
 
 (function () {
+  
+  var defaults = {
+    amplitude: 1,
+    cycles: 1,
+    slength: 512,
+    scale: 20
+  };
 
   math.import({
 
     sinewave: function sinewave(amp, cycles, slength) {
-      var _amplitude = amp !== undefined ? amp : 1,
-          _cycles = cycles !== undefined ? cycles : 1,
-          _samples_length = slength !== undefined ? slength : 500,
+      var _amplitude = amp !== undefined ? amp : defaults.amplitude,
+          _cycles = cycles !== undefined ? cycles : defaults.cycles,
+          _samples_length = slength !== undefined ? slength : defaults.slength,
           _samples = new Array(_samples_length),
           _sample = 0,
           _step = Math.PI * 2 * _cycles / _samples_length;
@@ -26,10 +33,10 @@
     },
     
     squarewave: function squarewave(amp, cycles, slength, scale) {
-      var _amplitude = amp !== undefined ? amp : 1,
-          _cycles = cycles !== undefined ? cycles : 1,
-          _samples_length = slength !== undefined ? slength : 500,
-          _amplify = scale !== undefined ? scale : 20,
+      var _amplitude = amp !== undefined ? amp : defaults.amplitude,
+          _cycles = cycles !== undefined ? cycles : defaults.cycles,
+          _samples_length = slength !== undefined ? slength : defaults.slength,
+          _amplify = scale !== undefined ? scale : defaults.scale,
           _samples = new Array(_samples_length),
           _sample = 0, _preamp,
           _step = Math.PI * 2 * _cycles / _samples_length;
@@ -48,9 +55,9 @@
     },
     
     sawtoothwave: function sawtoothwave(amp, cycles, slength) {
-      var _amplitude = amp !== undefined ? amp : 1,
-          _cycles = cycles !== undefined ? cycles : 1,
-          _samples_length = slength !== undefined ? slength : 500,
+      var _amplitude = amp !== undefined ? amp : defaults.amplitude,
+          _cycles = cycles !== undefined ? cycles : defaults.cycles,
+          _samples_length = slength !== undefined ? slength : defaults.slength,
           _samples = new Array(_samples_length),
           _sample = 0,
           _scale = -(2 / Math.PI) * _amplitude,
@@ -65,9 +72,9 @@
     },
     
     trianglewave: function trianglewave(amp, cycles, slength) {
-      var _amplitude = amp !== undefined ? amp : 1,
-          _cycles = cycles !== undefined ? cycles : 1,
-          _samples_length = slength !== undefined ? slength : 500,
+      var _amplitude = amp !== undefined ? amp : defaults.amplitude,
+          _cycles = cycles !== undefined ? cycles : defaults.cycles,
+          _samples_length = slength !== undefined ? slength : defaults.slength,
           _samples = new Array(_samples_length),
           _sample = 0,
           _scale = (2 / Math.PI) * _amplitude,
