@@ -57,6 +57,9 @@
           y = new Array(L),
           re = new Array(L),
           im = new Array(L),
+          polar = new Array(L),
+          r = new Array(L),
+          phi = new Array(L),
           _kval, _cycles, _fraction,
           N, coeff, q, kth, wk, kp;
 
@@ -78,25 +81,55 @@
         y[n] = math.add(math.multiply(coeff[0], 1 / N), math.multiply(q, 2 / N));
         re[n] = y[n].re;
         im[n] = y[n].im;
+        polar[n] = y[n].toPolar();
+        r[n] = polar[n].r;
+        phi[n] = polar[n].phi;
       }
-      
-      /*this.getReal = function() {
-        return math.eval("real", this);
-      }*/
 
       // To retrieve the data from within the console:
       // fs = fsps(signal);
       // fsreal = eval("real", fs);
       // fsimag = eval("imag", fs);
       // fscomplex = eval("complex", fs);
-      // TODO: consider a wrapper for this?
-      // ex: fsreal = getReal(fs);
+      // or use the wrappers below:
+      // fsreal = getReal(fs);
       return {
         complex: y, 
         real: re, 
-        imag:im
+        imag:im,
+        polar,
+        r,
+        phi
       };
-    }
+    },
+    
+    // Helper functions to retrieve arrays from
+    // multiple return objects.
+    getReal: function getReal(complexObject) {
+      return math.eval("real", complexObject);
+    },
+    getImag: function getImag(complexObject) {
+      return math.eval("imag", complexObject);
+    },
+    getComplex: function getComplex(complexObject) {
+      return math.eval("complex", complexObject);
+    },
+    getR: function getR(complexObject) {
+      return math.eval("r", complexObject);
+    },
+    getPhi: function getPhi(complexObject) {
+      return math.eval("phi", complexObject);
+    },
+    getPolar: function getPolar(complexObject) {
+      return math.eval("polar", complexObject);
+    },
+    // A default function that could replace
+    // all of the above, but from a console perspective, 
+    // individual functions would seem to be simpler
+    // on the user.
+    getData: function getData(key, object) {
+      return math.eval(key, object);
+    },
   }, {
     wrap: true
   });

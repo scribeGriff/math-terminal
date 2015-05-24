@@ -67,6 +67,10 @@ var acIsOpen = false;
     }
   };
 
+  math.config({
+    number: 'bignumber'
+  });
+
   // Import chart commands to mathjs.
   math.import({
     // Draws a curve through each data point but doesn't draw specific points.
