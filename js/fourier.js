@@ -10,15 +10,14 @@
   math.import({
     /**
      * Computes the FFT of an array of arbitrary length.
-     * @param   {Array}  redata real data or complex data
-     * @param   {Array}  imdata imaginary data (optional)
+     * @param   {Array}  rcdata real or complex data
      * @param   {Number} N      Order of FFT (optional)
      * @returns {Array}  FFT of input data as a complex array.
      */
-    fft: function fft(redata, imdata, N) {
+    fft: function fft(rcdata, N) {
       var _n, _cxdata;
 
-      _cxdata = formatData(redata, imdata, N);
+      _cxdata = formatData(rcdata, N);
       _n = _cxdata.length;
 
       if ((_n & -_n) === _n) {
@@ -31,15 +30,14 @@
     },
     /**
      * Computes the inverse FFT of an array of arbitrary length.
-     * @param   {Array}  redata real data or complex data
-     * @param   {Array}  imdata imaginary data (optional)
+     * @param   {Array}  rcdata real or complex data
      * @param   {Number} N      order of IFFT (optional)
      * @returns {Array}  IFFT of input data as a complex array
      */
-    ifft: function ifft(redata, imdata, N) {
+    ifft: function ifft(rcdata, N) {
       var _n, _cxdata;
 
-      _cxdata = formatData(redata, imdata, N);
+      _cxdata = formatData(rcdata, N);
       _n = _cxdata.length;
 
       if ((_n & -_n) === _n) {
@@ -102,7 +100,7 @@
         phi
       };
     },
-    
+
     // Helper functions to retrieve arrays from
     // multiple return objects.
     getReal: function getReal(complexObject) {
@@ -126,7 +124,7 @@
     // A default function that could replace
     // all of the above, but from a console perspective, 
     // individual functions would seem to be simpler
-    // on the user.
+    // for the user.
     getData: function getData(key, object) {
       return math.eval(key, object);
     },
@@ -136,44 +134,24 @@
 
   /**
    * Formats the input data for FFT/IFFT
-   * @param   {Array}  redata real data or complex data
-   * @param   {Array}  imdata imaginary data
+   * @param   {Array}  rcdata real or complex data
    * @param   {Number} N      optional: number of points of FFT/IFFT
-   * @returns {Array}  Array of complex numbers representing input data
+   * @returns {Array}  Array of length N corrected data
    */
-  formatData = function formatData(redata, imdata, N) {
-    var len, _redata, _imdata, _n, _cxdata;
-    len = redata.length;
+  formatData = function formatData(rcdata, N) {
+    var len, _rcdata;
+    len = rcdata.length;
 
-    // TODO: array.fill() mutates the original.  needs corrected below.
-    if (typeof redata[0] === 'number') {
-      if (N !== undefined && N !== len) {
-        _n = N;
-        if (N > len) {
-          _redata = redata.fill(0, len - 1, N -1);
-          _imdata = imdata !== undefined ? imdata.fill(0, len - 1, N -1) : new Array(len).fill(0);
-        } else {
-          _redata = redata.slice(0, N);
-          _imdata = imdata !== undefined ? imdata.slice(0, N) : new Array(len).fill(0);
-        }
+    if (N !== undefined && N !== len) {
+      if (N > len) {
+        _rcdata = rcdata.concat(new Array(N - len).fill(0));
       } else {
-        _n = len;
-        _redata = redata;
-        _imdata = imdata !== undefined ? imdata : new Array(len).fill(0);
-      }
-
-      // Generate a complex array from real and imaginary data.
-      _cxdata = new Array(_n);
-      for (var i = 0; i < _n; i++) {
-        _cxdata[i] = (math.complex(_redata[i], _imdata[i]));
+        _rcdata = rcdata.slice(0, N);
       }
     } else {
-      // Assume redata is already complex.
-      // TODO:  What to do about imdata and N?
-      _n = len;
-      _cxdata = redata;
+      _rcdata = rcdata;
     }
-    return _cxdata; 
+    return _rcdata; 
   };
 
   /**
