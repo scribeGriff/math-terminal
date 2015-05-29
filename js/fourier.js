@@ -6,8 +6,10 @@
 (function () {
 
   var radix2, dft, iradix2, idft, formatData;
+  const FSMALL = 14;
 
   math.import({
+
     /**
      * Computes the FFT of an array of arbitrary length.
      * @param   {Array}  rcdata real or complex data
@@ -73,10 +75,10 @@
         q = math.complex(0, 0);
         for (var k = 1; k <= _kval; k++) {
           kth = kp * n * k;
-          wk = math.complex(Math.cos(kth), Math.sin(kth));
+          wk = math.complex(math.cos(kth), math.sin(kth));
           q = math.add(q, math.multiply(wk, coeff[k]));
         }
-        y[n] = math.add(math.multiply(coeff[0], 1 / N), math.multiply(q, 2 / N));
+        y[n] = math.round(math.add(math.multiply(coeff[0], 1 / N), math.multiply(q, 2 / N)), FSMALL);
         re[n] = y[n].re;
         im[n] = y[n].im;
         polar[n] = y[n].toPolar();
@@ -183,8 +185,8 @@
     for (var k = 0; k < _n/2; k++) {
       var kth = -2 * k * math.PI / _n;
       var wk = math.complex(math.cos(kth), math.sin(kth));
-      y[k] = math.add(q[k], (math.multiply(wk, r[k])));
-      y[k + (_n >> 1)] = math.subtract(q[k], (math.multiply(wk, r[k])));
+      y[k] = math.round(math.add(q[k], (math.multiply(wk, r[k]))), FSMALL);
+      y[k + (_n >> 1)] = math.round(math.subtract(q[k], (math.multiply(wk, r[k]))), FSMALL);
     }
     return y;
   };
@@ -205,7 +207,7 @@
         var wk = math.complex(math.cos(kth), math.sin(kth));
         q = math.add(q, (math.multiply(wk, _data[j])));
       }
-      y[k] = q;
+      y[k] = math.round(q, FSMALL);
     }
     return y;
   };
@@ -228,7 +230,7 @@
 
     // Take the conjugate again of the transformed data and scale by 1/N.
     for (var j = 0; j < _n; j++) {
-      y[j] = math.multiply(math.conj(y[j]), 1 / _n);
+      y[j] = math.round(math.multiply(math.conj(y[j]), 1 / _n), FSMALL);
     }
     return y;
   };
@@ -249,7 +251,7 @@
         var wk = math.complex(math.cos(kth), math.sin(kth));
         q = math.add(q, (math.multiply(wk, _data[j])));
       }
-      y[k] = math.multiply(q, 1 / _n);
+      y[k] = math.round(math.multiply(q, 1 / _n), FSMALL);
     }
     return y;
   };
