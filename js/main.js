@@ -12,19 +12,32 @@ var acIsOpen = false;
 (function () {
   "use: strict";
 
-  var parser = new math.parser();
-  var preans = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">';
-  var preerr = '<i class="prefix fa fa-angle-double-right"></i> <span class="cmderr">';
-  var sufans = '</span>';
-  var precision = 8;  // default output format significant digits.
-  var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"];
-  var chart = null;
-  var points, cmdinput, autocompleter;
-  var parseData, createChart, terminal;
+  var parser = new math.parser(),
+      preans = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">',
+      preerr = '<i class="prefix fa fa-angle-double-right"></i> <span class="cmderr">',
+      sufans = '</span>',
+      precision = 8;  // default output format significant digits.
+  
+  var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"],
+      chart = null,
+      points, cmdinput, autocompleter,
+      parseData, createChart, terminal;
 
-  var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/;
-  var matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|samples.*|xaxis.*|yaxis.*$/;
-  var matchWaveGenCmds = /sine.*$/;
+  var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
+      matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|samples.*|xaxis.*|yaxis.*$/,
+      matchWaveGenCmds = /sine.*$/;
+  
+  var bgcolors = {
+    monokai: "#272822",
+    github: "#f8f8f8",
+    xcode: "#fff",
+    obsidian: "#282b2e",
+    vs: "#fff",
+    arta: "#222",
+    railcasts: "#232323",
+    chalkboard: "darkslategray",
+    dark: "#040004"
+  };
 
   var helpinfo = [
     '<table class="ink-table">',
@@ -127,17 +140,29 @@ var acIsOpen = false;
     },
     // Draws a data point chart using bar and points
     samples: function sequence(args) {
+
+      var data, max, min, start, end, bgcolor;
+
       if (chart) chart.destructor();
+      
+      bgcolor = bgcolors[terminal.getTheme()];
 
-      var data = parseData.apply(null, arguments);
+      data = parseData.apply(null, arguments);
 
-      console.log(math.format(math.max(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])))));
-      console.log(math.format(math.min(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])))));
-      var max = math.max(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])));
-      var min = math.min(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])));
+      max = math.max(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])));
+      min = math.min(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])));
 
-      if (max === min) {
-        min = max - min;
+      if (min < 0) {
+        if (max < 0) {
+          start = min;
+          end = 0;
+        } else {
+          start = min;
+          end = max;
+        }
+      } else {
+        start = 0;
+        end = max;
       }
 
       chart = webix.ui({
@@ -150,8 +175,9 @@ var acIsOpen = false;
           lineColor: "DimGray"
         },
         yAxis:{
-          start: min,
-          end: max,
+          start: start,
+          end: end,
+          step: 1,
           lineColor: "DimGray"
         },
         series:[
@@ -164,7 +190,7 @@ var acIsOpen = false;
             value:"#data1#",
             line:{
               width:0,
-              color: "#272822"
+              color: bgcolor
             },
             item: {
               color: "#272822",
@@ -246,7 +272,8 @@ var acIsOpen = false;
             if (args.length > 1) {
               return preerr + 'Too many arguments' + sufans;
             } else if (args[0].match(matchThemes)) { 
-              terminal.setTheme(args[0]); 
+              terminal.setTheme(args[0]);
+              console.log(bgcolors[args[0]]);
               return ''; 
             } else {
               return preerr + 'Invalid theme' + sufans;
