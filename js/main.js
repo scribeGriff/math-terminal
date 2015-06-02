@@ -23,7 +23,7 @@ var acIsOpen = false;
   var parseData, createChart, terminal;
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/;
-  var matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/;
+  var matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|samples.*|xaxis.*|yaxis.*$/;
   var matchWaveGenCmds = /sine.*$/;
 
   var helpinfo = [
@@ -74,7 +74,7 @@ var acIsOpen = false;
   // Import chart commands to mathjs.
   math.import({
     // Draws a curve through each data point but doesn't draw specific points.
-    curve: function(args) {
+    curve: function curve(args) {
       points = false;
       if (chart) chart.destructor();
 
@@ -87,7 +87,7 @@ var acIsOpen = false;
       });
     },
     // Draws a line to each data point but doesn't draw specific points.
-    line: function(args) {
+    line: function line(args) {
       points = false;
       if (chart) chart.destructor();
 
@@ -100,7 +100,7 @@ var acIsOpen = false;
       });
     },
     // Draws a curve through each data point and draws specific points.
-    curvepts: function(args) {
+    curvepts: function curvepts(args) {
       points = true;
       if (chart) chart.destructor();
 
@@ -113,7 +113,7 @@ var acIsOpen = false;
       });
     },
     // Draws a line through each data point and draws specific points.
-    linepts: function(args) {
+    linepts: function linepts(args) {
       points = true;
       if (chart) chart.destructor();
 
@@ -125,13 +125,69 @@ var acIsOpen = false;
         chart.adjust();
       });
     },
-    xaxis: function(xaxisTitle) {
+    // Draws a data point chart using bar and points
+    samples: function sequence(args) {
+      if (chart) chart.destructor();
+
+      var data = parseData.apply(null, arguments);
+
+      console.log(math.format(math.max(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])))));
+      console.log(math.format(math.min(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])))));
+      var max = math.max(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])));
+      var min = math.min(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])));
+
+      if (max === min) {
+        min = max - min;
+      }
+
+      chart = webix.ui({
+        container:"chart-div",
+        view:"chart",
+        type:"bar",
+        barWidth:4,
+        xAxis:{
+          template:"#data0#",
+          lineColor: "DimGray"
+        },
+        yAxis:{
+          start: min,
+          end: max,
+          lineColor: "DimGray"
+        },
+        series:[
+          {
+            value:"#data1#",
+            color:colors[1]
+          },
+          {
+            type:"line",
+            value:"#data1#",
+            line:{
+              width:0,
+              color: "#272822"
+            },
+            item: {
+              color: "#272822",
+              borderColor: colors[1],
+              radius: 4
+            }
+          }
+        ],
+        origin: 0,
+        datatype: "jsarray",
+        data: data
+      });
+
+    },
+    // Adds and xaxis label
+    xaxis: function xaxis(xaxisTitle) {
       if (chart) {
         chart.config.xAxis.title = xaxisTitle;
         chart.refresh();
       }
     },
-    yaxis: function(yaxisTitle) {
+    // Adds a y axis label
+    yaxis: function yaxis(yaxisTitle) {
       if (chart) {
         chart.config.yAxis.title = yaxisTitle;
         chart.refresh();
@@ -213,7 +269,7 @@ var acIsOpen = false;
 
         case 'ver':
         case 'version':
-          return '1.5.2';
+          return math.version;
 
         default:
           var result, katstr, formres;

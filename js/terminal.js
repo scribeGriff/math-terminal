@@ -25,7 +25,7 @@
     options.separator = options.separator || defaults.separator;
     options.theme = options.theme || defaults.theme;
 
-    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|line.*|linepts.*|curve.*|curvepts.*|xaxis.*|yaxis.*$/i;
+    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|line.*|linepts.*|curve.*|curvepts.*|samples.*|xaxis.*|yaxis.*$/i;
     var matchConsoleCmds = /^help.*|clear.*|theme.*|precision.*$/i;
 
     var extensions = Array.prototype.slice.call(arguments, 2);
