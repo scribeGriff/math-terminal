@@ -16,17 +16,18 @@ var acIsOpen = false;
       preans = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">',
       preerr = '<i class="prefix fa fa-angle-double-right"></i> <span class="cmderr">',
       sufans = '</span>',
-      precision = 8;  // default output format significant digits.
-  
+      precision = 8,  // default output format significant digits.
+      sampleChart = false;
+
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"],
-      chart = null,
+      chart = null, bgcolor, sampleSeries,
       points, cmdinput, autocompleter,
       parseData, createChart, terminal;
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
       matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|samples.*|xaxis.*|yaxis.*$/,
       matchWaveGenCmds = /sine.*$/;
-  
+
   var bgcolors = {
     monokai: "#272822",
     github: "#f8f8f8",
@@ -140,12 +141,32 @@ var acIsOpen = false;
     },
     // Draws a data point chart using bar and points
     samples: function sequence(args) {
-
-      var data, max, min, start, end, bgcolor;
+      var data, max, min, start, end;
 
       if (chart) chart.destructor();
-      
+
+      sampleChart = true;
+
       bgcolor = bgcolors[terminal.getTheme()];
+
+      sampleSeries = [
+        {
+          value:"#data1#",
+          color:colors[1]
+        },
+        {
+          type:"line",
+          value:"#data1#",
+          line:{
+            color: bgcolor
+          },
+          item: {
+            color: bgcolor,
+            borderColor: colors[1],
+            radius: 4
+          }
+        }
+      ];
 
       data = parseData.apply(null, arguments);
 
@@ -180,30 +201,15 @@ var acIsOpen = false;
           step: 1,
           lineColor: "DimGray"
         },
-        series:[
-          {
-            value:"#data1#",
-            color:colors[1]
-          },
-          {
-            type:"line",
-            value:"#data1#",
-            line:{
-              width:0,
-              color: bgcolor
-            },
-            item: {
-              color: "#272822",
-              borderColor: colors[1],
-              radius: 4
-            }
-          }
-        ],
+        series: sampleSeries,
         origin: 0,
         datatype: "jsarray",
         data: data
       });
 
+      webix.event(window, "resize", function () {
+        chart.adjust();
+      });
     },
     // Adds and xaxis label
     xaxis: function xaxis(xaxisTitle) {
@@ -216,6 +222,16 @@ var acIsOpen = false;
     yaxis: function yaxis(yaxisTitle) {
       if (chart) {
         chart.config.yAxis.title = yaxisTitle;
+        chart.refresh();
+      }
+    },
+    // Update sample chart so line remains transparent to user.
+    updateSampleChart: function updateSampleChart(bgcolorIndex) {
+      if (chart && sampleChart) {
+        bgcolor = bgcolors[bgcolorIndex];
+        sampleSeries[1].line.color = bgcolor;
+        sampleSeries[1].item.color = bgcolor;
+        chart.define("series", sampleSeries);
         chart.refresh();
       }
     }
@@ -239,10 +255,16 @@ var acIsOpen = false;
             } else if (args[0] === 'all') {
               parser.clear();
               terminal.clear();
-              if (chart) chart.destructor();
+              if (chart) {
+                chart.destructor();
+                sampleChart = false;
+              }
               return '';
             } else if (args[0] === 'chart') {
-              if (chart) chart.destructor();
+              if (chart) {
+                chart.destructor();
+                sampleChart = false;
+              }
               return '';
             } else {
               return preerr + 'Invalid clear argument' + sufans;
@@ -273,7 +295,7 @@ var acIsOpen = false;
               return preerr + 'Too many arguments' + sufans;
             } else if (args[0].match(matchThemes)) { 
               terminal.setTheme(args[0]);
-              console.log(bgcolors[args[0]]);
+              math.updateSampleChart(args[0]);
               return ''; 
             } else {
               return preerr + 'Invalid theme' + sufans;
