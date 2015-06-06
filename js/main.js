@@ -141,7 +141,7 @@ var acIsOpen = false;
     },
     // Draws a data point chart using bar and points
     samples: function sequence(args) {
-      var data, max, min, start, end;
+      var data, max, min, start, end, mod;
 
       if (chart) chart.destructor();
 
@@ -169,6 +169,7 @@ var acIsOpen = false;
       ];
 
       data = parseData.apply(null, arguments);
+      mod = Math.trunc(data.length / 5);
 
       max = math.max(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])));
       min = math.min(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])));
@@ -192,7 +193,12 @@ var acIsOpen = false;
         type:"bar",
         barWidth:4,
         xAxis:{
-          template:"#data0#",
+          template: function(obj){
+            return (obj.data0 % mod ? "" : obj.data0);
+          },
+          lines: function(obj){
+            return (obj.data0 % mod ? false:true);
+          },
           lineColor: "DimGray"
         },
         yAxis:{
@@ -226,6 +232,7 @@ var acIsOpen = false;
       }
     },
     // Update sample chart so line remains transparent to user.
+    // TODO: Accomodate multiple plots.
     updateSampleChart: function updateSampleChart(bgcolorIndex) {
       if (chart && sampleChart) {
         bgcolor = bgcolors[bgcolorIndex];

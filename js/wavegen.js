@@ -2,6 +2,9 @@
 /* jshint node: true, browser: true, esnext: true */
 
 // TODO: Refactor to remove redundant code
+// TODO: Mathjs may pass slength as an array.
+// Also, need to investigate if Mathjs passes slength as a
+// string instead of number.
 
 "use strict";
 
@@ -85,6 +88,22 @@
         _sample += _step;
       }
 
+      return _samples;
+    },
+    
+    impulse: function impulse(slength, nzero) {
+      var _samples_length = slength !== undefined ? slength : defaults.slength,
+          _nzero = nzero !== undefined ? nzero : Math.trunc(_samples_length / 4);
+      var _samples = new Array(Number(_samples_length)).fill(0);
+      _samples[_nzero] = 1;
+      return _samples;
+    },
+    
+    step: function step(slength, nzero) {
+      var _samples_length = slength !== undefined ? slength : defaults.slength,
+          _nzero = nzero !== undefined ? nzero : Math.trunc(_samples_length / 4);
+      var _samples = new Array(Number(_samples_length)).fill(0);
+      _samples.fill(1, _nzero);
       return _samples;
     }
   }, {
