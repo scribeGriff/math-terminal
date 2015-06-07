@@ -1,10 +1,7 @@
 /* global math: false */
 /* jshint node: true, browser: true, esnext: true */
 
-// TODO: Refactor to remove redundant code
-// TODO: Mathjs may pass slength as an array.
-// Also, need to investigate if Mathjs passes slength as a
-// string instead of number.
+// TODO: Refactor to remove redundant code.
 
 "use strict";
 
@@ -22,7 +19,7 @@
     sinewave: function sinewave(amp, cycles, slength) {
       var _amplitude = amp !== undefined ? amp : defaults.amplitude,
           _cycles = cycles !== undefined ? cycles : defaults.cycles,
-          _samples_length = slength !== undefined ? slength : defaults.slength,
+          _samples_length = slength !== undefined ? Number(slength) : defaults.slength,
           _samples = new Array(_samples_length),
           _sample = 0,
           _step = Math.PI * 2 * _cycles / _samples_length;
@@ -38,7 +35,7 @@
     squarewave: function squarewave(amp, cycles, slength, scale) {
       var _amplitude = amp !== undefined ? amp : defaults.amplitude,
           _cycles = cycles !== undefined ? cycles : defaults.cycles,
-          _samples_length = slength !== undefined ? slength : defaults.slength,
+          _samples_length = slength !== undefined ? Number(slength) : defaults.slength,
           _amplify = scale !== undefined ? scale : defaults.scale,
           _samples = new Array(_samples_length),
           _sample = 0, _preamp,
@@ -60,7 +57,7 @@
     sawtoothwave: function sawtoothwave(amp, cycles, slength) {
       var _amplitude = amp !== undefined ? amp : defaults.amplitude,
           _cycles = cycles !== undefined ? cycles : defaults.cycles,
-          _samples_length = slength !== undefined ? slength : defaults.slength,
+          _samples_length = slength !== undefined ? Number(slength) : defaults.slength,
           _samples = new Array(_samples_length),
           _sample = 0,
           _scale = -(2 / Math.PI) * _amplitude,
@@ -77,7 +74,7 @@
     trianglewave: function trianglewave(amp, cycles, slength) {
       var _amplitude = amp !== undefined ? amp : defaults.amplitude,
           _cycles = cycles !== undefined ? cycles : defaults.cycles,
-          _samples_length = slength !== undefined ? slength : defaults.slength,
+          _samples_length = slength !== undefined ? Number(slength) : defaults.slength,
           _samples = new Array(_samples_length),
           _sample = 0,
           _scale = (2 / Math.PI) * _amplitude,
@@ -92,17 +89,17 @@
     },
     
     impulse: function impulse(slength, nzero) {
-      var _samples_length = slength !== undefined ? slength : defaults.slength,
+      var _samples_length = slength !== undefined ? Number(slength) : defaults.slength,
           _nzero = nzero !== undefined ? nzero : Math.trunc(_samples_length / 4);
-      var _samples = new Array(Number(_samples_length)).fill(0);
+      var _samples = new Array(_samples_length).fill(0);
       _samples[_nzero] = 1;
       return _samples;
     },
     
     step: function step(slength, nzero) {
-      var _samples_length = slength !== undefined ? slength : defaults.slength,
+      var _samples_length = slength !== undefined ? Number(slength) : defaults.slength,
           _nzero = nzero !== undefined ? nzero : Math.trunc(_samples_length / 4);
-      var _samples = new Array(Number(_samples_length)).fill(0);
+      var _samples = new Array(_samples_length).fill(0);
       _samples.fill(1, _nzero);
       return _samples;
     }

@@ -96,10 +96,10 @@
       return {
         complex: y, 
         real: re, 
-        imag:im,
-        polar,
-        r,
-        phi
+        imag: im,
+        polar: polar,
+        r: r,
+        phi: phi
       };
     },
 
@@ -129,7 +129,7 @@
     // for the user.
     getData: function getData(key, object) {
       return math.eval(key, object);
-    },
+    }
   }, {
     wrap: true
   });
