@@ -80,6 +80,7 @@
   "linepts",
   "curve",
   "curvepts",
+  "samples",
   "sawtoothwave",
   "sinewave",
   "square",

@@ -1,8 +1,6 @@
 /* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false, Awesomplete: false, Ink: false */
 /* jshint node: true, browser: true */
 
-// TODO: Chart.resize() and chart.update() fail miserably with increasing data size.
-
 /* globals */
 /* For debugging autocomplete and later perhaps as an option to disable. */
 var awesomplete = true;
@@ -155,10 +153,11 @@ var acIsOpen = false;
           color:colors[1]
         },
         {
-          type:"line",
+          type:"spline",
           value:"#data1#",
           line:{
-            color: bgcolor
+            color: bgcolor,
+            width: 1
           },
           item: {
             color: bgcolor,
@@ -176,23 +175,23 @@ var acIsOpen = false;
 
       if (min < 0) {
         if (max < 0) {
-          start = min;
+          start = Math.floor(min);
           end = 0;
         } else {
-          start = min;
-          end = max;
+          start = Math.floor(min);
+          end = Math.ceil(max);
         }
       } else {
         start = 0;
-        end = max;
+        end = Math.ceil(max);
       }
 
       chart = webix.ui({
-        container:"chart-div",
-        view:"chart",
-        type:"bar",
-        barWidth:4,
-        xAxis:{
+        container: "chart-div",
+        view: "chart",
+        type: "bar",
+        preset: "stick",
+        xAxis: {
           template: function(obj){
             return (obj.data0 % mod ? "" : obj.data0);
           },
@@ -201,7 +200,7 @@ var acIsOpen = false;
           },
           lineColor: "DimGray"
         },
-        yAxis:{
+        yAxis: {
           start: start,
           end: end,
           step: 1,

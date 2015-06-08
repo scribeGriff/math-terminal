@@ -36,30 +36,31 @@
   math.import({
 
     filter1d: function filter1d(b, a, x, z) {
-      var ai, bi, y;
+      var ai, bi, y, n, alen, blen;
+      alen = a.length;
+      blen = b.length;
       if (a[0] === 0) {
         throw new RangeError("The coefficient a[0] can not be 0.");
       }
-      var n = math.max(a.length, b.length);
+      n = Math.max(alen, blen);
       if (z === undefined) {
-        z = math.zeros(n);
+        z = new Array(n).fill(0);
       } else if (z.length != n) {
         throw new RangeError("The intial condition sequence z is the wrong size.");
       }
 
-      if (a.length > b.length) {
-        bi = b.concat(new Array(a.length - b.length).fill(0));
+      if (alen > blen) {
+        bi = b.concat(new Array(alen - blen).fill(0));
         ai = a.slice();
-      } else if (b.length > a.length) {
-        ai = a.concat(new Array(a.length - b.length).fill(0));
+      } else if (blen > alen) {
+        ai = a.concat(new Array(alen - blen).fill(0));
         bi = b.slice();
       } else {
         ai = a.slice();
         bi = b.slice();
       }
 
-      //if (z === null) z = math.zeros(n);
-      y = math.zeros(x.length);
+      y = new Array(x.length).fill(0);
       for (var i = 0; i < y.length; i++) {
         y[i] = bi[0] * x[i] + z[0];
         for (var j = 1; j < n; j++) {
@@ -73,10 +74,10 @@
     },
     // Helper functions to retrieve arrays from
     // multiple return objects.
-    getResponse: function getReal(complexObject) {
+    getResponse: function getResponse(complexObject) {
       return math.eval("response", complexObject);
     },
-    getConditions: function getImag(complexObject) {
+    getConditions: function getConditions(complexObject) {
       return math.eval("conditions", complexObject);
     }
   }, {
