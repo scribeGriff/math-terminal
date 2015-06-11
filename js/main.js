@@ -139,7 +139,7 @@ var acIsOpen = false;
     },
     // Draws a data point chart using bar and points
     samples: function sequence(args) {
-      var data, max, min, start, end, mod;
+      var data, max, min, start, end, mod, step;
 
       if (chart) chart.destructor();
 
@@ -185,6 +185,10 @@ var acIsOpen = false;
         start = 0;
         end = Math.ceil(max);
       }
+      
+      // TODO: This needs to be more robust.
+      // Need to ensure the origin at 0 is included.
+      step = Math.trunc(Math.abs(end - start) / 10);
 
       chart = webix.ui({
         container: "chart-div",
@@ -203,7 +207,7 @@ var acIsOpen = false;
         yAxis: {
           start: start,
           end: end,
-          step: 1,
+          step: step,
           lineColor: "DimGray"
         },
         series: sampleSeries,
@@ -370,7 +374,7 @@ var acIsOpen = false;
         if (j >= arguments[k].length) {
           buffer[k] = null;
         } else {
-          buffer[k] = arguments[k][j];
+          buffer[k] = parseFloat(arguments[k][j]);
         }
       }
       data[j] = buffer;

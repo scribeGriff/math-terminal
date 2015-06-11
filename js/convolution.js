@@ -43,6 +43,7 @@
     conv: function conv(xd, hd, xn, hn) {
       
       var xdata, hdata, xlen, hlen, yindex, ytime, yfft, xfft, hfft, yifft;
+      var infoString = "Use getConvY(varName) and getConvN(varName)";
 
       // If a time vector hasn't been defined, define one that starts from 0 
       if (xn === undefined) xn = new Array(xd.length).fill(0).map(function (x, i) { return i; });
@@ -57,12 +58,11 @@
       hlen = hdata.length;
       
       yindex = xn.indexOf(0) + hn.indexOf(0);
-      //ytime = vec(-yindex, xlen - 1 + hlen - 1 - yindex);
-      ytime = new Array(xlen + hlen - 2).fill(0).map(function (x, i) { return i - yindex; });
+      ytime = new Array(xlen + hlen - 1).fill(0).map(function (x, i) { return i - yindex; });
       
       // Pad data with zeros to length required to compute circular convolution.
-      xdata.concat(new Array(hlen - 1).filled(0));
-      hdata.concat(new Array(xlen - 1).filled(0));
+      xdata = xdata.concat(new Array(hlen - 1).fill(0));
+      hdata = hdata.concat(new Array(xlen - 1).fill(0));
       
       xlen = xdata.length;
 
@@ -80,21 +80,24 @@
       // Take the inverse fft to find y(n).
       yifft = math.ifft(yfft);
       
-      return yifft;
-
-      /*if (yifft != null) {
-        // Check if solution is int by rounding.
-        if (yifft.data.every((element)
-                             => element.cround2.real == element.cround2.real.toInt())) {
-          isInt = true;
-        }
-        // Convert complex list to real and format results
-        var y = toReal(yifft.data, isInt);
-        return new ConvResults(sequence(y), sequence(ytime));
-      } else {
-        return null;
-      }*/
+      return {
+        y: yifft,
+        n: ytime,
+        info: infoString
+      };
+    },
+    // Helper functions to retrieve arrays from
+    // multiple return objects.
+    getConvY: function getConvY(complexObject) {
+      return math.eval("y", complexObject);
+    },
+    getConvN: function getConvN(complexObject) {
+      return math.eval("n", complexObject);
+    },
+    getInfo: function getInfo(complexObject) {
+      return math.eval("info", complexObject);
     }
+    
 
 
   } , {
