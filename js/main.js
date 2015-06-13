@@ -24,7 +24,8 @@ var acIsOpen = false;
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
       matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|samples.*|xaxis.*|yaxis.*$/,
-      matchWaveGenCmds = /sine.*$/;
+      matchWaveGenCmds = /sinewave.*|squarewave.*|sawtoothwave.*|trianglewave.*|impulse.*|step.*$/,
+      unformatedResults = /info.*|getData.*$/;
 
   var bgcolors = {
     monokai: "#272822",
@@ -44,6 +45,8 @@ var acIsOpen = false;
     '<tr><td>clear vars</td><td class="answer">clears workspace variables</td></tr>',
     '<tr><td>clear all</td><td class="answer">clears window and variables</td></tr>',
     '<tr><td>clear chart</td><td class="answer">clears current chart</td></tr>',
+    '<tr><td>info(<em>var</em>)</td><td class="answer">provides names (keys) of returned values for a <em>var</em> that contains multiple values</td></tr>',
+    '<tr><td>getData(<em>"name", var</em>)</td><td class="answer">retrieves <em>name</em> value for a <em>var</em> that contains multiple values</td></tr>',
     '<tr><td>help</td><td class="answer">displays this help screen</td></tr>',
     '<tr><td>help <em>command</em></td><td class="answer">displays Math.js <em>command</em> documentation</td></tr>',
     '<tr><td>precision</td><td class="answer">displays number of significant digits in formatted answer</td></tr>',
@@ -185,7 +188,7 @@ var acIsOpen = false;
         start = 0;
         end = Math.ceil(max);
       }
-      
+
       // TODO: This needs to be more robust.
       // Need to ensure the origin at 0 is included.
       step = Math.trunc(Math.abs(end - start) / 10);
@@ -244,6 +247,16 @@ var acIsOpen = false;
         chart.define("series", sampleSeries);
         chart.refresh();
       }
+    },
+    // This will be a general purpose getter for each function that returns
+    // an object.  Each object would have an info field.
+    info: function info(complexObject) {
+      return math.eval("info", complexObject);
+    },
+    // For functions that return multiple values, getData
+    // retrieves and returns each value.
+    getData: function getData(key, object) {
+      return math.eval(key, object);
     }
   }, {
     wrap: true
@@ -265,6 +278,7 @@ var acIsOpen = false;
             } else if (args[0] === 'all') {
               parser.clear();
               terminal.clear();
+              terminal.clearWelcome();
               if (chart) {
                 chart.destructor();
                 sampleChart = false;
@@ -281,6 +295,7 @@ var acIsOpen = false;
             }
           }
           terminal.clear();
+          terminal.clearWelcome();
           return '';
 
         case 'help':
@@ -351,8 +366,12 @@ var acIsOpen = false;
             // Check for Katex format of solution.
             try {
               formres = math.format(result, precision);
-              katstr = katex.renderToString(formres);
-              return preans + katstr + sufans;
+              if (cmd.match(unformatedResults)) {
+                return preans + formres + sufans;
+              } else {
+                katstr = katex.renderToString(formres);
+                return preans + katstr + sufans;
+              }
             } catch(error) {
               return preans + formres + sufans;
             }

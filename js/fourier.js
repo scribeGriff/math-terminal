@@ -61,7 +61,8 @@
           r = new Array(L),
           phi = new Array(L),
           _kval, _cycles, _fraction,
-          N, coeff, q, kth, wk, kp;
+          N, coeff, q, kth, wk, kp,
+          infoString = 'The <em>myFsps = fsps(x, n)</em> function returns its results in a number of formats.  Retrieve your desired output with <em>y = getData(result, myFsps)</em> where <em>result</em> can be "complex", "real" for just the real component, "imag" for just the imaginary component, "polar" for polar format, "r" and "phi" for the radius and angle results respectively';
 
       _kval = kval !== undefined ? kval : 3;
       _cycles = cycles !== undefined ? cycles : 1;
@@ -86,49 +87,15 @@
         phi[n] = polar[n].phi;
       }
 
-      // To retrieve the data from within the console:
-      // fs = fsps(signal);
-      // fsreal = eval("real", fs);
-      // fsimag = eval("imag", fs);
-      // fscomplex = eval("complex", fs);
-      // or use the wrappers below:
-      // fsreal = getReal(fs);
       return {
         complex: y, 
         real: re, 
         imag: im,
         polar: polar,
         r: r,
-        phi: phi
+        phi: phi,
+        info: infoString
       };
-    },
-
-    // Helper functions to retrieve arrays from
-    // multiple return objects.
-    getReal: function getReal(complexObject) {
-      return math.eval("real", complexObject);
-    },
-    getImag: function getImag(complexObject) {
-      return math.eval("imag", complexObject);
-    },
-    getComplex: function getComplex(complexObject) {
-      return math.eval("complex", complexObject);
-    },
-    getR: function getR(complexObject) {
-      return math.eval("r", complexObject);
-    },
-    getPhi: function getPhi(complexObject) {
-      return math.eval("phi", complexObject);
-    },
-    getPolar: function getPolar(complexObject) {
-      return math.eval("polar", complexObject);
-    },
-    // A default function that could replace
-    // all of the above, but from a console perspective, 
-    // individual functions would seem to be simpler
-    // for the user.
-    getData: function getData(key, object) {
-      return math.eval(key, object);
     }
   }, {
     wrap: true

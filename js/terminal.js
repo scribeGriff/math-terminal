@@ -13,7 +13,7 @@
     if (!containerID) return;
 
     var defaults = {
-      welcome: '',
+      welcome: 'Welcome to The Math Console.<br>To get started, type help at the prompt.',
       prompt: '',
       separator: '<i class="fa fa-angle-right"></i>',
       theme: 'monokai'
@@ -25,7 +25,7 @@
     options.separator = options.separator || defaults.separator;
     options.theme = options.theme || defaults.theme;
 
-    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|line.*|linepts.*|curve.*|curvepts.*|samples.*|xaxis.*|yaxis.*$/i;
+    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|line.*|linepts.*|curve.*|curvepts.*|samples.*|xaxis.*|yaxis.*|info.*|getData.*$/i;
     var matchConsoleCmds = /^help.*|clear.*|theme.*|precision.*$/i;
 
     var extensions = Array.prototype.slice.call(arguments, 2);
@@ -284,6 +284,9 @@
       },
       getTheme: function() {
         return options.theme; 
+      },
+      clearWelcome: function() {
+        options.welcome = '';
       }
     };
   };

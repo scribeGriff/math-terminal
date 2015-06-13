@@ -42,8 +42,8 @@
 
     conv: function conv(xd, hd, xn, hn) {
       
-      var xdata, hdata, xlen, hlen, yindex, ytime, yfft, xfft, hfft, yifft;
-      var infoString = "Use getConvY(varName) and getConvN(varName)";
+      var xdata, hdata, xlen, hlen, yindex, ytime, yfft, xfft, hfft, yifft,
+          infoString = 'The <em>myConv = conv(x, n)</em> function returns the results sequence, "y", retrieved with <em>y = getData("y", myConv)</em>, and the time order sequence "n", retrieved with <em>n = getData("n", myConv)</em>';
 
       // If a time vector hasn't been defined, define one that starts from 0 
       if (xn === undefined) xn = new Array(xd.length).fill(0).map(function (x, i) { return i; });
@@ -85,21 +85,7 @@
         n: ytime,
         info: infoString
       };
-    },
-    // Helper functions to retrieve arrays from
-    // multiple return objects.
-    getConvY: function getConvY(complexObject) {
-      return math.eval("y", complexObject);
-    },
-    getConvN: function getConvN(complexObject) {
-      return math.eval("n", complexObject);
-    },
-    getInfo: function getInfo(complexObject) {
-      return math.eval("info", complexObject);
     }
-    
-
-
   } , {
     wrap: true
   });

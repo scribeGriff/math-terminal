@@ -18,8 +18,8 @@
  *     b = [1];
  *     a = [1, -1, 0.9];
  *     h = filter1d(b, a, x);
- *     y = getResponse(h);  // The filter response.
- *     z = getConditions(h);  // The final conditions of the filter.
+ *     y = getData("y", h);  // The filter response.
+ *     z = getData("z", h);  // The final conditions of the filter.
  *     s = math.sum(math.abs(y)); // The magnitude of the response.
  *
  * TODO: Normalize all coefficients if a[0] not equal to 1.
@@ -36,7 +36,8 @@
   math.import({
 
     filter1d: function filter1d(b, a, x, z) {
-      var ai, bi, y, n, alen, blen;
+      var ai, bi, y, n, alen, blen,
+          infoString = 'The <em>myFilter = filter1d(b, a, x)</em> function returns the results sequence, "y", retrieved with <em>y = getData("y", myFilter)</em>, and the final condition sequence "z", retrieved with <em>z = getData("z", myFilter)</em>';
       alen = a.length;
       blen = b.length;
       if (a[0] === 0) {
@@ -68,17 +69,10 @@
         }
       }
       return {
-        response: y,
-        conditions: z
+        y: y,
+        z: z,
+        info: infoString
       };
-    },
-    // Helper functions to retrieve arrays from
-    // multiple return objects.
-    getResponse: function getResponse(complexObject) {
-      return math.eval("response", complexObject);
-    },
-    getConditions: function getConditions(complexObject) {
-      return math.eval("conditions", complexObject);
     }
   }, {
     wrap: true
