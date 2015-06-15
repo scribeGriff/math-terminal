@@ -278,8 +278,10 @@ var acIsOpen = false;
     updateSampleChart: function updateSampleChart(bgcolorIndex) {
       if (chart && sampleChart) {
         bgcolor = bgcolors[bgcolorIndex];
-        sampleSeries[1].line.color = bgcolor;
-        sampleSeries[1].item.color = bgcolor;
+        //sampleSeries[1].line.color = bgcolor;
+        //sampleSeries[1].item.color = bgcolor;
+        sampleSeries[0].line.color = bgcolor;
+        sampleSeries[0].item.color = bgcolor;
         chart.define("series", sampleSeries);
         chart.refresh();
       }
