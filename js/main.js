@@ -25,7 +25,7 @@ var acIsOpen = false;
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
       matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|samples.*|xaxis.*|yaxis.*$/,
       matchWaveGenCmds = /sinewave.*|squarewave.*|sawtoothwave.*|trianglewave.*|impulse.*|step.*$/,
-      unformatedResults = /info.*|getData.*$/;
+      unformatedResults = /info.*$/;
 
   var bgcolors = {
     monokai: "#272822",
@@ -142,7 +142,7 @@ var acIsOpen = false;
     },
     // Draws a data point chart using bar and points
     samples: function sequence(args) {
-      var data, max, min, start, end, mod, step;
+      var data, max, min, start, end, mod, step, templ;
 
       if (chart) chart.destructor();
 
@@ -150,7 +150,11 @@ var acIsOpen = false;
 
       bgcolor = bgcolors[terminal.getTheme()];
 
-      sampleSeries = [
+      // this draws the bar chart first, and the points second,
+      // so the spline lies on top of the bars.  Visually, the order
+      // could become irrelevant when added multiple plots on the same
+      // chart, so I have left this here for now.
+      /*sampleSeries = [
         {
           value:"#data1#",
           color:colors[1]
@@ -168,51 +172,83 @@ var acIsOpen = false;
             radius: 4
           }
         }
+      ];*/
+
+      sampleSeries = [
+        {
+          value:"#data1#",
+          line:{
+            color: bgcolor,
+            width: 1
+          },
+          item: {
+            color: bgcolor,
+            borderColor: colors[1],
+            radius: 4
+          }
+        },
+        {
+          type:"bar",
+          barWidth: 3,
+          value:"#data1#",
+          color:colors[1]
+        }
       ];
 
       data = parseData.apply(null, arguments);
-      mod = Math.trunc(data.length / 5);
+      mod = Math.trunc(data.length / 10);
+      if (mod === 1) {
+        templ = "#data0#";
+      } else {
+        templ = function(obj) {
+          return (obj.data0 % mod ? "" : obj.data0);
+        };
+      }
 
       max = math.max(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])));
       min = math.min(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])));
 
       if (min < 0) {
         if (max < 0) {
-          start = Math.floor(min);
+          start = Math.floor((min - 1) / 10) * 10;
           end = 0;
         } else {
-          start = Math.floor(min);
-          end = Math.ceil(max);
+          start = Math.floor((min - 1) / 10) * 10;
+          end = Math.ceil((max + 1) / 10) * 10;
         }
       } else {
         start = 0;
-        end = Math.ceil(max);
+        end = Math.ceil((max + 1) / 10) * 10;
       }
 
-      // TODO: This needs to be more robust.
-      // Need to ensure the origin at 0 is included.
-      step = Math.trunc(Math.abs(end - start) / 10);
+      // Scaling the power of the range to provide a step size.
+      // The number 5 means that half way through a power of 10, the scale 
+      // will move to the next largest step size.
+      step = Math.pow(10, Math.trunc(Math.log10(Math.abs(end - start) * 5)) - 1);
 
       chart = webix.ui({
         container: "chart-div",
         view: "chart",
-        type: "bar",
-        preset: "stick",
+        type: "spline",
         xAxis: {
-          template: function(obj){
-            return (obj.data0 % mod ? "" : obj.data0);
-          },
-          lines: function(obj){
-            return (obj.data0 % mod ? false:true);
-          },
-          lineColor: "DimGray"
+          //template: function(obj) {
+            //return (obj.data0 % mod ? "" : obj.data0);
+          //},
+          template: templ,
+          lines: false
         },
         yAxis: {
           start: start,
           end: end,
           step: step,
-          lineColor: "DimGray"
+          lines: false
         },
+        tooltip:{
+          template:function(obj) {
+            return (Math.round(obj.data1));
+          }
+        },
+        eventRadius: 10,
         series: sampleSeries,
         origin: 0,
         datatype: "jsarray",
