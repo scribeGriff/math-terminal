@@ -1,5 +1,5 @@
 /* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false, Awesomplete: false, Ink: false */
-/* jshint node: true, browser: true */
+/* jshint node: true, browser: true, loopfunc: true */
 
 /* globals */
 /* For debugging autocomplete and later perhaps as an option to disable. */
@@ -20,7 +20,7 @@ var acIsOpen = false;
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"],
       chart = null, bgcolor, sampleSeries,
       points, cmdinput, autocompleter,
-      parseData, createChart, terminal;
+      parseData, createChart, terminal, sampleChartType;
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
       matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|samples.*|xaxis.*|yaxis.*$/,
@@ -141,8 +141,9 @@ var acIsOpen = false;
       });
     },
     // Draws a data point chart using bar and points
-    samples: function sequence(args) {
-      var data, max, min, start, end, mod, step, templ;
+    samples: function samples(args) {
+      var data, max, min, start, end, mod, 
+          step, templ, len;
 
       if (chart) chart.destructor();
 
@@ -150,53 +151,9 @@ var acIsOpen = false;
 
       bgcolor = bgcolors[terminal.getTheme()];
 
-      // this draws the bar chart first, and the points second,
-      // so the spline lies on top of the bars.  Visually, the order
-      // could become irrelevant when added multiple plots on the same
-      // chart, so I have left this here for now.
-      /*sampleSeries = [
-        {
-          value:"#data1#",
-          color:colors[1]
-        },
-        {
-          type:"spline",
-          value:"#data1#",
-          line:{
-            color: bgcolor,
-            width: 1
-          },
-          item: {
-            color: bgcolor,
-            borderColor: colors[1],
-            radius: 4
-          }
-        }
-      ];*/
-
-      sampleSeries = [
-        {
-          value:"#data1#",
-          line:{
-            color: bgcolor,
-            width: 1
-          },
-          item: {
-            color: bgcolor,
-            borderColor: colors[1],
-            radius: 4
-          }
-        },
-        {
-          type:"bar",
-          barWidth: 3,
-          value:"#data1#",
-          color:colors[1]
-        }
-      ];
-
       data = parseData.apply(null, arguments);
       mod = Math.trunc(data.length / 10);
+
       if (mod === 1) {
         templ = "#data0#";
       } else {
@@ -221,6 +178,51 @@ var acIsOpen = false;
         end = Math.ceil((max + 1) / 10) * 10;
       }
 
+      sampleSeries = new Array(data[0].length - 1);
+      len = data[0].length;
+
+      if (len < 3) {
+        sampleChartType = "spline";
+        sampleSeries = [
+          {
+            value:"#data1#",
+            line:{
+              color: bgcolor,
+              width: 1
+            },
+            item: {
+              color: bgcolor,
+              borderColor: colors[1],
+              radius: 4
+            }
+          },
+          {
+            type:"bar",
+            barWidth: 3,
+            value:"#data1#",
+            color:colors[1],
+            tooltip:{
+              template: function(obj) {
+                return (Math.round(obj.data1));
+              }
+            }
+          }
+        ];
+      } else {
+        sampleChartType = "bar";
+        for (var i = 1; i < len; i++) {
+          sampleSeries[i - 1] = {
+            value:"#data" + i + "#",
+            color:colors[i],
+            tooltip:{
+              template: function(obj) {
+                return (Math.round(obj["data" + i]));
+              }
+            }
+          };
+        }
+      }
+
       // Scaling the power of the range to provide a step size.
       // The number 5 means that half way through a power of 10, the scale 
       // will move to the next largest step size.
@@ -229,11 +231,10 @@ var acIsOpen = false;
       chart = webix.ui({
         container: "chart-div",
         view: "chart",
-        type: "spline",
+        type: sampleChartType,
+        barWidth: 3,
         xAxis: {
-          //template: function(obj) {
-            //return (obj.data0 % mod ? "" : obj.data0);
-          //},
+          //color: need to change based on theme
           template: templ,
           lines: false
         },
@@ -243,17 +244,16 @@ var acIsOpen = false;
           step: step,
           lines: false
         },
-        tooltip:{
-          template:function(obj) {
-            return (Math.round(obj.data1));
-          }
-        },
         eventRadius: 10,
         series: sampleSeries,
         origin: 0,
         datatype: "jsarray",
         data: data
       });
+      
+      if (sampleChartType === "bar") {
+        chart.add({barWidth: 3});
+      } 
 
       webix.event(window, "resize", function () {
         chart.adjust();
@@ -276,10 +276,8 @@ var acIsOpen = false;
     // Update sample chart so line remains transparent to user.
     // TODO: Accomodate multiple plots.
     updateSampleChart: function updateSampleChart(bgcolorIndex) {
-      if (chart && sampleChart) {
+      if (chart && sampleChart && sampleChartType === "spline") {
         bgcolor = bgcolors[bgcolorIndex];
-        //sampleSeries[1].line.color = bgcolor;
-        //sampleSeries[1].item.color = bgcolor;
         sampleSeries[0].line.color = bgcolor;
         sampleSeries[0].item.color = bgcolor;
         chart.define("series", sampleSeries);
