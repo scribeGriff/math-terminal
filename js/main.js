@@ -143,7 +143,7 @@ var acIsOpen = false;
     // Draws a data point chart using bar and points
     samples: function samples(args) {
       var data, max, min, start, end, mod, 
-          step, templ, len;
+          step, templ, len, sampleData, sampleLegend;
 
       if (chart) chart.destructor();
 
@@ -152,6 +152,7 @@ var acIsOpen = false;
       bgcolor = bgcolors[terminal.getTheme()];
 
       data = parseData.apply(null, arguments);
+
       mod = Math.trunc(data.length / 10);
 
       if (mod === 1) {
@@ -179,14 +180,16 @@ var acIsOpen = false;
       }
 
       sampleSeries = new Array(data[0].length - 1);
+      sampleLegend = new Array(data[0].length - 1);
       len = data[0].length;
+      console.log(data);
 
       if (len < 3) {
         sampleChartType = "spline";
         sampleSeries = [
           {
             value:"#data1#",
-            line:{
+            line: {
               color: bgcolor,
               width: 1
             },
@@ -194,31 +197,32 @@ var acIsOpen = false;
               color: bgcolor,
               borderColor: colors[1],
               radius: 4
+            },
+            tooltip: {
+              template: function(obj) {
+                return (Math.round(obj.data1));
+              }
             }
           },
           {
             type:"bar",
             barWidth: 3,
             value:"#data1#",
-            color:colors[1],
-            tooltip:{
-              template: function(obj) {
-                return (Math.round(obj.data1));
-              }
-            }
+            color:colors[1]
           }
         ];
       } else {
         sampleChartType = "bar";
         for (var i = 1; i < len; i++) {
+          sampleData = "#data" + i + "#";
           sampleSeries[i - 1] = {
-            value:"#data" + i + "#",
-            color:colors[i],
-            tooltip:{
-              template: function(obj) {
-                return (Math.round(obj["data" + i]));
-              }
-            }
+            value: sampleData,
+            color: colors[i],
+            label: sampleData
+          };
+          sampleLegend[i - 1] = {
+            text: "ydata " + i,
+            color: colors[i]
           };
         }
       }
@@ -232,7 +236,7 @@ var acIsOpen = false;
         container: "chart-div",
         view: "chart",
         type: sampleChartType,
-        barWidth: 3,
+        preset: "alpha",
         xAxis: {
           //color: need to change based on theme
           template: templ,
@@ -249,11 +253,23 @@ var acIsOpen = false;
         origin: 0,
         datatype: "jsarray",
         data: data
-      });
-      
+      }); 
+
       if (sampleChartType === "bar") {
-        chart.add({barWidth: 3});
-      } 
+        chart.define({
+          legend:{
+            values:sampleLegend,
+            valign:"top",
+            align:"right",
+            width:90,
+            layout:"y",
+            marker: {
+              type: "round"
+            }
+          }
+        });
+        chart.refresh();
+      }
 
       webix.event(window, "resize", function () {
         chart.adjust();
@@ -274,7 +290,6 @@ var acIsOpen = false;
       }
     },
     // Update sample chart so line remains transparent to user.
-    // TODO: Accomodate multiple plots.
     updateSampleChart: function updateSampleChart(bgcolorIndex) {
       if (chart && sampleChart && sampleChartType === "spline") {
         bgcolor = bgcolors[bgcolorIndex];

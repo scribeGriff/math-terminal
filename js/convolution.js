@@ -44,6 +44,7 @@
       
       var xdata, hdata, xlen, hlen, yindex, ytime, yfft, xfft, hfft, yifft,
           infoString = 'The <em>myConv = conv(x, n)</em> function returns the results sequence, "y", retrieved with <em>y = getData("y", myConv)</em>, and the time order sequence "n", retrieved with <em>n = getData("n", myConv)</em>';
+      const CSMALL = 9;
 
       // If a time vector hasn't been defined, define one that starts from 0 
       if (xn === undefined) xn = new Array(xd.length).fill(0).map(function (x, i) { return i; });
@@ -78,7 +79,7 @@
         }
 
       // Take the inverse fft to find y(n).
-      yifft = math.ifft(yfft);
+      yifft = math.round(math.ifft(yfft), CSMALL);
       
       return {
         y: yifft,
