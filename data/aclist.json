@@ -41,6 +41,7 @@
   "csc",
   "csch",
   "cube",
+  "deconv",
   "deepEqual",
   "det",
   "diag",
