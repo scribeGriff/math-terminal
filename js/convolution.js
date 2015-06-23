@@ -6,6 +6,7 @@
 (function () {
 
   math.import({
+
     /**
      * Perform linear convolution of two signals using N point circular convolution.
      * Accepts position information.  Returns the convolved
@@ -41,12 +42,24 @@
 
       var xdata, hdata, xlen, hlen, yindex, ytime, yfft, xfft, hfft, yifft,
           infoString = 'The <em>myConv = conv(x, n)</em> function returns the results sequence, "y", retrieved with <em>y = getData("y", myConv)</em>, and the time order sequence "n", retrieved with <em>n = getData("n", myConv)</em>';
-      
-      const CSMALL = 9;
+
+      const CSMALL = 12;
 
       // If a time vector hasn't been defined, define one that starts from 0 
-      if (xn === undefined) xn = new Array(xd.length).fill(0).map(function (x, i) { return i; });
-      if (hn === undefined) hn = new Array(hd.length).fill(0).map(function (x, i) { return i; });
+      if (xn === undefined) {
+        xn = new Array(xd.length).fill(0).map(function (x, i) { 
+          return i; 
+        });
+      } else {
+        xn = math.number(xn);
+      }
+      if (hn === undefined) {
+        hn = new Array(hd.length).fill(0).map(function (x, i) { 
+          return i; 
+        });
+      } else {
+        hn = math.number(hn);
+      }
 
       // Create a local copy of each list.  This is necessary
       // in case xd and hd are the same object.
@@ -57,7 +70,6 @@
       hlen = hdata.length;
 
       yindex = xn.indexOf(0) + hn.indexOf(0);
-      //ytime = vec(-yindex, xLength - 1 + hLength - 1 - yindex);
       ytime = new Array(xlen + hlen - 1).fill(0).map(function (x, i) { return i - yindex; });
 
       // Pad data with zeros to length required to compute circular convolution.
@@ -86,20 +98,71 @@
         info: infoString
       };
     },
-    
+
+    /**
+     * Perform the deconvolution of two signals using polynomial long division.
+     *
+     *  Performs a deconvolution (polynomial long division) of numerator and
+     * denominator.  Accepts position information.  Returns quotient, remainder,
+     * and position information for each.
+     *
+     * Basic usage:
+     *
+     *     num = [1, 1, 1, 1, 1, 1];
+     *     den = [1, 2, 1];
+     *     qrem = deconv(num, den);
+     *
+     * First coefficient assumed to be associated with highest power. For example,
+     * if the numerator was given as 1 + 2z^-1 + 2z^-2, then:
+     *
+     *     var num = [1, 2, 2];
+     *
+     * where, by default, the polynomials are assumed to be causal. Both indices
+     * assume the first element in a list is at i = 0;
+     * 
+     * For non-causal polynomials, the function accepts two optional parameters:
+     *
+     * * nn is the position array for the numerator
+     * * dn is the position array for the denominator
+     *
+     * Example optional usage:
+     *
+     * // num = z^2 + z + 1 + z^-1 + z^-2 +z^-3
+     * num = [1, 1, 1, 1, 1, 1];
+     * nn = range(-2, 3); // The zero index is at position 2 in num.
+     * // den = z + 2 + z^-1
+     * den = [1, 2, 1];
+     * dn = range(-1, 1);  // The zero index is at position 1 in den.
+     * qrem = deconv(num, den, nn, dn);
+     *
+     * Note that the sequences do not need to be the same length.
+    */
+
     deconv: function deconv(numerator, denominator, numn, denn) {
       var num, den, dlen, nlen, ddeg, ndeg, qindex, q, qtime, rtime, r,
-          infoString = 'The <em>myConv = conv(x, n)</em> function returns the results sequence, "y", retrieved with <em>y = getData("y", myConv)</em>, and the time order sequence "n", retrieved with <em>n = getData("n", myConv)</em>';
-      
-      const CSMALL = 9;
+          infoString = 'The <em>myDeconv = deconv(numerator, denominator)</em> function returns the quotient, "q", retrieved with <em>q = getData("q", myDeconv)</em>, and the remainder "r", retrieved with <em>r = getData("r", myDeconv)</em>.  Time information is also available as "qtime" and "rtime".';
+
+      const CSMALL = 12;
 
       // If a time vector hasn't been defined, define one that starts from 0 
-      if (numn === undefined) numn = new Array(num.length).fill(0).map(function (x, i) { return i; });
-      if (denn === undefined) denn = new Array(den.length).fill(0).map(function (x, i) { return i; });
-      
-      num = numerator.slice();
-      den = denominator.slice();
-      
+      if (numn === undefined) {
+        numn = new Array(num.length).fill(0).map(function (x, i) { 
+          return i; 
+        });
+      } else {
+        numn = math.number(numn);
+      }
+      if (denn === undefined) {
+        denn = new Array(den.length).fill(0).map(function (x, i) { 
+          return i; 
+        });
+      } else {
+        denn = math.number(denn);
+      }
+
+      num = math.number(numerator.slice());
+      den = math.number(denominator.slice());
+
       dlen = den.length;
       nlen = num.length;
       ddeg = dlen - 1;
@@ -131,14 +194,12 @@
         qtime = new Array(q.length - 1).fill(0).map(function(x, i) { return i - qindex; });
       }
       return {
-          q: q,
-          r: r, 
-          qtime: qtime, 
-          rtime: rtime, 
-          den: den, 
-          denn: denn,
-          info: infoString
-        };
+        q: q,
+        r: r, 
+        qtime: qtime, 
+        rtime: rtime,
+        info: infoString
+      };
     }
   }, {
     wrap: true
