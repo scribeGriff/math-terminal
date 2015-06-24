@@ -146,14 +146,14 @@
 
       // If a time vector hasn't been defined, define one that starts from 0 
       if (numn === undefined) {
-        numn = new Array(num.length).fill(0).map(function (x, i) { 
+        numn = new Array(numerator.length).fill(0).map(function (x, i) { 
           return i; 
         });
       } else {
         numn = math.number(numn);
       }
       if (denn === undefined) {
-        denn = new Array(den.length).fill(0).map(function (x, i) { 
+        denn = new Array(denominator.length).fill(0).map(function (x, i) { 
           return i; 
         });
       } else {
@@ -175,15 +175,17 @@
       if (ndeg < ddeg) {
         q = [0];
         qtime = [0];
-        rtime = new Array(ndeg).fill(0).map(function(x, i) { return i - numn.indexOf(0); });
+        rtime = new Array(ndeg + 1).fill(0).map(function(x, i) { return i - numn.indexOf(0); });
       } else {
         q = new Array(ndeg - ddeg + 1);
-        rtime = new Array(ndeg - ddeg + numn.indexOf(0)).fill(0).map(function(x, i) { return i - numn.indexOf(0); });
+        rtime = new Array(ndeg - ddeg + numn.indexOf(0) + 1).fill(0).map(function(x, i) { return i - numn.indexOf(0); });
 
         /// Perform the long division.
         for (var k = 0; k <= ndeg - ddeg; k++) {
           q[k] = r[k] / den[0];
-          if (q[k] == q[k].toInt()) q[k] = q[k].toInt();
+          if (q[k] === Math.trunc(q[k])) {
+            q[k] = Math.trunc(q[k]);
+          }
           for (var j = k + 1; j <= ddeg + k; j++) {
             r[j] -= q[k] * den[j - k];
           }
@@ -191,7 +193,7 @@
         for (var l = 0; l <= ndeg - ddeg; l++) {
           r[l] = 0;
         }
-        qtime = new Array(q.length - 1).fill(0).map(function(x, i) { return i - qindex; });
+        qtime = new Array(q.length).fill(0).map(function(x, i) { return i - qindex; });
       }
       return {
         q: q,
