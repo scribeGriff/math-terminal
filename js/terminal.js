@@ -3,7 +3,7 @@
    The original license can be found here: https://github.com/SDA/terminal/blob/master/LICENSE
 */
 
-/* global math:false, katex: false, awesomplete: false, acIsOpen: false */
+/* global math:false, katex: false, awesomplete: false, acIsOpen: false, awesompleteDivUl: false */
 /* jshint node: true, browser: true */
 
 (function (global, undefined) {
@@ -262,6 +262,14 @@
         _inputLine.scrollIntoView({ block: "end", behavior: "smooth" });
       } else {
         _inputLine.scrollIntoView();
+      }
+      
+      if (awesompleteDivUl !== null) {
+        if (_terminal.scrollHeight - _terminal.scrollTop === _terminal.clientHeight) {
+          awesompleteDivUl.classList.remove('bottom50');
+        } else {
+          awesompleteDivUl.classList.add('bottom50');
+        }
       }
     }
 

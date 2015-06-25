@@ -1,4 +1,4 @@
-/* global math: false, katex: false, Terminal: false, document: false, vis: false, webix: false, Awesomplete: false, Ink: false */
+/* global math: false, katex: false, Terminal: false, document: false, webix: false, Awesomplete: false, Ink: false */
 /* jshint node: true, browser: true, loopfunc: true */
 
 /* globals */
@@ -6,6 +6,9 @@
 var awesomplete = true;
 /* Detect when autocomplete menu is open to prevent terminal behavior on Enter key. */
 var acIsOpen = false;
+/* For terminal to detect if command completion should be above or below input */
+var awesompleteDivUl = null;
+
 
 (function () {
   "use: strict";
@@ -79,6 +82,8 @@ var acIsOpen = false;
       webix.ajax("data/aclist.json").then(function(aclist) {
         autocompleter.list = aclist.json();
       });
+      
+      awesompleteDivUl = document.querySelector('div.awesomplete > ul');
     }
   };
 

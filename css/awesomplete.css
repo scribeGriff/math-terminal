@@ -22,6 +22,10 @@ div.awesomplete > ul {
   z-index: 1;
 }
 
+.bottom50 {
+  bottom: 50px;
+}
+
 div.awesomplete > ul[hidden],
 div.awesomplete > ul:empty {
   display: none;
