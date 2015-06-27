@@ -102,6 +102,14 @@
       var _samples = new Array(_samples_length).fill(0);
       _samples.fill(1, _nzero);
       return _samples;
+    },
+    
+    gauss: function gauss(slength) {
+      var _samples_length = slength !== undefined ? Number(slength) : defaults.slength;
+      var _samples = new Array(_samples_length).fill(0).map(function (x, i) { 
+        return math.cos(2 * math.PI * math.random()) * math.sqrt(-2 * math.log(math.random())); 
+      });
+      return _samples;
     }
   }, {
     wrap: true

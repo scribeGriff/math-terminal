@@ -2,7 +2,7 @@
 
 .visually-hidden {
   clip: rect(0, 0, 0, 0);
-  left: 15px;
+  left: 30px;
   position: absolute;
 }
 
@@ -12,7 +12,7 @@ div.awesomplete > ul {
   border: 1px solid rgba(0,0,0,.3);
   border-radius: .3em;
   box-shadow: .05em .2em .6em rgba(0,0,0,.2);
-  left: 15px;
+  left: 30px;
   list-style: none;
   margin: .2em 0 0;
   padding: 0;
@@ -42,27 +42,6 @@ div.awesomplete > ul:empty {
   opacity: 0;
   transform: scale(0);
   transition-timing-function: ease;
-}
-
-/* Pointer */
-div.awesomplete > ul:before {
-  background: #3E4438;
-  border: 1px solid black;
-  border: 1px solid rgba(0,0,0,.3);
-  border-bottom: 0;
-  border-right: 0;
-  content: "";
-  height: 0;
-  left: 1em;
-  padding: .4em;
-  position: absolute;
-  top: -.43em;
-  -webkit-transform: rotate(45deg);
-  -moz-transform: rotate(45deg);
-  -ms-transform: rotate(45deg);
-  -o-transform: rotate(45deg);
-  transform: rotate(45deg);
-  width: 0;
 }
 
 div.awesomplete > ul > li {

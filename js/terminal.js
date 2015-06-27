@@ -265,7 +265,8 @@
       }
       
       if (awesompleteDivUl !== null) {
-        if (_terminal.scrollHeight - _terminal.scrollTop === _terminal.clientHeight) {
+        // 1 pixel offset is for chrome, ff doesn't need it.  not sure why chrome does.
+        if (_terminal.scrollHeight - _terminal.scrollTop <= _terminal.clientHeight + 1) {
           awesompleteDivUl.classList.remove('bottom50');
         } else {
           awesompleteDivUl.classList.add('bottom50');
