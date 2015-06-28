@@ -246,13 +246,13 @@
       
       _seq1 = math.number(seq1.slice());
       if (seq2 === undefined) {
-        _seq2 = seq1.slice();
+        _seq2 = math.number(seq1.slice());
       } else {
         _seq2 = math.number(seq2.slice());
       }
       
       if (pos1 === undefined) {
-        _pos1 = new Array(seq1.length).fill(0).map(function (x, i) { 
+        _pos1 = new Array(_seq1.length).fill(0).map(function (x, i) { 
           return i; 
         });
       } else {
@@ -260,7 +260,7 @@
       }
       
       if (pos2 === undefined) {
-        _pos2 = new Array(seq2.length).fill(0).map(function (x, i) { 
+        _pos2 = new Array(_seq2.length).fill(0).map(function (x, i) { 
           return i; 
         });
       } else {
@@ -273,6 +273,7 @@
       });
       
       s1xs2 = math.conv(_seq2, _seq1, _pos2, _pos1);
+      console.log(s1xs2);
       
       return {
         y: s1xs2.y,

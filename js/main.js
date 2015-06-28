@@ -22,13 +22,14 @@ var awesompleteDivUl = null;
 
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"],
       chart = null, bgcolor, sampleSeries,
-      points, cmdinput, autocompleter,
+      points, cmdinput, autocompleter, helpExt,
       parseData, createChart, terminal, sampleChartType;
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
       matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|samples.*|xaxis.*|yaxis.*$/,
-      matchWaveGenCmds = /sinewave.*|squarewave.*|sawtoothwave.*|trianglewave.*|impulse.*|step.*$/,
-      unformatedResults = /info.*$/;
+      matchWaveGenCmds = /sinewave.*|squarewave.*|sawtoothwave.*|trianglewave.*|impulse.*|step.*|gauss.*$/,
+      unformatedResults = /info.*$/,
+      matchMathExtensions = /fft.*|ifft.*|fsps.*|conv.*|deconv.*|corr.*$/;
 
   var bgcolors = {
     monokai: "#272822",
@@ -81,6 +82,10 @@ var awesompleteDivUl = null;
       /* Reference : http://docs.webix.com/helpers__ajax_operations.html */
       webix.ajax("data/aclist.json").then(function(aclist) {
         autocompleter.list = aclist.json();
+      });
+      
+      webix.ajax("data/helpext.json").then(function(helpext) {
+        helpExt = helpext.json();
       });
       
       awesompleteDivUl = document.querySelector('div.awesomplete > ul');
@@ -358,6 +363,8 @@ var awesompleteDivUl = null;
           if (args && args[0]) {
             if (args.length > 1) {
               return preerr + 'Too many arguments' + sufans;
+            } else if (args[0].match(matchChartCmds) || args[0].match(matchWaveGenCmds) || args[0].match(unformatedResults) || args[0].match(matchMathExtensions)) {
+              return preans + helpExt[args[0]] + sufans;
             } else {
               try {
                 var helpStr = math.help(args[0]).toString();
