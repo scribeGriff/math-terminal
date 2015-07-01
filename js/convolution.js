@@ -8,6 +8,8 @@
   math.import({
 
     /**
+     * conv()
+     * 
      * Perform linear convolution of two signals using N point circular convolution.
      * Accepts position information.  Returns the convolved
      * array y, and its position array n.
@@ -40,8 +42,7 @@
 
     conv: function conv(xd, hd, xn, hn) {
 
-      var xdata, hdata, xlen, hlen, yindex, ytime, yfft, xfft, hfft, yifft,
-          infoString = 'The <em>myConv = conv(x, n)</em> function returns the results sequence, "y", retrieved with <em>y = getData("y", myConv)</em>, and the time order sequence "n", retrieved with <em>n = getData("n", myConv)</em>';
+      var xdata, hdata, xlen, hlen, yindex, ytime, yfft, xfft, hfft, yifft;
 
       const CSMALL = 12;
 
@@ -94,8 +95,7 @@
 
       return {
         y: yifft,
-        n: ytime,
-        info: infoString
+        n: ytime
       };
     },
 
@@ -139,8 +139,7 @@
     */
 
     deconv: function deconv(numerator, denominator, numn, denn) {
-      var num, den, dlen, nlen, ddeg, ndeg, qindex, q, qtime, rtime, r,
-          infoString = 'The <em>myDeconv = deconv(numerator, denominator)</em> function returns the quotient, "q", retrieved with <em>q = getData("q", myDeconv)</em>, and the remainder "r", retrieved with <em>r = getData("r", myDeconv)</em>.  Time information is also available as "qtime" and "rtime".';
+      var num, den, dlen, nlen, ddeg, ndeg, qindex, q, qtime, rtime, r;
 
       const CSMALL = 12;
 
@@ -198,9 +197,8 @@
       return {
         q: q,
         r: r, 
-        qtime: qtime, 
-        rtime: rtime,
-        info: infoString
+        qn: qtime, 
+        rn: rtime
       };
     },
     
@@ -241,8 +239,7 @@
      *
      **/
     corr: function corr(seq1, seq2, pos1, pos2) {
-      var _seq1, _seq2, _pos1, _pos2, s1xs2,
-          infoString = 'The <em>myCorr = corr(sequence1, [sequence2, position1, position2])</em> function returns the result, "y", retrieved with <em>y = getData("y", myCorr)</em>, and the position vector "n", retrieved with <em>n = getData("n", myCorr)</em>.';
+      var _seq1, _seq2, _pos1, _pos2, s1xs2;
       
       _seq1 = math.number(seq1.slice());
       if (seq2 === undefined) {

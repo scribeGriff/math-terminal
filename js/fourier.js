@@ -11,6 +11,8 @@
   math.import({
 
     /**
+     * fft()
+     * 
      * Computes the FFT of an array of arbitrary length.
      * @param   {Array}  rcdata real or complex data
      * @param   {Number} N      Order of FFT (optional)
@@ -30,7 +32,10 @@
         return dft(_cxdata);
       }
     },
-    /**
+    
+    /** 
+     * ifft()
+     * 
      * Computes the inverse FFT of an array of arbitrary length.
      * @param   {Array}  rcdata real or complex data
      * @param   {Number} N      order of IFFT (optional)
@@ -51,7 +56,11 @@
       }
     },
 
-    // This might be a bit slow yet, but functional.
+    /**
+     * fsps()
+     * 
+     * 
+     */
     fsps: function fsps(data, kval, cycles, fraction) {
       var L = data.length,
           y = new Array(L),
@@ -61,8 +70,7 @@
           r = new Array(L),
           phi = new Array(L),
           _kval, _cycles, _fraction,
-          N, coeff, q, kth, wk, kp,
-          infoString = 'The <em>myFsps = fsps(x, n)</em> function returns its results in a number of formats.  Retrieve your desired output with <em>y = getData(result, myFsps)</em> where <em>result</em> can be "complex", "real" for just the real component, "imag" for just the imaginary component, "polar" for polar format, "r" and "phi" for the radius and angle results respectively';
+          N, coeff, q, kth, wk, kp;
 
       _kval = kval !== undefined ? kval : 3;
       _cycles = cycles !== undefined ? cycles : 1;
@@ -80,22 +88,10 @@
           q = math.add(q, math.multiply(wk, coeff[k]));
         }
         y[n] = math.round(math.add(math.multiply(coeff[0], 1 / N), math.multiply(q, 2 / N)), FSMALL);
-        re[n] = y[n].re;
-        im[n] = y[n].im;
-        polar[n] = y[n].toPolar();
-        r[n] = polar[n].r;
-        phi[n] = polar[n].phi;
       }
+      
+      return y;
 
-      return {
-        complex: y, 
-        real: re, 
-        imag: im,
-        polar: polar,
-        r: r,
-        phi: phi,
-        info: infoString
-      };
     }
   }, {
     wrap: true

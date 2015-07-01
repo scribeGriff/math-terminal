@@ -36,8 +36,7 @@
   math.import({
 
     filter1d: function filter1d(b, a, x, z) {
-      var ai, bi, y, n, alen, blen,
-          infoString = 'The <em>myFilter = filter1d(b, a, x)</em> function returns the results sequence, "y", retrieved with <em>y = getData("y", myFilter)</em>, and the final condition sequence "z", retrieved with <em>z = getData("z", myFilter)</em>';
+      var ai, bi, y, n, alen, blen;
       alen = a.length;
       blen = b.length;
       if (a[0] === 0) {
@@ -70,8 +69,7 @@
       }
       return {
         y: y,
-        z: z,
-        info: infoString
+        z: z
       };
     }
   }, {

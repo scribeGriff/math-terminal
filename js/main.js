@@ -28,8 +28,7 @@ var awesompleteDivUl = null;
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
       matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|samples.*|xaxis.*|yaxis.*$/,
       matchWaveGenCmds = /sinewave.*|squarewave.*|sawtoothwave.*|trianglewave.*|impulse.*|step.*|gauss.*$/,
-      unformatedResults = /info.*$/,
-      matchMathExtensions = /fft.*|ifft.*|fsps.*|conv.*|deconv.*|corr.*$/;
+      matchMathExtensions = /fft.*|ifft.*|fsps.*|conv.*|deconv.*|corr.*|filter1d.*|length.*$/;
 
   var bgcolors = {
     monokai: "#272822",
@@ -83,11 +82,11 @@ var awesompleteDivUl = null;
       webix.ajax("data/aclist.json").then(function(aclist) {
         autocompleter.list = aclist.json();
       });
-      
+
       webix.ajax("data/helpext.json").then(function(helpext) {
         helpExt = helpext.json();
       });
-      
+
       awesompleteDivUl = document.querySelector('div.awesomplete > ul');
     }
   };
@@ -309,15 +308,18 @@ var awesompleteDivUl = null;
         chart.refresh();
       }
     },
-    // This will be a general purpose getter for each function that returns
-    // an object.  Each object would have an info field.
-    info: function info(complexObject) {
-      return math.eval("info", complexObject);
-    },
     // For functions that return multiple values, getData
     // retrieves and returns each value.
     getData: function getData(key, object) {
       return math.eval(key, object);
+    },
+    // A shortcut to retrieve the y data.
+    gety: function gety(object) {
+      return math.eval("y", object);
+    },
+    // A shortcut to retrieve the n data.
+    getn: function getn(object) {
+      return math.eval("n", object);
     }
   }, {
     wrap: true
@@ -363,7 +365,7 @@ var awesompleteDivUl = null;
           if (args && args[0]) {
             if (args.length > 1) {
               return preerr + 'Too many arguments' + sufans;
-            } else if (args[0].match(matchChartCmds) || args[0].match(matchWaveGenCmds) || args[0].match(unformatedResults) || args[0].match(matchMathExtensions)) {
+            } else if (args[0].match(matchChartCmds) || args[0].match(matchWaveGenCmds) || args[0].match(matchMathExtensions)) {
               return preans + helpExt[args[0]] + sufans;
             } else {
               try {
@@ -429,12 +431,8 @@ var awesompleteDivUl = null;
             // Check for Katex format of solution.
             try {
               formres = math.format(result, precision);
-              if (cmd.match(unformatedResults)) {
-                return preans + formres + sufans;
-              } else {
-                katstr = katex.renderToString(formres);
-                return preans + katstr + sufans;
-              }
+              katstr = katex.renderToString(formres);
+              return preans + katstr + sufans;
             } catch(error) {
               return preans + formres + sufans;
             }

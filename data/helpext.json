@@ -1,10 +1,11 @@
 {
-  fft: "this if the fft help info",
-  ifft: "this is the ifft help info",
-  fsps: "this is the fsps help info",
+  fft: "Description: Computes a fourier transform of an array of arbitrary length.  Uses a radix-2 FFT algorithm if the length is a power of 2 and a DFT otherwise.  Accepts an optional integer value for the power of the FFT.  Syntax: y = fft(x); or, optionally, y = fft(x, 16); where x is an array of real or complex values.  Returns a complex array.  Example: x = [0,1,2,3]; y = fft(x);  See also: re, im, ifft, fsps, conv",
+  ifft: "Description: Computes an inverse fourier transform of an array of arbitrary length.  Uses a radix-2 FFT algorithm if the length is a power of 2 and a DFT otherwise.  Accepts an optional integer value for the power of the FFT.  Syntax: x = ifft(y); or, optionally, x = ifft(y, 16); where y is an array of real or complex values.  Returns a complex array.  Example: x = [0,1,2,3]; y = fft(x); xr = ifft(y);  See also: re, im, fft, fsps, conv",
+  fsps: "Description: Computes the partial sums of the Fourier series of a waveform.  Requires an array of values representing the input waveform.  Accepts an optional values for number of sums (default is 3), number of cycles are represented in the waveform (default is 1) and the fraction of the data to treat as a cycle (default is 1).  Syntax: y = fsps(x); or, optionally, y = fsps(x, 6, 1, 0.5);  Example: x = squarewave(); y = fsps(x); n = length(x); curve(n, re(y))  See also: squarewave, trianglewave, sawtoothwave, fft, re, im, complex",
   conv: "this is the conv help info",
   deconv: "this is the deconv help info",
   corr: "this is the corr help info",
+  filter1d: "this is the filter1d info",
   sinewave: "this is the sinewave help info",
   squarewave: "this is the squarewave help info",
   trianglewave: "this is the trianglewave help info",
@@ -19,6 +20,6 @@
   samples: "this is the samples plot help info",
   xaxis: "this is the xaxis help info",
   yaxis: "this is the yaxis help info",
-  info: "this is the info help info",
-  getData: "this is the getData help info"
+  getData: "this is the getData help info",
+  length: "Description: Returns the length of a one dimensional array.  Syntax: len = length(x);  Example: x = squarewave(); len = length(x);  See also: size"
 }
