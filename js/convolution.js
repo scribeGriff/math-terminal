@@ -102,7 +102,7 @@
     /**
      * Perform the deconvolution of two signals using polynomial long division.
      *
-     *  Performs a deconvolution (polynomial long division) of numerator and
+     * Performs a deconvolution (polynomial long division) of numerator and
      * denominator.  Accepts position information.  Returns quotient, remainder,
      * and position information for each.
      *
@@ -201,7 +201,7 @@
         rn: rtime
       };
     },
-    
+
     /**
      * Perform crosscorrelation or autocorrelation.
      *
@@ -209,6 +209,9 @@
      * performs the autocorrelation of seq1.  Accepts position information.
      * Returns the correlation sequence and its position information.
      *
+     * TODO: This example doesn't work as is.  Need some equivalent
+     * to the addseqs from the convolab library.
+     * 
      * Example:
      *
      *     // x(n):
@@ -219,13 +222,13 @@
      *     // Shift n two places.
      *     nm2 = range(-1, 5);
      *     // Generate gaussian noise.
-     *     w = gauss(size(x));
-     *     wn = nm2.slice();
-     *     // Create noise corrupted and shifted signal.
-     *     seqsum = addseqs(x, w, nm2, wn);
-     *     // Compute cross correlation between x(n) and y(n).
-     *     xcorr = corr(x, add(x,w), n, add(nm2,wn));
-     *     y = getData("y", xcorr);
+     *     w = gauss(length(x));
+     *     // Add the noise to the shifted signal
+     *     seqsum = addSeqs(x, w, nm2, nm2);
+     *     // Compute cross correlation between x(n) and y(n)
+     *     // with added noise.
+     *     xcorr = corr(x, gety(seqsum), n, getn(seqsum));
+     *     y = gety(xcorr);
      *     
      *     [5.020124415984023, 31.74811229652198, 54.337851908313304,
      *      13.297725982440669, -2.2771026999749457, 97.84500977600702,
@@ -233,21 +236,21 @@
      *      -17.35850051195083, 47.737359690914296, 33.80525231377048,
      *      5.819059373561337]
      *      
-     *     n = getData("n", xcorr);
+     *     n = getn(xcorr);
      *     
      *     [-4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8]
      *
      **/
     corr: function corr(seq1, seq2, pos1, pos2) {
       var _seq1, _seq2, _pos1, _pos2, s1xs2;
-      
+
       _seq1 = math.number(seq1.slice());
       if (seq2 === undefined) {
         _seq2 = math.number(seq1.slice());
       } else {
         _seq2 = math.number(seq2.slice());
       }
-      
+
       if (pos1 === undefined) {
         _pos1 = new Array(_seq1.length).fill(0).map(function (x, i) { 
           return i; 
@@ -255,7 +258,7 @@
       } else {
         _pos1 = math.number(pos1);
       }
-      
+
       if (pos2 === undefined) {
         _pos2 = new Array(_seq2.length).fill(0).map(function (x, i) { 
           return i; 
@@ -263,18 +266,40 @@
       } else {
         _pos2 = math.number(pos2);
       }
-      
+
       _seq1 = _seq1.reverse();
       _pos1 = _pos1.reverse().map(function (x, i) { 
         return -1 * x; 
       });
-      
+
       s1xs2 = math.conv(_seq2, _seq1, _pos2, _pos1);
       console.log(s1xs2);
-      
+
       return {
         y: s1xs2.y,
         n: s1xs2.n
+      };
+    },
+
+    addSeqs: function addSeqs(seq1, seq2, pos1, pos2) {
+      var start, end, n, y1, y1f, y2, y2f, y, _seq1, _seq2, _pos1, _pos2;
+      _seq1 = math.number(seq1);
+      _seq2 = math.number(seq2);
+      _pos1 = math.number(pos1);
+      _pos2 = math.number(pos2);
+      start = math.min(math.min(_pos1), math.min(_pos2));
+      end = math.max(math.max(_pos1), math.max(_pos2));
+      n = new Array(end - start + 1).fill(0).map(function(x, i) { return i + start; });
+      y1 = new Array(n.length).fill(0);
+      y2 = new Array(n.length).fill(0);
+      y1.splice(n.indexOf(_pos1[0]), _seq1.length, _seq1);
+      y1f = y1.join(',').split(',').map(Number);
+      y2.splice(n.indexOf(_pos2[0]), seq2.length, _seq2);
+      y2f = y2.join(',').split(',').map(Number);
+      y = new Array(n.length).fill(0).map(function(x, i) { return y1f[i] + y2f[i]; });
+      return {
+        y: y, 
+        n: n
       };
     }
   }, {

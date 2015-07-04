@@ -28,7 +28,7 @@ var awesompleteDivUl = null;
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
       matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|samples.*|xaxis.*|yaxis.*$/,
       matchWaveGenCmds = /sinewave.*|squarewave.*|sawtoothwave.*|trianglewave.*|impulse.*|step.*|gauss.*$/,
-      matchMathExtensions = /fft.*|ifft.*|fsps.*|conv.*|deconv.*|corr.*|filter1d.*|length.*$/;
+      matchMathExtensions = /fft.*|ifft.*|fsps.*|conv.*|deconv.*|corr.*|filter1d.*|length.*|addSeqs.*$/;
 
   var bgcolors = {
     monokai: "#272822",
@@ -320,6 +320,22 @@ var awesompleteDivUl = null;
     // A shortcut to retrieve the n data.
     getn: function getn(object) {
       return math.eval("n", object);
+    },
+    // A shortcut to retrieve the q data.
+    getq: function getq(object) {
+      return math.eval("q", object);
+    },
+    // A shortcut to retrieve the r data.
+    getr: function getr(object) {
+      return math.eval("r", object);
+    },
+    // A shortcut to retrieve the qn data.
+    getqn: function getqn(object) {
+      return math.eval("qn", object);
+    },
+    // A shortcut to retrieve the rn data.
+    getrn: function getrn(object) {
+      return math.eval("rn", object);
     }
   }, {
     wrap: true
