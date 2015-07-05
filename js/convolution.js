@@ -273,7 +273,6 @@
       });
 
       s1xs2 = math.conv(_seq2, _seq1, _pos2, _pos1);
-      console.log(s1xs2);
 
       return {
         y: s1xs2.y,

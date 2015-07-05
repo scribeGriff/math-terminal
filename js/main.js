@@ -191,7 +191,6 @@ var awesompleteDivUl = null;
       sampleSeries = new Array(data[0].length - 1);
       sampleLegend = new Array(data[0].length - 1);
       len = data[0].length;
-      console.log(data);
 
       if (len < 3) {
         sampleChartType = "spline";
@@ -237,9 +236,8 @@ var awesompleteDivUl = null;
       }
 
       // Scaling the power of the range to provide a step size.
-      // The number 5 means that half way through a power of 10, the scale 
-      // will move to the next largest step size.
-      step = Math.pow(10, Math.trunc(Math.log10(Math.abs(end - start) * 5)) - 1);
+      // TODO: Some work to do here yet to get the optimum step size for many possible ranges.
+      step = Math.pow(10, Math.round(Math.log10(Math.abs(end - start) * 1)) - 1);
 
       chart = webix.ui({
         container: "chart-div",
@@ -336,6 +334,10 @@ var awesompleteDivUl = null;
     // A shortcut to retrieve the rn data.
     getrn: function getrn(object) {
       return math.eval("rn", object);
+    },
+    // A shortcut to retrieve the z data.
+    getz: function getz(object) {
+      return math.eval("z", object);
     }
   }, {
     wrap: true
