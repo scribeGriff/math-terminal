@@ -26,7 +26,7 @@ var awesompleteDivUl = null;
       parseData, createChart, terminal, sampleChartType;
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
-      matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|samples.*|xaxis.*|yaxis.*$/,
+      matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|samples.*|polar.*|xaxis.*|yaxis.*$/,
       matchWaveGenCmds = /sinewave.*|squarewave.*|sawtoothwave.*|trianglewave.*|impulse.*|step.*|gauss.*$/,
       matchMathExtensions = /fft.*|ifft.*|fsps.*|conv.*|deconv.*|corr.*|filter1d.*|length.*|addSeqs.*$/;
 
@@ -102,6 +102,8 @@ var awesompleteDivUl = null;
       points = false;
       if (chart) chart.destructor();
 
+      sampleChart = false;
+
       var data = parseData.apply(null, arguments);
 
       chart = createChart(data, "spline", points);
@@ -114,6 +116,8 @@ var awesompleteDivUl = null;
     line: function line(args) {
       points = false;
       if (chart) chart.destructor();
+
+      sampleChart = false;
 
       var data = parseData.apply(null, arguments);
 
@@ -128,6 +132,8 @@ var awesompleteDivUl = null;
       points = true;
       if (chart) chart.destructor();
 
+      sampleChart = false;
+
       var data = parseData.apply(null, arguments);
 
       chart = createChart(data, "spline", points);
@@ -141,6 +147,8 @@ var awesompleteDivUl = null;
       points = true;
       if (chart) chart.destructor();
 
+      sampleChart = false;
+
       var data = parseData.apply(null, arguments);
 
       chart = createChart(data, "line", points);
@@ -149,7 +157,63 @@ var awesompleteDivUl = null;
         chart.adjust();
       });
     },
-    // Draws a data point chart using bar and points
+    // Draws a polar plot using a radar chart type.
+    polar: function polar(args) {
+      if (chart) chart.destructor();
+
+      sampleChart = false;
+
+      var data = parseData.apply(null, arguments);
+      
+      console.log(data);
+
+      chart = webix.ui({
+        container: "chart-div",
+        view: "chart",
+        type: "radar",
+        padding: {
+          right: 50
+        },
+        preset: "area",
+        value: "#data1#",
+        xAxis: {
+          template: "#data0#",
+          /*template: function(obj) {
+            //return "<span style='font-size:14px'>"+math.round(obj.data0,3)+"</span>";
+            return math.round(obj.data0, 5).toString;
+          }
+          /*template: function(obj) {
+            //var degrees = math.round(+obj.data0 * 180 / Math.pi);
+            //console.log(degrees);
+            return (math.round(obj.data0 * 180 / math.pi) % 30 ? "2" : math.round(obj.data0 * 180 / math.pi));
+          },
+          /*lines: function(obj) {
+            var degrees = math.round(+obj.data0 * 180 / Math.pi);
+            console.log(degrees);
+            return (degrees % 30 ? true : false);
+          }*/
+        },
+        yAxis: {
+          lineShape:"arc",
+          bg: function(value) {
+            return (math.round(+value,6) % 1 ? "#ccc" : "#ddd");
+          },
+          lines:false,
+          template: function(value) {
+            return "<span style='font-size:15px'>"+math.round(+value,9)+"</span>";
+            //return "<span style='font-size:15px'>"+Number(value).toExponential(2)+"</span>";
+          }
+        },
+        eventRadius: 10,
+        datatype: "jsarray",
+        data: data
+      }); 
+
+      webix.event(window, "resize", function () {
+        chart.adjust();
+      });
+    },
+    // Draws a data point chart using bar and points.
     samples: function samples(args) {
       var data, max, min, start, end, mod, 
           step, templ, len, sampleData, sampleLegend;
@@ -208,7 +272,7 @@ var awesompleteDivUl = null;
             },
             tooltip: {
               template: function(obj) {
-                return (Math.round(obj.data1));
+                return (math.round(obj.data1, 6));
               }
             }
           },
@@ -517,7 +581,7 @@ var awesompleteDivUl = null;
           return (obj.data0 % mod ? "" : obj.data0);
         },
         lines: function(obj){
-          return (obj.data0 % mod ? false:true);
+          return (obj.data0 % mod ? false : true);
         }
       },
       yAxis: {},
