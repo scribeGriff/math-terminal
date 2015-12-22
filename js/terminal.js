@@ -25,7 +25,7 @@
     options.separator = options.separator || defaults.separator;
     options.theme = options.theme || defaults.theme;
 
-    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|line.*|linepts.*|curve.*|curvepts.*|samples.*|xaxis.*|yaxis.*|info.*|getData.*$/i;
+    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|line.*|linepts.*|curve.*|curvepts.*|sample.*|polar.*|xaxis.*|yaxis.*|title.*|info.*|getData.*$/i;
     var matchConsoleCmds = /^help.*|clear.*|theme.*|precision.*$/i;
 
     var extensions = Array.prototype.slice.call(arguments, 2);
@@ -254,6 +254,7 @@
     function clear() {
       _output.innerHTML = '';
       _cmdLine.value = '';
+      awesompleteDivUl.classList.remove('bottom50');
     }
 
     function output(html) {
@@ -265,8 +266,7 @@
       }
       
       if (awesompleteDivUl !== null) {
-        // 1 pixel offset is for chrome, ff doesn't need it.  not sure why chrome does.
-        if (_terminal.scrollHeight - _terminal.scrollTop <= _terminal.clientHeight + 1) {
+        if (_container.clientHeight < _terminal.clientHeight / 2) {
           awesompleteDivUl.classList.remove('bottom50');
         } else {
           awesompleteDivUl.classList.add('bottom50');

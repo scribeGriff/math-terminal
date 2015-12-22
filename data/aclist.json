@@ -71,6 +71,7 @@
   "getData",
   "help",
   "im",
+  "length",
   "theme",
   "clear",
   "precision",
@@ -80,7 +81,7 @@
   "linepts",
   "curve",
   "curvepts",
-  "samples",
+  "sample",
   "sawtoothwave",
   "sinewave",
   "square",
@@ -94,5 +95,9 @@
   "arta",
   "railcasts",
   "chalkboard",
-  "dark"
+  "dark",
+  "title",
+  "xaxis",
+  "yaxis",
+  "subtitle"
 ]

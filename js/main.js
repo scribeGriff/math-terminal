@@ -1,4 +1,4 @@
-/* global math: false, katex: false, Terminal: false, document: false, webix: false, Awesomplete: false, Ink: false */
+/* global math: false, katex: false, Terminal: false, document: false, webix: false, Awesomplete: false, Highcharts: false */
 /* jshint node: true, browser: true, loopfunc: true */
 
 /* globals */
@@ -20,13 +20,15 @@ var awesompleteDivUl = null;
       precision = 8,  // default output format significant digits.
       sampleChart = false;
 
-  var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#261C21", "#3E6B48", "#CE1836", "#F85931", "#009989"],
-      chart = null, bgcolor, sampleSeries,
-      points, cmdinput, autocompleter, helpExt,
-      parseData, createChart, terminal, sampleChartType;
+  var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
+      chart = null, bgcolor, sampleSeries, chartDiv, lineShape, parseDataPolar,
+      points, cmdinput, autocompleter, helpExt, chartMode, chartType,
+      parseData, createChart, terminal, sampleChartType, parseDataOld;
+
+  var hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348'];
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
-      matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|samples.*|polar.*|xaxis.*|yaxis.*$/,
+      matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|sample.*|polar.*|xaxis.*|yaxis.*|title.*|subtitle.*$/,
       matchWaveGenCmds = /sinewave.*|squarewave.*|sawtoothwave.*|trianglewave.*|impulse.*|step.*|gauss.*$/,
       matchMathExtensions = /fft.*|ifft.*|fsps.*|conv.*|deconv.*|corr.*|filter1d.*|length.*|addSeqs.*$/;
 
@@ -41,6 +43,105 @@ var awesompleteDivUl = null;
     chalkboard: "darkslategray",
     dark: "#040004"
   };
+
+  Highcharts.setOptions({
+    colors: hccolors,
+    chart: {
+      backgroundColor: 'transparent',
+      plotBorderWidth: 1
+    },
+    title: {
+      text: ' ',
+      style: {
+        color: '#76767A',
+        font: '18px "open_sansregular", sans-serif'
+      }
+    },
+    subtitle: {
+      style: {
+        color: '#76767A',
+        font: '14px "open_sansregular", sans-serif'
+      }
+    },
+    xAxis: {
+      lineColor: '#76767A',
+      tickColor: '#76767A',
+      gridLineWidth: 1,
+      gridLineDashStyle: 'dot',
+      gridLineColor: '#76767A',
+      gridZIndex: 0,
+      offset: 10,
+      endOnTick: false,
+      labels: {
+        y: 25,
+        style: {
+          color: '#76767A',
+          font: '12px "open_sansregular", sans-serif'
+        }
+      },
+      title: {
+        style: {
+          color: '#76767A',
+          fontSize: '14px',
+          fontFamily: '"open_sansregular", sans-serif'
+
+        }
+      }
+    },
+    yAxis: {
+      gridLineDashStyle: 'dot',
+      gridLineColor: '#76767A',
+      gridZIndex: 0,
+      lineColor: '#76767A',
+      lineWidth: 1,
+      offset: 10,
+      tickWidth: 1,
+      tickColor: '#76767A',
+      labels: {
+        style: {
+          color: '#76767A',
+          font: '12px "open_sansregular", sans-serif'
+        }
+      },
+      title: {
+        text: ' ',
+        style: {
+          color: '#76767A',
+          fontSize: '14px',
+          fontFamily: '"open_sansregular", sans-serif'
+        }
+      }
+    },
+    navigation: {
+      buttonOptions: {
+        align: 'right',
+        verticalAlign: 'bottom'
+      }
+    },
+    legend: {
+      itemStyle: {
+        color: '#76767A',
+        font: '12px "open_sansregular", sans-serif',
+      },
+      itemHoverStyle: {
+        color: '#7cb5ec'
+      },
+      itemHiddenStyle: {
+        color: '#555'
+      },
+      layout: 'vertical',
+      align: 'right',
+      verticalAlign: 'top',
+    },
+    credits: {
+      enabled: false
+    },
+    labels: {
+      style: {
+        color: '#3E576F'
+      }
+    }
+  });
 
   var helpinfo = [
     '<table class="ink-table">',
@@ -88,286 +189,346 @@ var awesompleteDivUl = null;
       });
 
       awesompleteDivUl = document.querySelector('div.awesomplete > ul');
+
+      chartDiv = document.getElementById('chart-div');
     }
   };
 
   math.config({
-    number: 'bignumber'
+    //number: 'bignumber'
   });
 
   // Import chart commands to mathjs.
   math.import({
     // Draws a curve through each data point but doesn't draw specific points.
     curve: function curve(args) {
-      points = false;
-      if (chart) chart.destructor();
+      var dataSeries;
+      if (arguments.length === 0) {
+        return;
+      } else {
+        dataSeries = parseData.apply(null, arguments);
+      }
 
-      sampleChart = false;
+      if (chart) chart.destroy();
 
-      var data = parseData.apply(null, arguments);
-
-      chart = createChart(data, "spline", points);
-
-      webix.event(window, "resize", function () {
-        chart.adjust();
+      chart = Highcharts.chart(chartDiv, {
+        chart: {
+          type: 'spline',
+          zoomType: 'x',
+          panning: true,
+          panKey: 'shift'
+        },
+        plotOptions: {
+          series: {
+            marker: {
+              enabled: false,
+              connectNulls: true
+            }
+          }
+        },
+        tooltip: {
+          valueDecimals: 6,
+          shared: true,
+        },
+        series: dataSeries
       });
     },
     // Draws a line to each data point but doesn't draw specific points.
     line: function line(args) {
-      points = false;
-      if (chart) chart.destructor();
+      var dataSeries;
+      if (arguments.length === 0) {
+        return;
+      } else {
+        dataSeries = parseData.apply(null, arguments);
+      }
 
-      sampleChart = false;
+      if (chart) chart.destroy();
 
-      var data = parseData.apply(null, arguments);
-
-      chart = createChart(data, "line", points);
-
-      webix.event(window, "resize", function () {
-        chart.adjust();
+      chart = Highcharts.chart(chartDiv, {
+        chart: {
+          type: 'line',
+          zoomType: 'x',
+          panning: true,
+          panKey: 'shift'
+        },
+        plotOptions: {
+          series: {
+            marker: {
+              enabled: false,
+              connectNulls: true
+            }
+          }
+        },
+        tooltip: {
+          valueDecimals: 6,
+          shared: true,
+        },
+        series: dataSeries
       });
+
     },
     // Draws a curve through each data point and draws specific points.
     curvepts: function curvepts(args) {
-      points = true;
-      if (chart) chart.destructor();
+      var dataSeries;
+      if (arguments.length === 0) {
+        return;
+      } else {
+        dataSeries = parseData.apply(null, arguments);
+      }
 
-      sampleChart = false;
+      if (chart) chart.destroy();
 
-      var data = parseData.apply(null, arguments);
-
-      chart = createChart(data, "spline", points);
-
-      webix.event(window, "resize", function () {
-        chart.adjust();
+      chart = Highcharts.chart(chartDiv, {
+        chart: {
+          type: 'spline',
+          zoomType: 'x',
+          panning: true,
+          panKey: 'shift'
+        },
+        plotOptions: {
+          series: {
+            marker: {
+              enabled: true,
+              connectNulls: true
+            }
+          }
+        },
+        tooltip: {
+          valueDecimals: 6,
+          shared: true,
+        },
+        series: dataSeries
       });
+
     },
     // Draws a line through each data point and draws specific points.
     linepts: function linepts(args) {
-      points = true;
-      if (chart) chart.destructor();
+      var dataSeries;
+      if (arguments.length === 0) {
+        return;
+      } else {
+        dataSeries = parseData.apply(null, arguments);
+      }
 
-      sampleChart = false;
+      if (chart) chart.destroy();
 
-      var data = parseData.apply(null, arguments);
-
-      chart = createChart(data, "line", points);
-
-      webix.event(window, "resize", function () {
-        chart.adjust();
-      });
-    },
-    // Draws a polar plot using a radar chart type.
-    polar: function polar(args) {
-      if (chart) chart.destructor();
-
-      sampleChart = false;
-
-      var data = parseData.apply(null, arguments);
-      
-      console.log(data);
-
-      chart = webix.ui({
-        container: "chart-div",
-        view: "chart",
-        type: "radar",
-        padding: {
-          right: 50
+      chart = Highcharts.chart(chartDiv, {
+        chart: {
+          type: 'line',
+          zoomType: 'x',
+          panning: true,
+          panKey: 'shift'
         },
-        preset: "area",
-        value: "#data1#",
-        xAxis: {
-          template: "#data0#",
-          /*template: function(obj) {
-            //return "<span style='font-size:14px'>"+math.round(obj.data0,3)+"</span>";
-            return math.round(obj.data0, 5).toString;
+        plotOptions: {
+          series: {
+            marker: {
+              enabled: true,
+              connectNulls: true
+            }
           }
-          /*template: function(obj) {
-            //var degrees = math.round(+obj.data0 * 180 / Math.pi);
-            //console.log(degrees);
-            return (math.round(obj.data0 * 180 / math.pi) % 30 ? "2" : math.round(obj.data0 * 180 / math.pi));
-          },
-          /*lines: function(obj) {
-            var degrees = math.round(+obj.data0 * 180 / Math.pi);
-            console.log(degrees);
-            return (degrees % 30 ? true : false);
-          }*/
+        },
+        tooltip: {
+          valueDecimals: 6,
+          shared: true,
+        },
+        series: dataSeries
+      });
+
+    },
+    // Draws a polar plot.
+    polar: function polar(args) {
+      var dataSeries = [], 
+          ydata,
+          argsLen = arguments.length,
+          argsZeroLen = arguments[0].length,
+          interval = 360 / argsZeroLen;
+
+      if (argsLen === 0) {
+        return;
+      } else {
+        for (var k = 0; k < argsLen; k++) {
+          ydata = new Array(argsZeroLen);
+          for (var l = 0; l < argsZeroLen; l++) {
+            ydata[l] = parseFloat(arguments[k][l]);
+          }
+          // drop the last point since in polar charts 0 and 2pi
+          // should overlap.
+          // TODO: consider cases where this is not valid.
+          ydata.splice(-1,1);
+
+          var dataObj = {
+            type: 'line',
+            name: 'set' + k + 1,
+            data: ydata,
+            dashStyle: 'LongDash'
+          };
+
+          dataSeries.push(dataObj);
+        }
+      }
+
+      if (chart) chart.destroy();
+
+      chart = Highcharts.chart(chartDiv, {
+        chart: {
+          polar: true
+        },
+        pane: {
+          startAngle: 0,
+          endAngle: 360
+        },
+        xAxis: {
+          tickInterval: 30,
+          min: 0,
+          max: 360,
+          labels: {
+            formatter: function () {
+              return this.value + '°';
+            },
+            step: 3
+          }
         },
         yAxis: {
-          lineShape:"arc",
-          bg: function(value) {
-            return (math.round(+value,6) % 1 ? "#ccc" : "#ddd");
+          min: 0
+        },
+        plotOptions: {
+          series: {
+            pointStart: 0,
+            pointInterval: interval,
+            marker: {
+              enabled: false
+            }
           },
-          lines:false,
-          template: function(value) {
-            return "<span style='font-size:15px'>"+math.round(+value,9)+"</span>";
-            //return "<span style='font-size:15px'>"+Number(value).toExponential(2)+"</span>";
+          column: {
+            pointPadding: 0,
+            groupPadding: 0
           }
         },
-        eventRadius: 10,
-        datatype: "jsarray",
-        data: data
-      }); 
-
-      webix.event(window, "resize", function () {
-        chart.adjust();
+        series: dataSeries
       });
     },
-    // Draws a data point chart using bar and points.
-    samples: function samples(args) {
-      var data, max, min, start, end, mod, 
-          step, templ, len, sampleData, sampleLegend;
+    // Draws a stem chart using bar and points.
+    sample: function sample(args) {
+      var dataSeries = [], 
+          ydata,
+          count,
+          argsLen = arguments.length;
 
-      if (chart) chart.destructor();
-
-      sampleChart = true;
-
-      bgcolor = bgcolors[terminal.getTheme()];
-
-      data = parseData.apply(null, arguments);
-
-      mod = Math.trunc(data.length / 10);
-
-      if (mod === 1) {
-        templ = "#data0#";
+      if (argsLen === 0) {
+        return;
       } else {
-        templ = function(obj) {
-          return (obj.data0 % mod ? "" : obj.data0);
-        };
-      }
+        count = 1;
+        for (var k = 0; k < argsLen; k++) {
+          ydata = new Array(arguments[k].length);
+          for (var l = 0; l < arguments[k].length; l++) {
+            ydata[l] = parseFloat(arguments[k][l]);
+          }
 
-      max = math.max(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])));
-      min = math.min(math.matrix(data).subset(math.index([0, data.length], [1, data[0].length])));
-
-      if (min < 0) {
-        if (max < 0) {
-          start = Math.floor((min - 1) / 10) * 10;
-          end = 0;
-        } else {
-          start = Math.floor((min - 1) / 10) * 10;
-          end = Math.ceil((max + 1) / 10) * 10;
+          var dataObj = [{
+            type: 'column',
+            cropThreshold: 600,
+            name: 'set ' + count++,
+            data: ydata,
+            color: hccolors[k]
+          }, {
+            type: 'scatter',
+            cropThreshold: 600,
+            data: ydata,
+            name: 'sample data',
+            linkedTo: ':previous',
+            marker: {
+              symbol: 'circle',
+              lineWidth: 2,
+              lineColor: hccolors[k],
+              fillColor: 'transparent'
+            }
+          }];
+          Array.prototype.push.apply(dataSeries, dataObj);
         }
-      } else {
-        start = 0;
-        end = Math.ceil((max + 1) / 10) * 10;
       }
 
-      sampleSeries = new Array(data[0].length - 1);
-      sampleLegend = new Array(data[0].length - 1);
-      len = data[0].length;
+      if (chart) chart.destroy();
 
-      if (len < 3) {
-        sampleChartType = "spline";
-        sampleSeries = [
-          {
-            value:"#data1#",
-            line: {
-              color: bgcolor,
-              width: 1
-            },
-            item: {
-              color: bgcolor,
-              borderColor: colors[1],
-              radius: 4
-            },
-            tooltip: {
-              template: function(obj) {
-                return (math.round(obj.data1, 6));
+      chart = Highcharts.chart(chartDiv, {
+        chart: {
+          zoomType: 'x',
+          panning: true,
+          panKey: 'shift'
+        },
+        tooltip: {
+          valueDecimals: 6,
+          shared: true,
+        },
+        plotOptions: {
+          column: {
+            grouping: false,
+            shadow: false,
+            borderWidth: 0
+          },
+          series: {
+            pointWidth: 3,
+            stickyTracking: false,
+            states: {
+              hover: {
+                enabled: false
               }
             }
-          },
-          {
-            type:"bar",
-            barWidth: 3,
-            value:"#data1#",
-            color:colors[1]
           }
-        ];
-      } else {
-        sampleChartType = "bar";
-        for (var i = 1; i < len; i++) {
-          sampleData = "#data" + i + "#";
-          sampleSeries[i - 1] = {
-            value: sampleData,
-            color: colors[i],
-            label: sampleData
-          };
-          sampleLegend[i - 1] = {
-            text: "ydata " + i,
-            color: colors[i]
-          };
-        }
-      }
-
-      // Scaling the power of the range to provide a step size.
-      // TODO: Some work to do here yet to get the optimum step size for many possible ranges.
-      step = Math.pow(10, Math.round(Math.log10(Math.abs(end - start) * 1)) - 1);
-
-      chart = webix.ui({
-        container: "chart-div",
-        view: "chart",
-        type: sampleChartType,
-        preset: "alpha",
-        xAxis: {
-          //color: need to change based on theme
-          template: templ,
-          lines: false
         },
         yAxis: {
-          start: start,
-          end: end,
-          step: step,
-          lines: false
+          plotLines: [{
+            color: '#76767A',
+            width: 2,
+            value: 0,
+            zIndex: 5
+          }]
         },
-        eventRadius: 10,
-        series: sampleSeries,
-        origin: 0,
-        datatype: "jsarray",
-        data: data
-      }); 
-
-      if (sampleChartType === "bar") {
-        chart.define({
-          legend:{
-            values:sampleLegend,
-            valign:"top",
-            align:"right",
-            width:90,
-            layout:"y",
-            marker: {
-              type: "round"
-            }
-          }
-        });
-        chart.refresh();
-      }
-
-      webix.event(window, "resize", function () {
-        chart.adjust();
+        series: dataSeries
       });
     },
     // Adds and xaxis label
-    xaxis: function xaxis(xaxisTitle) {
+    xaxis: function xaxisp(xaxisTitle) {
       if (chart) {
-        chart.config.xAxis.title = xaxisTitle;
-        chart.refresh();
+        chart.xAxis[0].setTitle({
+          text: xaxisTitle,
+        });
       }
     },
     // Adds a y axis label
     yaxis: function yaxis(yaxisTitle) {
       if (chart) {
-        chart.config.yAxis.title = yaxisTitle;
-        chart.refresh();
+        chart.yAxis[0].setTitle({
+          text: yaxisTitle
+        });
       }
     },
-    // Update sample chart so line remains transparent to user.
-    updateSampleChart: function updateSampleChart(bgcolorIndex) {
-      if (chart && sampleChart && sampleChartType === "spline") {
-        bgcolor = bgcolors[bgcolorIndex];
-        sampleSeries[0].line.color = bgcolor;
-        sampleSeries[0].item.color = bgcolor;
-        chart.define("series", sampleSeries);
-        chart.refresh();
+    // Adds a chart title
+    title: function title(chartTitle, titleColor) {
+      if (chart) {
+        chart.setTitle({
+          text: chartTitle
+        });
+        if (titleColor !== null) {
+          chart.setTitle({
+            style: { 
+              color: titleColor 
+            } 
+          });
+        }
+      }
+    },
+    subtitle: function title(chartSubTitle, subTitleColor) {
+      if (chart) {
+        chart.setTitle(null, {
+          text: chartSubTitle
+        });
+        if (subTitleColor !== null) {
+          chart.setTitle(null, {
+            style: { 
+              color: subTitleColor 
+            } 
+          });
+        }
       }
     },
     // For functions that return multiple values, getData
@@ -467,7 +628,6 @@ var awesompleteDivUl = null;
               return preerr + 'Too many arguments' + sufans;
             } else if (args[0].match(matchThemes)) { 
               terminal.setTheme(args[0]);
-              math.updateSampleChart(args[0]);
               return ''; 
             } else {
               return preerr + 'Invalid theme' + sufans;
@@ -523,8 +683,147 @@ var awesompleteDivUl = null;
     }
   });
 
-  // Parse the data for the various chart functions.
   parseData = function parseData(args) {
+    var dataSeries = [],
+        buffer,
+        ydata,
+        dataObj,
+        count,
+        argsLen = arguments.length;
+
+    if (argsLen === 1) {
+      // use the default x vector
+      ydata = new Array(arguments[0].length);
+      for (var j = 0; j < arguments[0].length; j++) {
+        ydata[j] = parseFloat(arguments[0][j]);
+      }
+      dataObj = {
+        cropThreshold: 600,
+        name: 'set 1',
+        data: ydata
+      };
+      dataSeries.push(dataObj);
+    } else {
+      // will need to create x,y pairs
+      count = 1;
+      for (var k = 0; k < argsLen; k += 2) {
+        ydata = new Array(arguments[k].length);
+        for (var l = 0; l < arguments[k].length; l++) {
+          buffer = new Array(2);
+          buffer[0] = parseFloat(arguments[k][l]);
+          if (l >= arguments[k + 1].length) {
+            buffer[1] = null;
+          } else {
+            buffer[1] = parseFloat(arguments[k + 1][l]);
+          }
+
+          ydata[l] = buffer;
+        }
+        dataObj = {
+          cropThreshold: 600,
+          name: 'set ' + count++,
+          data: ydata
+        };
+        dataSeries.push(dataObj);
+      }
+    }
+    return dataSeries;
+  };
+
+ /* parseDataWebix = function parseData(args) {
+    var data, xdata, ydata;
+    var argsLen = arguments.length;
+    var argsZeroLen = arguments[0].length;
+
+    if (argsLen === 1) {
+      // need to generate an x vector
+      xdata = new Array(argsZeroLen).fill(0).map(function(x, i) { return i + 1; });
+      ydata = new Array(argsZeroLen);
+
+      for (var i = 0; i < argsZeroLen; i++) {
+        ydata[i] = parseFloat(arguments[0][i]);
+      }
+      data = [{
+        type: chartType,
+        x: xdata,
+        y: ydata,
+        mode: chartMode,
+        line: {
+          color: colors[1],
+          width: 3,
+          shape: lineShape
+        },
+        marker: {
+          size: 9
+        }
+      }];
+    } else {
+      // create data objects for each pair of x and y
+      // push the objects onto the data array.
+
+      // TODO: need to account for y data lengths not equal to x data length.
+
+      data = [];
+      xdata = new Array(argsZeroLen);
+
+      for (var j = 0; j < argsZeroLen; j++) {
+        xdata[j] = parseFloat(arguments[0][j]);
+      }
+
+      for (var k = 1; k < argsLen; k++) {
+        ydata = new Array(argsZeroLen);
+        for (var l = 0; l < argsZeroLen; l++) {
+          ydata[l] = parseFloat(arguments[k][l]);
+        }
+
+        var dataObj = {
+          type: chartType,
+          x: xdata,
+          y: ydata,
+          mode: chartMode,
+          name: 'y' + k,
+          line: {
+            color: colors[k],
+            width: 3,
+            shape: lineShape
+          },
+          marker: {
+            size: 9
+          }
+        };
+
+        data.push(dataObj);
+      }
+    }
+    return data;
+  };
+
+  // Parse the data for the webix polar chart.
+  parseDataPolar = function parseDataPolar(args) {
+    console.time("data parsing time");
+    var lenj = arguments[0].length,
+        lenk = arguments.length,
+        data = new Array(lenj),
+        buffer;
+    for (var j = 0; j < lenj; j++) {
+      buffer = new Array(lenk);
+      for (var k = 0; k < lenk; k++) {
+        if (j >= arguments[k].length) {
+          buffer[k] = null;
+        } else {
+          buffer[k] = parseFloat(arguments[k][j]);
+        }
+      }
+      buffer[0] = buffer[0] * 180 / math.pi;
+      console.log(math.round(buffer[0]));
+      data[j] = buffer;
+    }
+    console.timeEnd("data parsing time");
+    return data;
+  };
+
+  // Parse the data for the various chart functions.
+  parseDataOld = function parseDataOld(args) {
     console.time("data parsing time");
     var lenj = arguments[0].length,
         lenk = arguments.length,
@@ -591,5 +890,5 @@ var awesompleteDivUl = null;
     console.timeEnd("chart creation time");
 
     return chartProto;
-  };
+  };*/
 }());
