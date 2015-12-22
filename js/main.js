@@ -17,13 +17,11 @@ var awesompleteDivUl = null;
       preans = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">',
       preerr = '<i class="prefix fa fa-angle-double-right"></i> <span class="cmderr">',
       sufans = '</span>',
-      precision = 8,  // default output format significant digits.
-      sampleChart = false;
+      precision = 8;  // default output format significant digits.
 
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
-      chart = null, bgcolor, sampleSeries, chartDiv, lineShape, parseDataPolar,
-      points, cmdinput, autocompleter, helpExt, chartMode, chartType,
-      parseData, createChart, terminal, sampleChartType, parseDataOld;
+      chart = null, bgcolor, sampleSeries, chartDiv, lineShape,
+      points, cmdinput, autocompleter, helpExt, parseData, createChart, terminal;
 
   var hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348'];
 
@@ -149,7 +147,6 @@ var awesompleteDivUl = null;
     '<tr><td>clear vars</td><td class="answer">clears workspace variables</td></tr>',
     '<tr><td>clear all</td><td class="answer">clears window and variables</td></tr>',
     '<tr><td>clear chart</td><td class="answer">clears current chart</td></tr>',
-    '<tr><td>info(<em>var</em>)</td><td class="answer">provides names (keys) of returned values for a <em>var</em> that contains multiple values</td></tr>',
     '<tr><td>getData(<em>"name", var</em>)</td><td class="answer">retrieves <em>name</em> value for a <em>var</em> that contains multiple values</td></tr>',
     '<tr><td>help</td><td class="answer">displays this help screen</td></tr>',
     '<tr><td>help <em>command</em></td><td class="answer">displays Math.js <em>command</em> documentation</td></tr>',
@@ -586,14 +583,12 @@ var awesompleteDivUl = null;
               terminal.clear();
               terminal.clearWelcome();
               if (chart) {
-                chart.destructor();
-                sampleChart = false;
+                chart.destroy();
               }
               return '';
             } else if (args[0] === 'chart') {
               if (chart) {
-                chart.destructor();
-                sampleChart = false;
+                chart.destroy();
               }
               return '';
             } else {
@@ -729,166 +724,4 @@ var awesompleteDivUl = null;
     }
     return dataSeries;
   };
-
- /* parseDataWebix = function parseData(args) {
-    var data, xdata, ydata;
-    var argsLen = arguments.length;
-    var argsZeroLen = arguments[0].length;
-
-    if (argsLen === 1) {
-      // need to generate an x vector
-      xdata = new Array(argsZeroLen).fill(0).map(function(x, i) { return i + 1; });
-      ydata = new Array(argsZeroLen);
-
-      for (var i = 0; i < argsZeroLen; i++) {
-        ydata[i] = parseFloat(arguments[0][i]);
-      }
-      data = [{
-        type: chartType,
-        x: xdata,
-        y: ydata,
-        mode: chartMode,
-        line: {
-          color: colors[1],
-          width: 3,
-          shape: lineShape
-        },
-        marker: {
-          size: 9
-        }
-      }];
-    } else {
-      // create data objects for each pair of x and y
-      // push the objects onto the data array.
-
-      // TODO: need to account for y data lengths not equal to x data length.
-
-      data = [];
-      xdata = new Array(argsZeroLen);
-
-      for (var j = 0; j < argsZeroLen; j++) {
-        xdata[j] = parseFloat(arguments[0][j]);
-      }
-
-      for (var k = 1; k < argsLen; k++) {
-        ydata = new Array(argsZeroLen);
-        for (var l = 0; l < argsZeroLen; l++) {
-          ydata[l] = parseFloat(arguments[k][l]);
-        }
-
-        var dataObj = {
-          type: chartType,
-          x: xdata,
-          y: ydata,
-          mode: chartMode,
-          name: 'y' + k,
-          line: {
-            color: colors[k],
-            width: 3,
-            shape: lineShape
-          },
-          marker: {
-            size: 9
-          }
-        };
-
-        data.push(dataObj);
-      }
-    }
-    return data;
-  };
-
-  // Parse the data for the webix polar chart.
-  parseDataPolar = function parseDataPolar(args) {
-    console.time("data parsing time");
-    var lenj = arguments[0].length,
-        lenk = arguments.length,
-        data = new Array(lenj),
-        buffer;
-    for (var j = 0; j < lenj; j++) {
-      buffer = new Array(lenk);
-      for (var k = 0; k < lenk; k++) {
-        if (j >= arguments[k].length) {
-          buffer[k] = null;
-        } else {
-          buffer[k] = parseFloat(arguments[k][j]);
-        }
-      }
-      buffer[0] = buffer[0] * 180 / math.pi;
-      console.log(math.round(buffer[0]));
-      data[j] = buffer;
-    }
-    console.timeEnd("data parsing time");
-    return data;
-  };
-
-  // Parse the data for the various chart functions.
-  parseDataOld = function parseDataOld(args) {
-    console.time("data parsing time");
-    var lenj = arguments[0].length,
-        lenk = arguments.length,
-        data = new Array(lenj),
-        buffer;
-    for (var j = 0; j < lenj; j++) {
-      buffer = new Array(lenk);
-      for (var k = 0; k < lenk; k++) {
-        if (j >= arguments[k].length) {
-          buffer[k] = null;
-        } else {
-          buffer[k] = parseFloat(arguments[k][j]);
-        }
-      }
-      data[j] = buffer;
-    }
-    console.timeEnd("data parsing time");
-    return data;
-  };
-
-  // Creates a chart from the provided data and specified type.
-  createChart = function createChart(data, type, usePoints) {
-    console.time("chart creation time");
-    var itemRadius = usePoints ? 4 : 0,
-        mod = Math.trunc(data.length / 5),
-        series = new Array(data[0].length - 1),
-        len = data[0].length,
-        chartProto;
-
-    for (var i = 1; i < len; i++) {
-      series[i - 1] = {
-        value: "#data" + i + "#",
-        item: {
-          color: colors[i],
-          radius: itemRadius
-        },
-        line: {
-          color: colors[i],
-          width: 3
-        }
-      };
-    }
-
-    chartProto = webix.ui({
-      id: "lineChart",
-      view: "chart",
-      data: data,
-      datatype: "jsarray",
-      container: "chart-div",
-      type: type,
-      border: true,
-      xAxis: {
-        template: function(obj){
-          return (obj.data0 % mod ? "" : obj.data0);
-        },
-        lines: function(obj){
-          return (obj.data0 % mod ? false : true);
-        }
-      },
-      yAxis: {},
-      series: series
-    });
-
-    console.timeEnd("chart creation time");
-
-    return chartProto;
-  };*/
 }());
