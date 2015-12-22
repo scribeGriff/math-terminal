@@ -25,7 +25,7 @@
     options.separator = options.separator || defaults.separator;
     options.theme = options.theme || defaults.theme;
 
-    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|line.*|linepts.*|curve.*|curvepts.*|sample.*|polar.*|xaxis.*|yaxis.*|title.*|subtitle.*|info.*|getData.*$/i;
+    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|line.*|linepts.*|curve.*|curvepts.*|sample.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*|xaxis.*|yaxis.*|title.*|subtitle.*|info.*|getData.*$/i;
     var matchConsoleCmds = /^help.*|clear.*|theme.*|precision.*$/i;
 
     var extensions = Array.prototype.slice.call(arguments, 2);
@@ -164,10 +164,10 @@
       input.autofocus = false;
       input.readOnly = true;
 
-      // Check if a valid built-in command name.  If not, try to format as tex
-      // and render with KaTeX.
+      // Check if a valid built-in command name or is just an array of values.  
+      // If not, try to format as tex and render with KaTeX.
       // With awesomplete, we now have an extra layer of heirarchy with the added div.
-      if (input.value.match(matchAllBuiltIns)) {
+      if (input.value.match(matchAllBuiltIns) || input.value.match(/\[([^\]]+)];?/)) {
         if (awesomplete) {
           input.parentNode.insertAdjacentHTML('beforebegin', input.value);
         } else {

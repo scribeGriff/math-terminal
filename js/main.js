@@ -20,13 +20,12 @@ var awesompleteDivUl = null;
       precision = 8;  // default output format significant digits.
 
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
-      chart = null, bgcolor, sampleSeries, chartDiv, lineShape,
-      points, cmdinput, autocompleter, helpExt, parseData, createChart, terminal;
+      chart = null, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData, terminal;
 
   var hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348'];
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
-      matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|sample.*|polar.*|xaxis.*|yaxis.*|title.*|subtitle.*$/,
+      matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|sample.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*|xaxis.*|yaxis.*|title.*|subtitle.*$/,
       matchWaveGenCmds = /sinewave.*|squarewave.*|sawtoothwave.*|trianglewave.*|impulse.*|step.*|gauss.*$/,
       matchMathExtensions = /fft.*|ifft.*|fsps.*|conv.*|deconv.*|corr.*|filter1d.*|length.*|addSeqs.*$/;
 
@@ -192,6 +191,7 @@ var awesompleteDivUl = null;
   };
 
   math.config({
+    // bignumber causes erroneous calculations of sine(x).
     //number: 'bignumber'
   });
 
@@ -332,6 +332,63 @@ var awesompleteDivUl = null;
       });
 
     },
+
+    scatter: function scatter(args) {
+      var dataSeries;
+      if (arguments.length === 0) {
+        return;
+      } else {
+        dataSeries = parseData.apply(null, arguments);
+      }
+
+      if (chart) chart.destroy();
+
+      chart = Highcharts.chart(chartDiv, {
+        chart: {
+          type: 'scatter',
+          zoomType: 'xy',
+          panning: true,
+          panKey: 'shift'
+        },
+        plotOptions: {
+          scatter: {
+            marker: {
+              radius: 5,
+              states: {
+                hover: {
+                  lineColor: 'rgb(100,100,100)'
+                }
+              }
+            },
+            states: {
+              hover: {
+                marker: {
+                  enabled: false
+                }
+              }
+            }
+          }
+        },
+        xAxis: {
+          startOnTick: true,
+          endOnTick: true
+        },
+        series: dataSeries
+      });
+    },
+
+    linlog: function linlog(args) {
+
+    },
+
+    loglin: function loglin(args) {
+
+    },
+
+    loglog: function loglog(args) {
+
+    },
+
     // Draws a polar plot.
     polar: function polar(args) {
       var dataSeries = [], 
