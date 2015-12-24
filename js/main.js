@@ -330,7 +330,6 @@ var awesompleteDivUl = null;
         },
         series: dataSeries
       });
-
     },
 
     scatter: function scatter(args) {
@@ -377,16 +376,122 @@ var awesompleteDivUl = null;
       });
     },
 
+    // Similiar to linepts() but with a logarithmic y axis.
     linlog: function linlog(args) {
+      var dataSeries;
+      if (arguments.length === 0) {
+        return;
+      } else {
+        dataSeries = parseData.apply(null, arguments);
+      }
 
+      if (chart) chart.destroy();
+
+      chart = Highcharts.chart(chartDiv, {
+        chart: {
+          type: 'line',
+          zoomType: 'x',
+          panning: true,
+          panKey: 'shift'
+        },
+        plotOptions: {
+          series: {
+            marker: {
+              enabled: true,
+              connectNulls: true
+            }
+          }
+        },
+        yAxis: {
+          type: 'logarithmic',
+          minorTickInterval: 0.1
+        },
+        tooltip: {
+          valueDecimals: 6,
+          shared: true,
+        },
+        series: dataSeries
+      });
     },
 
+    // Similiar to linepts() but with a logarithmic x axis.
     loglin: function loglin(args) {
+      var dataSeries;
+      if (arguments.length === 0) {
+        return;
+      } else {
+        dataSeries = parseData.apply(null, arguments);
+      }
 
+      if (chart) chart.destroy();
+
+      chart = Highcharts.chart(chartDiv, {
+        chart: {
+          type: 'line',
+          zoomType: 'x',
+          panning: true,
+          panKey: 'shift'
+        },
+        plotOptions: {
+          series: {
+            marker: {
+              enabled: true,
+              connectNulls: true
+            }
+          }
+        },
+        xAxis: {
+          type: 'logarithmic',
+          minorTickInterval: 0.1
+        },
+        tooltip: {
+          valueDecimals: 6,
+          shared: true,
+        },
+        series: dataSeries
+      });
     },
 
+    // Similiar to linepts() but with a logarithmic x and y axis.
     loglog: function loglog(args) {
+      var dataSeries;
+      if (arguments.length === 0) {
+        return;
+      } else {
+        dataSeries = parseData.apply(null, arguments);
+      }
 
+      if (chart) chart.destroy();
+
+      chart = Highcharts.chart(chartDiv, {
+        chart: {
+          type: 'line',
+          zoomType: 'x',
+          panning: true,
+          panKey: 'shift'
+        },
+        plotOptions: {
+          series: {
+            marker: {
+              enabled: true,
+              connectNulls: true
+            }
+          }
+        },
+        xAxis: {
+          type: 'logarithmic',
+          minorTickInterval: 0.1
+        },
+        yAxis: {
+          type: 'logarithmic',
+          minorTickInterval: 0.1
+        },
+        tooltip: {
+          valueDecimals: 6,
+          shared: true,
+        },
+        series: dataSeries
+      });
     },
 
     // Draws a polar plot.
@@ -462,6 +567,8 @@ var awesompleteDivUl = null;
       });
     },
     // Draws a stem chart using bar and points.
+    // Does not accept time information.  All samples start at n = 0.
+    // See samplen() for sample plot that takes time information.
     sample: function sample(args) {
       var dataSeries = [], 
           ydata,
@@ -479,6 +586,121 @@ var awesompleteDivUl = null;
           }
 
           var dataObj = [{
+            type: 'column',
+            cropThreshold: 600,
+            name: 'set ' + count++,
+            data: ydata,
+            color: hccolors[k]
+          }, {
+            type: 'scatter',
+            cropThreshold: 600,
+            data: ydata,
+            name: 'sample data',
+            linkedTo: ':previous',
+            marker: {
+              symbol: 'circle',
+              lineWidth: 2,
+              lineColor: hccolors[k],
+              fillColor: 'transparent'
+            }
+          }];
+          Array.prototype.push.apply(dataSeries, dataObj);
+        }
+      }
+
+      if (chart) chart.destroy();
+
+      chart = Highcharts.chart(chartDiv, {
+        chart: {
+          zoomType: 'x',
+          panning: true,
+          panKey: 'shift'
+        },
+        tooltip: {
+          valueDecimals: 6,
+          shared: true,
+        },
+        plotOptions: {
+          column: {
+            grouping: false,
+            shadow: false,
+            borderWidth: 0
+          },
+          series: {
+            pointWidth: 3,
+            stickyTracking: false,
+            states: {
+              hover: {
+                enabled: false
+              }
+            }
+          }
+        },
+        yAxis: {
+          plotLines: [{
+            color: '#76767A',
+            width: 2,
+            value: 0,
+            zIndex: 5
+          }]
+        },
+        series: dataSeries
+      });
+    },
+    // Like sample plot, but accepts timing information.
+    samplen: function samplen(args) {
+      var dataSeries = [], 
+          ydata,
+          count,
+          dataObj,
+          buffer,
+          argsLen = arguments.length;
+
+      if (argsLen === 0) {
+        return;
+      } else if (argsLen === 1) {
+        ydata = new Array(arguments[0].length);
+        for (var j = 0; j < arguments[0].length; j++) {
+          ydata[j] = parseFloat(arguments[0][j]);
+        }
+
+        dataObj = [{
+          type: 'column',
+          cropThreshold: 600,
+          name: 'set ' + 1,
+          data: ydata,
+          color: hccolors[0]
+        }, {
+          type: 'scatter',
+          cropThreshold: 600,
+          data: ydata,
+          name: 'sample data',
+          linkedTo: ':previous',
+          marker: {
+            symbol: 'circle',
+            lineWidth: 2,
+            lineColor: hccolors[0],
+            fillColor: 'transparent'
+          }
+        }];
+        Array.prototype.push.apply(dataSeries, dataObj);
+      } else {
+        // need to generate n,y pairs
+        count = 1;
+        for (var k = 0; k < argsLen; k += 2) {
+          ydata = new Array(arguments[k].length);
+          for (var l = 0; l < arguments[k].length; l++) {
+            buffer = new Array(2);
+            buffer[0] = parseFloat(arguments[k][l]);
+            if (l >= arguments[k + 1].length) {
+              buffer[1] = null;
+            } else {
+              buffer[1] = parseFloat(arguments[k + 1][l]);
+            }
+
+            ydata[l] = buffer;
+          }
+          dataObj = [{
             type: 'column',
             cropThreshold: 600,
             name: 'set ' + count++,
