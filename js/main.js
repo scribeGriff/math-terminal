@@ -17,7 +17,7 @@ var awesompleteDivUl = null;
       preans = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">',
       preerr = '<i class="prefix fa fa-angle-double-right"></i> <span class="cmderr">',
       sufans = '</span>',
-      precision = 8;  // default output format significant digits.
+      precisionVar = 8;  // default output format significant digits.
 
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
       chart = null, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData, terminal;
@@ -848,8 +848,8 @@ var awesompleteDivUl = null;
   // This example defines several custom commands for the terminal.
   terminal = new Terminal('terminal', {}, {
     execute: function(cmd, args) {
-      switch (cmd) {
-        case 'clear':
+      var cmds = {
+        clear: function clear() {
           if (args && args[0]) {
             if (args.length > 1) {
               return preerr + 'Too many arguments' + sufans;
@@ -877,8 +877,9 @@ var awesompleteDivUl = null;
           terminal.clear();
           terminal.clearWelcome();
           return '';
+        },
 
-        case 'help':
+        help: function help() {
           if (args && args[0]) {
             if (args.length > 1) {
               return preerr + 'Too many arguments' + sufans;
@@ -895,8 +896,9 @@ var awesompleteDivUl = null;
             }
           }
           return helpinfo;
+        },
 
-        case 'theme':
+        theme: function theme() {
           if (args && args[0]) {
             if (args.length > 1) {
               return preerr + 'Too many arguments' + sufans;
@@ -908,52 +910,59 @@ var awesompleteDivUl = null;
             }
           }
           return preans + terminal.getTheme() + sufans;
+        },
 
-        case 'precision':
+        precision: function precision() {
           if (args && args[0]) {
             if (args.length > 1) {
               return preerr + 'Too many arguments' + sufans;
             } else if (args[0].match(/^([0-9]|1[0-6])$/)) { 
-              precision = parseInt(args[0]);
+              precisionVar = parseInt(args[0]);
               return ''; 
             } else {
               return preerr + 'Invalid precision value' + sufans;
             }
           }
-          return preans + precision + sufans;
+          return preans + precisionVar + sufans;
+        },
 
-        case 'ver':
-        case 'version':
+        ver: function ver() {
           return math.version;
+        },
+        version: function version() {
+          return math.version;
+        }
+      };
 
-        default:
-          var result, katstr, formres;
-          // Check for valid Math.js command.
+      if (typeof cmds[cmd] !== 'function') {
+        var result, katstr, formres;
+        // Check for valid Math.js command.
+        try {
+          result = parser.eval(cmd);
+        } catch(error) {
+          // Unknown command.
+          return false;
+        }
+        if (cmd.match(matchChartCmds)) {
+          // Generate chart but don't return any result for now.
+          return '';
+        } else if (cmd.match(/[;]$/)) {
+          // Suppress the empty array symbol if line ends in a ;
+          return '';
+        } else if (cmd.match(matchWaveGenCmds)) {
+          return 'generated waveform';
+        } else {
+          // Check for Katex format of solution.
           try {
-            result = parser.eval(cmd);
+            formres = math.format(result, precisionVar);
+            katstr = katex.renderToString(formres);
+            return preans + katstr + sufans;
           } catch(error) {
-            // Unknown command.
-            return false;
+            return preans + formres + sufans;
           }
-          if (cmd.match(matchChartCmds)) {
-            // Generate chart but don't return any result for now.
-            return '';
-          } else if (cmd.match(/[;]$/)) {
-            // Suppress the empty array symbol if line ends in a ;
-            return '';
-          } else if (cmd.match(matchWaveGenCmds)) {
-            return 'generated waveform';
-          } else {
-            // Check for Katex format of solution.
-            try {
-              formres = math.format(result, precision);
-              katstr = katex.renderToString(formres);
-              return preans + katstr + sufans;
-            } catch(error) {
-              return preans + formres + sufans;
-            }
-          }
+        }
       }
+      return cmds[cmd]();
     }
   });
 
