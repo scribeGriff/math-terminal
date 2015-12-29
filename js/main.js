@@ -1,5 +1,5 @@
 /* global math: false, katex: false, Terminal: false, document: false, webix: false, Awesomplete: false, Highcharts: false */
-/* jshint node: true, browser: true, loopfunc: true */
+/* jshint node: true, browser: true, loopfunc: true, esnext: true */
 
 /* globals */
 /* For debugging autocomplete and later perhaps as an option to disable. */
@@ -15,12 +15,12 @@ var awesompleteDivUl = null;
 
   var parser = new math.parser(),
       preans = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">',
-      preerr = '<i class="prefix fa fa-angle-double-right"></i> <span class="cmderr">',
+      preerr = '<i class="prefix fa fa-angle-double-right"></i> <span class="cmderror">',
       sufans = '</span>',
       precisionVar = 8;  // default output format significant digits.
 
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
-      chart = null, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData, terminal;
+      chart = null, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData, terminal, createBaseChart;
 
   var hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348'];
 
@@ -197,185 +197,6 @@ var awesompleteDivUl = null;
 
   // Import chart commands to mathjs.
   math.import({
-    // Draws a curve through each data point but doesn't draw specific points.
-    curve: function curve(args) {
-      var dataSeries;
-      if (arguments.length === 0) {
-        return;
-      } else {
-        dataSeries = parseData.apply(null, arguments);
-      }
-
-      if (chart) chart.destroy();
-
-      chart = Highcharts.chart(chartDiv, {
-        chart: {
-          type: 'spline',
-          zoomType: 'x',
-          panning: true,
-          panKey: 'shift'
-        },
-        plotOptions: {
-          series: {
-            marker: {
-              enabled: false,
-              connectNulls: true
-            }
-          }
-        },
-        tooltip: {
-          valueDecimals: 6,
-          shared: true,
-        },
-        series: dataSeries
-      });
-    },
-    // Draws a line to each data point but doesn't draw specific points.
-    line: function line(args) {
-      var dataSeries;
-      if (arguments.length === 0) {
-        return;
-      } else {
-        dataSeries = parseData.apply(null, arguments);
-      }
-
-      if (chart) chart.destroy();
-
-      chart = Highcharts.chart(chartDiv, {
-        chart: {
-          type: 'line',
-          zoomType: 'x',
-          panning: true,
-          panKey: 'shift'
-        },
-        plotOptions: {
-          series: {
-            marker: {
-              enabled: false,
-              connectNulls: true
-            }
-          }
-        },
-        tooltip: {
-          valueDecimals: 6,
-          shared: true,
-        },
-        series: dataSeries
-      });
-
-    },
-    // Draws a curve through each data point and draws specific points.
-    curvepts: function curvepts(args) {
-      var dataSeries;
-      if (arguments.length === 0) {
-        return;
-      } else {
-        dataSeries = parseData.apply(null, arguments);
-      }
-
-      if (chart) chart.destroy();
-
-      chart = Highcharts.chart(chartDiv, {
-        chart: {
-          type: 'spline',
-          zoomType: 'x',
-          panning: true,
-          panKey: 'shift'
-        },
-        plotOptions: {
-          series: {
-            marker: {
-              enabled: true,
-              connectNulls: true
-            }
-          }
-        },
-        tooltip: {
-          valueDecimals: 6,
-          shared: true,
-        },
-        series: dataSeries
-      });
-
-    },
-    // Draws a line through each data point and draws specific points.
-    linepts: function linepts(args) {
-      var dataSeries;
-      if (arguments.length === 0) {
-        return;
-      } else {
-        dataSeries = parseData.apply(null, arguments);
-      }
-
-      if (chart) chart.destroy();
-
-      chart = Highcharts.chart(chartDiv, {
-        chart: {
-          type: 'line',
-          zoomType: 'x',
-          panning: true,
-          panKey: 'shift'
-        },
-        plotOptions: {
-          series: {
-            marker: {
-              enabled: true,
-              connectNulls: true
-            }
-          }
-        },
-        tooltip: {
-          valueDecimals: 6,
-          shared: true,
-        },
-        series: dataSeries
-      });
-    },
-
-    scatter: function scatter(args) {
-      var dataSeries;
-      if (arguments.length === 0) {
-        return;
-      } else {
-        dataSeries = parseData.apply(null, arguments);
-      }
-
-      if (chart) chart.destroy();
-
-      chart = Highcharts.chart(chartDiv, {
-        chart: {
-          type: 'scatter',
-          zoomType: 'xy',
-          panning: true,
-          panKey: 'shift'
-        },
-        plotOptions: {
-          scatter: {
-            marker: {
-              radius: 5,
-              states: {
-                hover: {
-                  lineColor: 'rgb(100,100,100)'
-                }
-              }
-            },
-            states: {
-              hover: {
-                marker: {
-                  enabled: false
-                }
-              }
-            }
-          }
-        },
-        xAxis: {
-          startOnTick: true,
-          endOnTick: true
-        },
-        series: dataSeries
-      });
-    },
-
     // Similiar to linepts() but with a logarithmic y axis.
     linlog: function linlog(args) {
       var dataSeries;
@@ -929,8 +750,125 @@ var awesompleteDivUl = null;
         ver: function ver() {
           return math.version;
         },
+
         version: function version() {
           return math.version;
+        },
+
+        curve: function curve() {
+          var dataSeries,
+              chartType = 'spline',
+              markerEnabled = false;
+          if (args.length === 0) {
+            return preerr + 'The curve chart needs to know what data to plot.  Please see <em>help curve</em> for more information.' + sufans;
+          } else {
+            dataSeries = parseData.apply(null, args.map(JSON.parse));
+          }
+
+          if (chart) chart.destroy();
+
+          chart = createBaseChart(chartDiv, dataSeries, chartType, markerEnabled);
+
+          return '';
+        },
+
+        line: function line() {
+          var dataSeries,
+              chartType = 'line',
+              markerEnabled = false;
+          if (args.length === 0) {
+            return preerr + 'The line chart needs to know what data to plot.  Please see <em>help line</em> for more information.' + sufans;
+          } else {
+            dataSeries = parseData.apply(null, args.map(JSON.parse));
+          }
+
+          if (chart) chart.destroy();
+
+          chart = createBaseChart(chartDiv, dataSeries, chartType, markerEnabled);
+
+          return '';
+        },
+
+        curvepts: function curvepts() {
+          var dataSeries,
+              chartType = 'spline',
+              markerEnabled = true;
+          if (args.length === 0) {
+            return preerr + 'The curvepts chart needs to know what data to plot.  Please see <em>help curvepts</em> for more information.' + sufans;
+          } else {
+            dataSeries = parseData.apply(null, args.map(JSON.parse));
+          }
+
+          if (chart) chart.destroy();
+
+          chart = createBaseChart(chartDiv, dataSeries, chartType, markerEnabled);
+
+          return '';
+        },
+
+        linepts: function linepts() {
+          var dataSeries,
+              chartType = 'line',
+              markerEnabled = true;
+          if (args.length === 0) {
+            return preerr + 'The linepts chart needs to know what data to plot.  Please see <em>help linepts</em> for more information.' + sufans;
+          } else {
+            dataSeries = parseData.apply(null, args.map(JSON.parse));
+          }
+
+          if (chart) chart.destroy();
+
+          chart = createBaseChart(chartDiv, dataSeries, chartType, markerEnabled);
+
+          return '';
+        },
+
+        scatter: function scatter() {
+          var dataSeries,
+              chartType = 'line',
+              markerEnabled = true;
+          if (args.length === 0) {
+            return preerr + 'The scatter chart needs to know what data to plot.  Please see <em>help scatter</em> for more information.' + sufans;
+          } else {
+            dataSeries = parseData.apply(null, args.map(JSON.parse));
+          }
+
+          if (chart) chart.destroy();
+
+          chart = Highcharts.chart(chartDiv, {
+            chart: {
+              type: 'scatter',
+              zoomType: 'xy',
+              panning: true,
+              panKey: 'shift'
+            },
+            plotOptions: {
+              scatter: {
+                marker: {
+                  radius: 5,
+                  states: {
+                    hover: {
+                      lineColor: 'rgb(100,100,100)'
+                    }
+                  }
+                },
+                states: {
+                  hover: {
+                    marker: {
+                      enabled: false
+                    }
+                  }
+                }
+              }
+            },
+            xAxis: {
+              startOnTick: true,
+              endOnTick: true
+            },
+            series: dataSeries
+          });
+
+          return '';
         }
       };
 
@@ -1011,5 +949,29 @@ var awesompleteDivUl = null;
       }
     }
     return dataSeries;
+  };
+
+  createBaseChart = function createBaseChart(container, chartData, type, enableMarkers) {
+    return Highcharts.chart(container, {
+      chart: {
+        type: type,
+        zoomType: 'x',
+        panning: true,
+        panKey: 'shift'
+      },
+      plotOptions: {
+        series: {
+          marker: {
+            enabled: enableMarkers,
+            connectNulls: true
+          }
+        }
+      },
+      tooltip: {
+        valueDecimals: 6,
+        shared: true,
+      },
+      series: chartData
+    });
   };
 }());

@@ -26,7 +26,7 @@
     options.theme = options.theme || defaults.theme;
 
     var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|ver.*|version.*|line.*|linepts.*|curve.*|curvepts.*|sample.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*|xaxis.*|yaxis.*|title.*|subtitle.*|info.*|getData.*$/i;
-    var matchConsoleCmds = /^help.*|clear.*|theme.*|precision.*|ver.*|version.*$/i;
+    var matchConsoleCmds = /^help.*|clear.*|theme.*|precision.*|ver.*|version.*|curve.*|line.*|curvepts.*|linepts.*|scatter.*$/i;
 
     var extensions = Array.prototype.slice.call(arguments, 2);
 
