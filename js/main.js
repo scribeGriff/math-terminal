@@ -757,25 +757,57 @@ var awesompleteDivUl = null;
 
         curve: function curve() {
           var dataSeries,
-              chartType = 'spline',
-              markerEnabled = false;
+              argVal,
+              options = {
+                type: 'spline',
+                enableMarkers: false
+              };
+
           if (args.length === 0) {
             return preerr + 'The curve chart needs to know what data to plot.  Please see <em>help curve</em> for more information.' + sufans;
           } else {
-            dataSeries = parseData.apply(null, args.map(JSON.parse));
+            // Try to parse the data and format it for plotting.
+            try {
+              // Check if argument is a terminal variable by trying to retrieve the value.
+              for (var i = 0; i < args.length; i++) {
+                argVal = parser.eval(args[i]);
+                if (typeof argVal != 'undefined') {
+                  args[i] = argVal;
+                }
+              }
+              // Check if all the arguments are arrays.  If not throw an error.
+              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+                throw new Error('The curve charts only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help curve</em> for more information.');
+              }
+              // Format the data for plotting.
+              dataSeries = parseData.apply(null, args.map(JSON.parse));
+            // Catch any errors.
+            } catch(error) {
+              // This usually means the data was passed without using pairs of arrays for x and y values.
+              if (error.name.toString() == "TypeError") {
+                return preerr + error.name + ': The curve chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help curve</em> for more information.' + sufans;
+              }
+              // Some other kind of error has occurred.
+              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+            }
           }
 
+          // Recommended by Highcharts for memory management.
           if (chart) chart.destroy();
 
-          chart = createBaseChart(chartDiv, dataSeries, chartType, markerEnabled);
+          // Chart the data in the correct div and with the required options.
+          chart = createBaseChart(chartDiv, dataSeries, options);
 
+          // Return an empty string to the terminal.
           return '';
         },
 
         line: function line() {
           var dataSeries,
-              chartType = 'line',
-              markerEnabled = false;
+              options = {
+                type: 'line',
+                enableMarkers: false
+              };
           if (args.length === 0) {
             return preerr + 'The line chart needs to know what data to plot.  Please see <em>help line</em> for more information.' + sufans;
           } else {
@@ -784,15 +816,17 @@ var awesompleteDivUl = null;
 
           if (chart) chart.destroy();
 
-          chart = createBaseChart(chartDiv, dataSeries, chartType, markerEnabled);
+          chart = createBaseChart(chartDiv, dataSeries, options);
 
           return '';
         },
 
         curvepts: function curvepts() {
           var dataSeries,
-              chartType = 'spline',
-              markerEnabled = true;
+              options = {
+                type: 'spline',
+                enableMarkers: true
+              };
           if (args.length === 0) {
             return preerr + 'The curvepts chart needs to know what data to plot.  Please see <em>help curvepts</em> for more information.' + sufans;
           } else {
@@ -801,15 +835,17 @@ var awesompleteDivUl = null;
 
           if (chart) chart.destroy();
 
-          chart = createBaseChart(chartDiv, dataSeries, chartType, markerEnabled);
+          chart = createBaseChart(chartDiv, dataSeries, options);
 
           return '';
         },
 
         linepts: function linepts() {
           var dataSeries,
-              chartType = 'line',
-              markerEnabled = true;
+              options = {
+                type: 'line',
+                enableMarkers: true
+              };
           if (args.length === 0) {
             return preerr + 'The linepts chart needs to know what data to plot.  Please see <em>help linepts</em> for more information.' + sufans;
           } else {
@@ -818,7 +854,7 @@ var awesompleteDivUl = null;
 
           if (chart) chart.destroy();
 
-          chart = createBaseChart(chartDiv, dataSeries, chartType, markerEnabled);
+          chart = createBaseChart(chartDiv, dataSeries, options);
 
           return '';
         },
@@ -951,10 +987,28 @@ var awesompleteDivUl = null;
     return dataSeries;
   };
 
-  createBaseChart = function createBaseChart(container, chartData, type, enableMarkers) {
+  createBaseChart = function createBaseChart(container, chartData, uoptions) {
+
+    var defaults = {
+      type: 'line',
+      enableMarkers: false,
+      xmTickInterval: null,
+      xType: 'linear',
+      ymTickInterval: null,
+      yType: 'linear'
+    };
+
+    var options = uoptions || defaults;
+    options.type = options.type || defaults.type;
+    options.enableMarkers = options.enableMarkers || defaults.enableMarkers;
+    options.xmTickInterval = options.xmTickInterval || defaults.xmTickInterval;
+    options.xType = options.xType || defaults.xType;
+    options.ymTickInterval = options.ymTickInterval || defaults.ymTickInterval;
+    options.yType = options.yType || defaults.yType;
+
     return Highcharts.chart(container, {
       chart: {
-        type: type,
+        type: options.type,
         zoomType: 'x',
         panning: true,
         panKey: 'shift'
@@ -962,10 +1016,18 @@ var awesompleteDivUl = null;
       plotOptions: {
         series: {
           marker: {
-            enabled: enableMarkers,
+            enabled: options.enableMarkers,
             connectNulls: true
           }
         }
+      },
+      xAxis: {
+        type: options.xType,
+        minorTickInterval: options.xmTickInterval
+      },
+      yAxis: {
+        type: options.yType,
+        minorTickInterval: options.ymTickInterval
       },
       tooltip: {
         valueDecimals: 6,
