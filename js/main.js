@@ -777,11 +777,11 @@ var awesompleteDivUl = null;
               }
               // Check if all the arguments are arrays.  If not throw an error.
               if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
-                throw new Error('The curve charts only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help curve</em> for more information.');
+                throw new Error('The curve chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help curve</em> for more information.');
               }
               // Format the data for plotting.
               dataSeries = parseData.apply(null, args.map(JSON.parse));
-            // Catch any errors.
+              // Catch any errors.
             } catch(error) {
               // This usually means the data was passed without using pairs of arrays for x and y values.
               if (error.name.toString() == "TypeError") {
@@ -798,12 +798,13 @@ var awesompleteDivUl = null;
           // Chart the data in the correct div and with the required options.
           chart = createBaseChart(chartDiv, dataSeries, options);
 
-          // Return an empty string to the terminal.
+          // If all went well, just return an empty string to the terminal.
           return '';
         },
 
         line: function line() {
           var dataSeries,
+              argVal,
               options = {
                 type: 'line',
                 enableMarkers: false
@@ -811,18 +812,45 @@ var awesompleteDivUl = null;
           if (args.length === 0) {
             return preerr + 'The line chart needs to know what data to plot.  Please see <em>help line</em> for more information.' + sufans;
           } else {
-            dataSeries = parseData.apply(null, args.map(JSON.parse));
+            // Try to parse the data and format it for plotting.
+            try {
+              // Check if argument is a terminal variable by trying to retrieve the value.
+              for (var i = 0; i < args.length; i++) {
+                argVal = parser.eval(args[i]);
+                if (typeof argVal != 'undefined') {
+                  args[i] = argVal;
+                }
+              }
+              // Check if all the arguments are arrays.  If not throw an error.
+              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+                throw new Error('The line chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help line</em> for more information.');
+              }
+              // Format the data for plotting.
+              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              // Catch any errors.
+            } catch(error) {
+              // This usually means the data was passed without using pairs of arrays for x and y values.
+              if (error.name.toString() == "TypeError") {
+                return preerr + error.name + ': The line chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help line</em> for more information.' + sufans;
+              }
+              // Some other kind of error has occurred.
+              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+            }
           }
 
+          // Recommended by Highcharts for memory management.
           if (chart) chart.destroy();
 
+          // Chart the data in the correct div and with the required options.
           chart = createBaseChart(chartDiv, dataSeries, options);
 
+          // If all went well, just return an empty string to the terminal.
           return '';
         },
 
         curvepts: function curvepts() {
           var dataSeries,
+              argVal,
               options = {
                 type: 'spline',
                 enableMarkers: true
@@ -830,18 +858,45 @@ var awesompleteDivUl = null;
           if (args.length === 0) {
             return preerr + 'The curvepts chart needs to know what data to plot.  Please see <em>help curvepts</em> for more information.' + sufans;
           } else {
-            dataSeries = parseData.apply(null, args.map(JSON.parse));
+            // Try to parse the data and format it for plotting.
+            try {
+              // Check if argument is a terminal variable by trying to retrieve the value.
+              for (var i = 0; i < args.length; i++) {
+                argVal = parser.eval(args[i]);
+                if (typeof argVal != 'undefined') {
+                  args[i] = argVal;
+                }
+              }
+              // Check if all the arguments are arrays.  If not throw an error.
+              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+                throw new Error('The curvepts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help curvepts</em> for more information.');
+              }
+              // Format the data for plotting.
+              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              // Catch any errors.
+            } catch(error) {
+              // This usually means the data was passed without using pairs of arrays for x and y values.
+              if (error.name.toString() == "TypeError") {
+                return preerr + error.name + ': The curvepts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help curvepts</em> for more information.' + sufans;
+              }
+              // Some other kind of error has occurred.
+              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+            }
           }
 
+          // Recommended by Highcharts for memory management.
           if (chart) chart.destroy();
 
+          // Chart the data in the correct div and with the required options.
           chart = createBaseChart(chartDiv, dataSeries, options);
 
+          // If all went well, just return an empty string to the terminal.
           return '';
         },
 
         linepts: function linepts() {
           var dataSeries,
+              argVal,
               options = {
                 type: 'line',
                 enableMarkers: true
@@ -849,13 +904,39 @@ var awesompleteDivUl = null;
           if (args.length === 0) {
             return preerr + 'The linepts chart needs to know what data to plot.  Please see <em>help linepts</em> for more information.' + sufans;
           } else {
-            dataSeries = parseData.apply(null, args.map(JSON.parse));
+            // Try to parse the data and format it for plotting.
+            try {
+              // Check if argument is a terminal variable by trying to retrieve the value.
+              for (var i = 0; i < args.length; i++) {
+                argVal = parser.eval(args[i]);
+                if (typeof argVal != 'undefined') {
+                  args[i] = argVal;
+                }
+              }
+              // Check if all the arguments are arrays.  If not throw an error.
+              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+                throw new Error('The linepts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linepts</em> for more information.');
+              }
+              // Format the data for plotting.
+              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              // Catch any errors.
+            } catch(error) {
+              // This usually means the data was passed without using pairs of arrays for x and y values.
+              if (error.name.toString() == "TypeError") {
+                return preerr + error.name + ': The linepts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linepts</em> for more information.' + sufans;
+              }
+              // Some other kind of error has occurred.
+              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+            }
           }
 
+          // Recommended by Highcharts for memory management.
           if (chart) chart.destroy();
 
+          // Chart the data in the correct div and with the required options.
           chart = createBaseChart(chartDiv, dataSeries, options);
 
+          // If all went well, just return an empty string to the terminal.
           return '';
         },
 
