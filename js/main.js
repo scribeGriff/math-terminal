@@ -197,274 +197,6 @@ var awesompleteDivUl = null;
 
   // Import chart commands to mathjs.
   math.import({
-    // Draws a polar plot.
-    polar: function polar(args) {
-      var dataSeries = [], 
-          ydata,
-          argsLen = arguments.length,
-          argsZeroLen = arguments[0].length,
-          interval = 360 / argsZeroLen;
-
-      if (argsLen === 0) {
-        return;
-      } else {
-        for (var k = 0; k < argsLen; k++) {
-          ydata = new Array(argsZeroLen);
-          for (var l = 0; l < argsZeroLen; l++) {
-            ydata[l] = parseFloat(arguments[k][l]);
-          }
-          // drop the last point since in polar charts 0 and 2pi
-          // should overlap.
-          // TODO: consider cases where this is not valid.
-          ydata.splice(-1,1);
-
-          var dataObj = {
-            type: 'line',
-            name: 'set' + k + 1,
-            data: ydata,
-            dashStyle: 'LongDash'
-          };
-
-          dataSeries.push(dataObj);
-        }
-      }
-
-      if (chart) chart.destroy();
-
-      chart = Highcharts.chart(chartDiv, {
-        chart: {
-          polar: true
-        },
-        pane: {
-          startAngle: 0,
-          endAngle: 360
-        },
-        xAxis: {
-          tickInterval: 30,
-          min: 0,
-          max: 360,
-          labels: {
-            formatter: function () {
-              return this.value + '°';
-            },
-            step: 3
-          }
-        },
-        yAxis: {
-          min: 0
-        },
-        plotOptions: {
-          series: {
-            pointStart: 0,
-            pointInterval: interval,
-            marker: {
-              enabled: false
-            }
-          },
-          column: {
-            pointPadding: 0,
-            groupPadding: 0
-          }
-        },
-        series: dataSeries
-      });
-    },
-    // Draws a stem chart using bar and points.
-    // Does not accept time information.  All samples start at n = 0.
-    // See samplen() for sample plot that takes time information.
-    sample: function sample(args) {
-      var dataSeries = [], 
-          ydata,
-          count,
-          argsLen = arguments.length;
-
-      if (argsLen === 0) {
-        return;
-      } else {
-        count = 1;
-        for (var k = 0; k < argsLen; k++) {
-          ydata = new Array(arguments[k].length);
-          for (var l = 0; l < arguments[k].length; l++) {
-            ydata[l] = parseFloat(arguments[k][l]);
-          }
-
-          var dataObj = [{
-            type: 'column',
-            cropThreshold: 600,
-            name: 'set ' + count++,
-            data: ydata,
-            color: hccolors[k]
-          }, {
-            type: 'scatter',
-            cropThreshold: 600,
-            data: ydata,
-            name: 'sample data',
-            linkedTo: ':previous',
-            marker: {
-              symbol: 'circle',
-              lineWidth: 2,
-              lineColor: hccolors[k],
-              fillColor: 'transparent'
-            }
-          }];
-          Array.prototype.push.apply(dataSeries, dataObj);
-        }
-      }
-
-      if (chart) chart.destroy();
-
-      chart = Highcharts.chart(chartDiv, {
-        chart: {
-          zoomType: 'x',
-          panning: true,
-          panKey: 'shift'
-        },
-        tooltip: {
-          valueDecimals: 6,
-          shared: true,
-        },
-        plotOptions: {
-          column: {
-            grouping: false,
-            shadow: false,
-            borderWidth: 0
-          },
-          series: {
-            pointWidth: 3,
-            stickyTracking: false,
-            states: {
-              hover: {
-                enabled: false
-              }
-            }
-          }
-        },
-        yAxis: {
-          plotLines: [{
-            color: '#76767A',
-            width: 2,
-            value: 0,
-            zIndex: 5
-          }]
-        },
-        series: dataSeries
-      });
-    },
-    // Like sample plot, but accepts timing information.
-    samplen: function samplen(args) {
-      var dataSeries = [], 
-          ydata,
-          count,
-          dataObj,
-          buffer,
-          argsLen = arguments.length;
-
-      if (argsLen === 0) {
-        return;
-      } else if (argsLen === 1) {
-        ydata = new Array(arguments[0].length);
-        for (var j = 0; j < arguments[0].length; j++) {
-          ydata[j] = parseFloat(arguments[0][j]);
-        }
-
-        dataObj = [{
-          type: 'column',
-          cropThreshold: 600,
-          name: 'set ' + 1,
-          data: ydata,
-          color: hccolors[0]
-        }, {
-          type: 'scatter',
-          cropThreshold: 600,
-          data: ydata,
-          name: 'sample data',
-          linkedTo: ':previous',
-          marker: {
-            symbol: 'circle',
-            lineWidth: 2,
-            lineColor: hccolors[0],
-            fillColor: 'transparent'
-          }
-        }];
-        Array.prototype.push.apply(dataSeries, dataObj);
-      } else {
-        // need to generate n,y pairs
-        count = 1;
-        for (var k = 0; k < argsLen; k += 2) {
-          ydata = new Array(arguments[k].length);
-          for (var l = 0; l < arguments[k].length; l++) {
-            buffer = new Array(2);
-            buffer[0] = parseFloat(arguments[k][l]);
-            if (l >= arguments[k + 1].length) {
-              buffer[1] = null;
-            } else {
-              buffer[1] = parseFloat(arguments[k + 1][l]);
-            }
-
-            ydata[l] = buffer;
-          }
-          dataObj = [{
-            type: 'column',
-            cropThreshold: 600,
-            name: 'set ' + count++,
-            data: ydata,
-            color: hccolors[k]
-          }, {
-            type: 'scatter',
-            cropThreshold: 600,
-            data: ydata,
-            name: 'sample data',
-            linkedTo: ':previous',
-            marker: {
-              symbol: 'circle',
-              lineWidth: 2,
-              lineColor: hccolors[k],
-              fillColor: 'transparent'
-            }
-          }];
-          Array.prototype.push.apply(dataSeries, dataObj);
-        }
-      }
-
-      if (chart) chart.destroy();
-
-      chart = Highcharts.chart(chartDiv, {
-        chart: {
-          zoomType: 'x',
-          panning: true,
-          panKey: 'shift'
-        },
-        tooltip: {
-          valueDecimals: 6,
-          shared: true,
-        },
-        plotOptions: {
-          column: {
-            grouping: false,
-            shadow: false,
-            borderWidth: 0
-          },
-          series: {
-            pointWidth: 3,
-            stickyTracking: false,
-            states: {
-              hover: {
-                enabled: false
-              }
-            }
-          }
-        },
-        yAxis: {
-          plotLines: [{
-            color: '#76767A',
-            width: 2,
-            value: 0,
-            zIndex: 5
-          }]
-        },
-        series: dataSeries
-      });
-    },
     // Adds and xaxis label
     xaxis: function xaxisp(xaxisTitle) {
       if (chart) {
@@ -1028,6 +760,443 @@ var awesompleteDivUl = null;
 
           // If all went well, just return an empty string to the terminal.
           return '';
+        },
+
+        linlogpts: function linlogpts() {
+          var dataSeries,
+              argVal,
+              options = {
+                enableMarkers: true,
+                ymTickInterval: 0.1,
+                yType: 'logarithmic'
+              };
+          if (arguments.length === 0) {
+            return preerr + 'The linlogpts chart needs to know what data to plot.  Please see <em>help linlogpts</em> for more information.' + sufans;
+          } else {
+            // Try to parse the data and format it for plotting.
+            try {
+              // Check if argument is a terminal variable by trying to retrieve the value.
+              for (var i = 0; i < args.length; i++) {
+                argVal = parser.eval(args[i]);
+                if (typeof argVal != 'undefined') {
+                  args[i] = argVal;
+                }
+              }
+              // Check if all the arguments are arrays.  If not throw an error.
+              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+                throw new Error('The linlogpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linlogpts</em> for more information.');
+              }
+              // Format the data for plotting.
+              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              // Catch any errors.
+            } catch(error) {
+              // This usually means the data was passed without using pairs of arrays for x and y values.
+              if (error.name.toString() == "TypeError") {
+                return preerr + error.name + ': The linlogpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linlogpts</em> for more information.' + sufans;
+              }
+              // Some other kind of error has occurred.
+              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+            }
+          }
+
+          // Recommended by Highcharts for memory management.
+          if (chart) chart.destroy();
+
+          // Chart the data in the correct div and with the required options.
+          chart = createBaseChart(chartDiv, dataSeries, options);
+
+          // If all went well, just return an empty string to the terminal.
+          return '';
+        },
+
+        loglinpts: function loglinpts() {
+          var dataSeries,
+              argVal,
+              options = {
+                enableMarkers: true,
+                xmTickInterval: 0.1,
+                xType: 'logarithmic'
+              };
+          if (arguments.length === 0) {
+            return preerr + 'The loglinpts chart needs to know what data to plot.  Please see <em>help loglinpts</em> for more information.' + sufans;
+          } else {
+            // Try to parse the data and format it for plotting.
+            try {
+              // Check if argument is a terminal variable by trying to retrieve the value.
+              for (var i = 0; i < args.length; i++) {
+                argVal = parser.eval(args[i]);
+                if (typeof argVal != 'undefined') {
+                  args[i] = argVal;
+                }
+              }
+              // Check if all the arguments are arrays.  If not throw an error.
+              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+                throw new Error('The loglinpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglinpts</em> for more information.');
+              }
+              // Format the data for plotting.
+              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              // Catch any errors.
+            } catch(error) {
+              // This usually means the data was passed without using pairs of arrays for x and y values.
+              if (error.name.toString() == "TypeError") {
+                return preerr + error.name + ': The loglinpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglinpts</em> for more information.' + sufans;
+              }
+              // Some other kind of error has occurred.
+              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+            }
+          }
+
+          // Recommended by Highcharts for memory management.
+          if (chart) chart.destroy();
+
+          // Chart the data in the correct div and with the required options.
+          chart = createBaseChart(chartDiv, dataSeries, options);
+
+          // If all went well, just return an empty string to the terminal.
+          return '';
+        },
+
+        loglogpts: function loglogpts() {
+          var dataSeries,
+              argVal,
+              options = {
+                enableMarkers: true,
+                xmTickInterval: 0.1,
+                xType: 'logarithmic',
+                ymTickInterval: 0.1,
+                yType: 'logarithmic'
+              };
+          if (arguments.length === 0) {
+            return preerr + 'The loglogpts chart needs to know what data to plot.  Please see <em>help loglogpts</em> for more information.' + sufans;
+          } else {
+            // Try to parse the data and format it for plotting.
+            try {
+              // Check if argument is a terminal variable by trying to retrieve the value.
+              for (var i = 0; i < args.length; i++) {
+                argVal = parser.eval(args[i]);
+                if (typeof argVal != 'undefined') {
+                  args[i] = argVal;
+                }
+              }
+              // Check if all the arguments are arrays.  If not throw an error.
+              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+                throw new Error('The loglogpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglogpts</em> for more information.');
+              }
+              // Format the data for plotting.
+              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              // Catch any errors.
+            } catch(error) {
+              // This usually means the data was passed without using pairs of arrays for x and y values.
+              if (error.name.toString() == "TypeError") {
+                return preerr + error.name + ': The loglogpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglogpts</em> for more information.' + sufans;
+              }
+              // Some other kind of error has occurred.
+              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+            }
+          }
+
+          // Recommended by Highcharts for memory management.
+          if (chart) chart.destroy();
+
+          // Chart the data in the correct div and with the required options.
+          chart = createBaseChart(chartDiv, dataSeries, options);
+
+          // If all went well, just return an empty string to the terminal.
+          return '';
+        },
+
+        // Draws a polar plot.
+        polar: function polar() {
+          var dataSeries = [], 
+              ydata, argVal, argsLen,
+              argsZeroLen, interval;
+
+          if (argsLen === 0) {
+            return preerr + 'The polar chart needs to know what data to plot.  Please see <em>help polar</em> for more information.' + sufans;
+          } else {
+            // Try to parse the data and format it for plotting.
+            try {
+              // Check if argument is a terminal variable by trying to retrieve the value.
+              for (var i = 0; i < args.length; i++) {
+                argVal = parser.eval(args[i]);
+                if (typeof argVal != 'undefined') {
+                  args[i] = argVal;
+                }
+              }
+              // Check if all the arguments are arrays.  If not throw an error.
+              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+                throw new Error('The polar chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help polar</em> for more information.');
+              }
+              
+              argsLen = args.length;
+              argsZeroLen = args[0].length;
+              interval = 360 / argsZeroLen;
+              
+              for (var k = 0; k < argsLen; k++) {
+                ydata = new Array(argsZeroLen);
+                for (var l = 0; l < argsZeroLen; l++) {
+                  ydata[l] = parseFloat(arguments[k][l]);
+                }
+                // drop the last point since in polar charts 0 and 2pi
+                // should overlap.
+                // TODO: consider cases where this is not valid.
+                ydata.splice(-1,1);
+
+                var dataObj = {
+                  type: 'line',
+                  name: 'set' + k + 1,
+                  data: ydata,
+                  dashStyle: 'LongDash'
+                };
+
+                dataSeries.push(dataObj);
+              }
+              // Catch any errors.
+            } catch(error) {
+              // This usually means the data was passed without using pairs of arrays for x and y values.
+              if (error.name.toString() == "TypeError") {
+                return preerr + error.name + ': The polar chart requires data to be submitted as [x1] [x1] [x3] etc.  Please see <em>help polar</em> for more information.' + sufans;
+              }
+              // Some other kind of error has occurred.
+              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+            }
+          }
+
+          if (chart) chart.destroy();
+
+          chart = Highcharts.chart(chartDiv, {
+            chart: {
+              polar: true
+            },
+            pane: {
+              startAngle: 0,
+              endAngle: 360
+            },
+            xAxis: {
+              tickInterval: 30,
+              min: 0,
+              max: 360,
+              labels: {
+                formatter: function () {
+                  return this.value + '°';
+                },
+                step: 3
+              }
+            },
+            yAxis: {
+              min: 0
+            },
+            plotOptions: {
+              series: {
+                pointStart: 0,
+                pointInterval: interval,
+                marker: {
+                  enabled: false
+                }
+              },
+              column: {
+                pointPadding: 0,
+                groupPadding: 0
+              }
+            },
+            series: dataSeries
+          });
+        },
+        // Draws a stem chart using bar and points.
+        // Does not accept time information.  All samples start at n = 0.
+        // See samplen() for sample plot that takes time information.
+        sample: function sample() {
+          var dataSeries = [], 
+              ydata,
+              count,
+              argsLen = arguments.length;
+
+          if (argsLen === 0) {
+            return;
+          } else {
+            count = 1;
+            for (var k = 0; k < argsLen; k++) {
+              ydata = new Array(arguments[k].length);
+              for (var l = 0; l < arguments[k].length; l++) {
+                ydata[l] = parseFloat(arguments[k][l]);
+              }
+
+              var dataObj = [{
+                type: 'column',
+                cropThreshold: 600,
+                name: 'set ' + count++,
+                data: ydata,
+                color: hccolors[k]
+              }, {
+                type: 'scatter',
+                cropThreshold: 600,
+                data: ydata,
+                name: 'sample data',
+                linkedTo: ':previous',
+                marker: {
+                  symbol: 'circle',
+                  lineWidth: 2,
+                  lineColor: hccolors[k],
+                  fillColor: 'transparent'
+                }
+              }];
+              Array.prototype.push.apply(dataSeries, dataObj);
+            }
+          }
+
+          if (chart) chart.destroy();
+
+          chart = Highcharts.chart(chartDiv, {
+            chart: {
+              zoomType: 'x',
+              panning: true,
+              panKey: 'shift'
+            },
+            tooltip: {
+              valueDecimals: 6,
+              shared: true,
+            },
+            plotOptions: {
+              column: {
+                grouping: false,
+                shadow: false,
+                borderWidth: 0
+              },
+              series: {
+                pointWidth: 3,
+                stickyTracking: false,
+                states: {
+                  hover: {
+                    enabled: false
+                  }
+                }
+              }
+            },
+            yAxis: {
+              plotLines: [{
+                color: '#76767A',
+                width: 2,
+                value: 0,
+                zIndex: 5
+              }]
+            },
+            series: dataSeries
+          });
+        },
+        // Like sample plot, but accepts timing information.
+        samplen: function samplen() {
+          var dataSeries = [], 
+              ydata,
+              count,
+              dataObj,
+              buffer,
+              argsLen = arguments.length;
+
+          if (argsLen === 0) {
+            return;
+          } else if (argsLen === 1) {
+            ydata = new Array(arguments[0].length);
+            for (var j = 0; j < arguments[0].length; j++) {
+              ydata[j] = parseFloat(arguments[0][j]);
+            }
+
+            dataObj = [{
+              type: 'column',
+              cropThreshold: 600,
+              name: 'set ' + 1,
+              data: ydata,
+              color: hccolors[0]
+            }, {
+              type: 'scatter',
+              cropThreshold: 600,
+              data: ydata,
+              name: 'sample data',
+              linkedTo: ':previous',
+              marker: {
+                symbol: 'circle',
+                lineWidth: 2,
+                lineColor: hccolors[0],
+                fillColor: 'transparent'
+              }
+            }];
+            Array.prototype.push.apply(dataSeries, dataObj);
+          } else {
+            // need to generate n,y pairs
+            count = 1;
+            for (var k = 0; k < argsLen; k += 2) {
+              ydata = new Array(arguments[k].length);
+              for (var l = 0; l < arguments[k].length; l++) {
+                buffer = new Array(2);
+                buffer[0] = parseFloat(arguments[k][l]);
+                if (l >= arguments[k + 1].length) {
+                  buffer[1] = null;
+                } else {
+                  buffer[1] = parseFloat(arguments[k + 1][l]);
+                }
+
+                ydata[l] = buffer;
+              }
+              dataObj = [{
+                type: 'column',
+                cropThreshold: 600,
+                name: 'set ' + count++,
+                data: ydata,
+                color: hccolors[k]
+              }, {
+                type: 'scatter',
+                cropThreshold: 600,
+                data: ydata,
+                name: 'sample data',
+                linkedTo: ':previous',
+                marker: {
+                  symbol: 'circle',
+                  lineWidth: 2,
+                  lineColor: hccolors[k],
+                  fillColor: 'transparent'
+                }
+              }];
+              Array.prototype.push.apply(dataSeries, dataObj);
+            }
+          }
+
+          if (chart) chart.destroy();
+
+          chart = Highcharts.chart(chartDiv, {
+            chart: {
+              zoomType: 'x',
+              panning: true,
+              panKey: 'shift'
+            },
+            tooltip: {
+              valueDecimals: 6,
+              shared: true,
+            },
+            plotOptions: {
+              column: {
+                grouping: false,
+                shadow: false,
+                borderWidth: 0
+              },
+              series: {
+                pointWidth: 3,
+                stickyTracking: false,
+                states: {
+                  hover: {
+                    enabled: false
+                  }
+                }
+              }
+            },
+            yAxis: {
+              plotLines: [{
+                color: '#76767A',
+                width: 2,
+                value: 0,
+                zIndex: 5
+              }]
+            },
+            series: dataSeries
+          });
         }
       };
 
