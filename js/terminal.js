@@ -25,8 +25,8 @@
     options.separator = options.separator || defaults.separator;
     options.theme = options.theme || defaults.theme;
 
-    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|ver.*|version.*|line.*|linepts.*|curve.*|curvepts.*|sample.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*|xaxis.*|yaxis.*|title.*|subtitle.*|info.*|getData.*$/i;
-    var matchConsoleCmds = /^help.*|clear.*|theme.*|precision.*|ver.*|version.*|curve.*|line.*|curvepts.*|linepts.*|scatter.*$/i;
+    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|ver.*|version.*|line.*|linepts.*|curve.*|curvepts.*|sample.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*|xaxis.*|yaxis.*|title.*|subtitle.*$/i;
+    var matchSupportCmds = /^getData.*$/i;
 
     var extensions = Array.prototype.slice.call(arguments, 2);
 
@@ -167,7 +167,7 @@
       // Check if a valid built-in command name or is just an array of values.  
       // If not, try to format as tex and render with KaTeX.
       // With awesomplete, we now have an extra layer of heirarchy with the added div.
-      if (input.value.match(matchAllBuiltIns) || input.value.match(/\[([^\]]+)];?/)) {
+      if (input.value.match(matchAllBuiltIns) || input.value.match(/\[([^\]]+)];?/) || input.value.match(matchSupportCmds)) {
         if (awesomplete) {
           input.parentNode.insertAdjacentHTML('beforebegin', input.value);
         } else {
@@ -216,7 +216,7 @@
       // Parse out command, args, and trim off whitespace.
       if (cmdline && cmdline.trim()) {
         // If command line starts with a predefined console function, parse arguments, if any.
-        if (cmdline.match(matchConsoleCmds)) {
+        if (cmdline.match(matchAllBuiltIns)) {
           args = cmdline.split(' ').filter(function(val, i) {
             return val;
           });

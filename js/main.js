@@ -197,124 +197,6 @@ var awesompleteDivUl = null;
 
   // Import chart commands to mathjs.
   math.import({
-    // Similiar to linepts() but with a logarithmic y axis.
-    linlog: function linlog(args) {
-      var dataSeries;
-      if (arguments.length === 0) {
-        return;
-      } else {
-        dataSeries = parseData.apply(null, arguments);
-      }
-
-      if (chart) chart.destroy();
-
-      chart = Highcharts.chart(chartDiv, {
-        chart: {
-          type: 'line',
-          zoomType: 'x',
-          panning: true,
-          panKey: 'shift'
-        },
-        plotOptions: {
-          series: {
-            marker: {
-              enabled: true,
-              connectNulls: true
-            }
-          }
-        },
-        yAxis: {
-          type: 'logarithmic',
-          minorTickInterval: 0.1
-        },
-        tooltip: {
-          valueDecimals: 6,
-          shared: true,
-        },
-        series: dataSeries
-      });
-    },
-
-    // Similiar to linepts() but with a logarithmic x axis.
-    loglin: function loglin(args) {
-      var dataSeries;
-      if (arguments.length === 0) {
-        return;
-      } else {
-        dataSeries = parseData.apply(null, arguments);
-      }
-
-      if (chart) chart.destroy();
-
-      chart = Highcharts.chart(chartDiv, {
-        chart: {
-          type: 'line',
-          zoomType: 'x',
-          panning: true,
-          panKey: 'shift'
-        },
-        plotOptions: {
-          series: {
-            marker: {
-              enabled: true,
-              connectNulls: true
-            }
-          }
-        },
-        xAxis: {
-          type: 'logarithmic',
-          minorTickInterval: 0.1
-        },
-        tooltip: {
-          valueDecimals: 6,
-          shared: true,
-        },
-        series: dataSeries
-      });
-    },
-
-    // Similiar to linepts() but with a logarithmic x and y axis.
-    loglog: function loglog(args) {
-      var dataSeries;
-      if (arguments.length === 0) {
-        return;
-      } else {
-        dataSeries = parseData.apply(null, arguments);
-      }
-
-      if (chart) chart.destroy();
-
-      chart = Highcharts.chart(chartDiv, {
-        chart: {
-          type: 'line',
-          zoomType: 'x',
-          panning: true,
-          panKey: 'shift'
-        },
-        plotOptions: {
-          series: {
-            marker: {
-              enabled: true,
-              connectNulls: true
-            }
-          }
-        },
-        xAxis: {
-          type: 'logarithmic',
-          minorTickInterval: 0.1
-        },
-        yAxis: {
-          type: 'logarithmic',
-          minorTickInterval: 0.1
-        },
-        tooltip: {
-          valueDecimals: 6,
-          shared: true,
-        },
-        series: dataSeries
-      });
-    },
-
     // Draws a polar plot.
     polar: function polar(args) {
       var dataSeries = [], 
@@ -806,7 +688,6 @@ var awesompleteDivUl = null;
           var dataSeries,
               argVal,
               options = {
-                type: 'line',
                 enableMarkers: false
               };
           if (args.length === 0) {
@@ -898,7 +779,6 @@ var awesompleteDivUl = null;
           var dataSeries,
               argVal,
               options = {
-                type: 'line',
                 enableMarkers: true
               };
           if (args.length === 0) {
@@ -942,49 +822,211 @@ var awesompleteDivUl = null;
 
         scatter: function scatter() {
           var dataSeries,
-              chartType = 'line',
-              markerEnabled = true;
-          if (args.length === 0) {
-            return preerr + 'The scatter chart needs to know what data to plot.  Please see <em>help scatter</em> for more information.' + sufans;
-          } else {
-            dataSeries = parseData.apply(null, args.map(JSON.parse));
-          }
-
-          if (chart) chart.destroy();
-
-          chart = Highcharts.chart(chartDiv, {
-            chart: {
-              type: 'scatter',
-              zoomType: 'xy',
-              panning: true,
-              panKey: 'shift'
-            },
-            plotOptions: {
-              scatter: {
-                marker: {
-                  radius: 5,
+              argVal,
+              options = {
+                type: 'line',
+                zoomDir: 'xy',
+                enableMarkers: true,
+                xEndOnTic: true,
+                xStartOnTic: true,
+                scatterOps: {
+                  marker: {
+                    radius: 5,
+                    states: {
+                      hover: {
+                        lineColor: 'rgb(100,100,100)'
+                      }
+                    }
+                  },
                   states: {
                     hover: {
-                      lineColor: 'rgb(100,100,100)'
-                    }
-                  }
-                },
-                states: {
-                  hover: {
-                    marker: {
-                      enabled: false
+                      marker: {
+                        enabled: false
+                      }
                     }
                   }
                 }
-              }
-            },
-            xAxis: {
-              startOnTick: true,
-              endOnTick: true
-            },
-            series: dataSeries
-          });
+              };
 
+          if (args.length === 0) {
+            return preerr + 'The scatter chart needs to know what data to plot.  Please see <em>help scatter</em> for more information.' + sufans;
+          } else {
+            // Try to parse the data and format it for plotting.
+            try {
+              // Check if argument is a terminal variable by trying to retrieve the value.
+              for (var i = 0; i < args.length; i++) {
+                argVal = parser.eval(args[i]);
+                if (typeof argVal != 'undefined') {
+                  args[i] = argVal;
+                }
+              }
+              // Check if all the arguments are arrays.  If not throw an error.
+              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+                throw new Error('The scatter chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help scatter</em> for more information.');
+              }
+              // Format the data for plotting.
+              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              // Catch any errors.
+            } catch(error) {
+              // This usually means the data was passed without using pairs of arrays for x and y values.
+              if (error.name.toString() == "TypeError") {
+                return preerr + error.name + ': The scatter chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help scatter</em> for more information.' + sufans;
+              }
+              // Some other kind of error has occurred.
+              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+            }
+          }
+
+          // Recommended by Highcharts for memory management.
+          if (chart) chart.destroy();
+
+          // Chart the data in the correct div and with the required options.
+          chart = createBaseChart(chartDiv, dataSeries, options);
+
+          // If all went well, just return an empty string to the terminal.
+          return '';
+        },
+
+        linlog: function linlog() {
+          var dataSeries,
+              argVal,
+              options = {
+                enableMarkers: false,
+                ymTickInterval: 0.1,
+                yType: 'logarithmic'
+              };
+          if (arguments.length === 0) {
+            return preerr + 'The linlog chart needs to know what data to plot.  Please see <em>help linlog</em> for more information.' + sufans;
+          } else {
+            // Try to parse the data and format it for plotting.
+            try {
+              // Check if argument is a terminal variable by trying to retrieve the value.
+              for (var i = 0; i < args.length; i++) {
+                argVal = parser.eval(args[i]);
+                if (typeof argVal != 'undefined') {
+                  args[i] = argVal;
+                }
+              }
+              // Check if all the arguments are arrays.  If not throw an error.
+              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+                throw new Error('The linlog chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linlog</em> for more information.');
+              }
+              // Format the data for plotting.
+              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              // Catch any errors.
+            } catch(error) {
+              // This usually means the data was passed without using pairs of arrays for x and y values.
+              if (error.name.toString() == "TypeError") {
+                return preerr + error.name + ': The linlog chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linlog</em> for more information.' + sufans;
+              }
+              // Some other kind of error has occurred.
+              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+            }
+          }
+
+          // Recommended by Highcharts for memory management.
+          if (chart) chart.destroy();
+
+          // Chart the data in the correct div and with the required options.
+          chart = createBaseChart(chartDiv, dataSeries, options);
+
+          // If all went well, just return an empty string to the terminal.
+          return '';
+        },
+
+        loglin: function loglin() {
+          var dataSeries,
+              argVal,
+              options = {
+                enableMarkers: false,
+                xmTickInterval: 0.1,
+                xType: 'logarithmic'
+              };
+          if (arguments.length === 0) {
+            return preerr + 'The loglin chart needs to know what data to plot.  Please see <em>help loglin</em> for more information.' + sufans;
+          } else {
+            // Try to parse the data and format it for plotting.
+            try {
+              // Check if argument is a terminal variable by trying to retrieve the value.
+              for (var i = 0; i < args.length; i++) {
+                argVal = parser.eval(args[i]);
+                if (typeof argVal != 'undefined') {
+                  args[i] = argVal;
+                }
+              }
+              // Check if all the arguments are arrays.  If not throw an error.
+              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+                throw new Error('The loglin chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglin</em> for more information.');
+              }
+              // Format the data for plotting.
+              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              // Catch any errors.
+            } catch(error) {
+              // This usually means the data was passed without using pairs of arrays for x and y values.
+              if (error.name.toString() == "TypeError") {
+                return preerr + error.name + ': The loglin chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglin</em> for more information.' + sufans;
+              }
+              // Some other kind of error has occurred.
+              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+            }
+          }
+
+          // Recommended by Highcharts for memory management.
+          if (chart) chart.destroy();
+
+          // Chart the data in the correct div and with the required options.
+          chart = createBaseChart(chartDiv, dataSeries, options);
+
+          // If all went well, just return an empty string to the terminal.
+          return '';
+        },
+
+        loglog: function loglog() {
+          var dataSeries,
+              argVal,
+              options = {
+                enableMarkers: false,
+                xmTickInterval: 0.1,
+                xType: 'logarithmic',
+                ymTickInterval: 0.1,
+                yType: 'logarithmic'
+              };
+          if (arguments.length === 0) {
+            return preerr + 'The loglog chart needs to know what data to plot.  Please see <em>help loglog</em> for more information.' + sufans;
+          } else {
+            // Try to parse the data and format it for plotting.
+            try {
+              // Check if argument is a terminal variable by trying to retrieve the value.
+              for (var i = 0; i < args.length; i++) {
+                argVal = parser.eval(args[i]);
+                if (typeof argVal != 'undefined') {
+                  args[i] = argVal;
+                }
+              }
+              // Check if all the arguments are arrays.  If not throw an error.
+              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+                throw new Error('The loglog chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglog</em> for more information.');
+              }
+              // Format the data for plotting.
+              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              // Catch any errors.
+            } catch(error) {
+              // This usually means the data was passed without using pairs of arrays for x and y values.
+              if (error.name.toString() == "TypeError") {
+                return preerr + error.name + ': The loglog chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglog</em> for more information.' + sufans;
+              }
+              // Some other kind of error has occurred.
+              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+            }
+          }
+
+          // Recommended by Highcharts for memory management.
+          if (chart) chart.destroy();
+
+          // Chart the data in the correct div and with the required options.
+          chart = createBaseChart(chartDiv, dataSeries, options);
+
+          // If all went well, just return an empty string to the terminal.
           return '';
         }
       };
@@ -1072,7 +1114,11 @@ var awesompleteDivUl = null;
 
     var defaults = {
       type: 'line',
+      zoomDir: 'x',
+      scatterOps: {},
       enableMarkers: false,
+      xEndOnTic: false,
+      xStartOnTic: false,
       xmTickInterval: null,
       xType: 'linear',
       ymTickInterval: null,
@@ -1082,6 +1128,10 @@ var awesompleteDivUl = null;
     var options = uoptions || defaults;
     options.type = options.type || defaults.type;
     options.enableMarkers = options.enableMarkers || defaults.enableMarkers;
+    options.zoomDir = options.zoomDir || defaults.zoomDir;
+    options.scatterOps = options.scatterOps || defaults.scatterOps;
+    options.xEndOnTic = options.xEndOnTic || defaults.xEndOnTic;
+    options.xStartOnTic = options.xStartOnTic || defaults.xStartOnTic;
     options.xmTickInterval = options.xmTickInterval || defaults.xmTickInterval;
     options.xType = options.xType || defaults.xType;
     options.ymTickInterval = options.ymTickInterval || defaults.ymTickInterval;
@@ -1090,7 +1140,7 @@ var awesompleteDivUl = null;
     return Highcharts.chart(container, {
       chart: {
         type: options.type,
-        zoomType: 'x',
+        zoomType: options.zoomDir,
         panning: true,
         panKey: 'shift'
       },
@@ -1100,9 +1150,12 @@ var awesompleteDivUl = null;
             enabled: options.enableMarkers,
             connectNulls: true
           }
-        }
+        },
+        scatter: options.scatterOps
       },
       xAxis: {
+        endOnTic: options.xEndOnTic,
+        startOnTic: options.xStartOnTic,
         type: options.xType,
         minorTickInterval: options.xmTickInterval
       },
