@@ -1164,7 +1164,7 @@ var awesompleteDivUl = null;
         xaxis: function xaxis() {
           if (chart) {
             chart.xAxis[0].setTitle({
-              text: JSON.parse(args[0]),
+              text: args[0],
             });
           }
           return '';
@@ -1173,7 +1173,7 @@ var awesompleteDivUl = null;
         yaxis: function yaxis() {
           if (chart) {
             chart.yAxis[0].setTitle({
-              text: JSON.parse(args[0])
+              text: args[0]
             });
           }
           return '';
@@ -1182,12 +1182,12 @@ var awesompleteDivUl = null;
         title: function title() {
           if (chart) {
             chart.setTitle({
-              text: JSON.parse(args[0])
+              text: args[0]
             });
             if (args[1] !== null) {
               chart.setTitle({
                 style: { 
-                  color: JSON.parse(args[1]) 
+                  color: args[1] 
                 } 
               });
             }
@@ -1197,12 +1197,12 @@ var awesompleteDivUl = null;
         subtitle: function title() {
           if (chart) {
             chart.setTitle(null, {
-              text: JSON.parse(args[0])
+              text: args[0]
             });
             if (args[1] !== null) {
               chart.setTitle(null, {
                 style: { 
-                  color: JSON.parse(args[1]) 
+                  color: args[1] 
                 } 
               });
             }

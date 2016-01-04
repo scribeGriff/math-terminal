@@ -4,7 +4,7 @@
 */
 
 /* global math:false, katex: false, awesomplete: false, acIsOpen: false, awesompleteDivUl: false */
-/* jshint node: true, browser: true */
+/* jshint node: true, browser: true, esnext: true  */
 
 (function (global, undefined) {
   "use: strict";
@@ -235,12 +235,12 @@
           cmd = args[0];
           // Remove cmd from arg list.
           args = args.splice(1);
-          // Else it is a chart command which will be using double quoted strings for arguments.
+          // Else it is a chart command which will be using quoted strings for arguments.
         } else if (cmdline.match(matchChartTextCmds)) {
-          args = cmdline.match(/\w+|"(?:\\"|[^"])+"/g);
+          args = cmdline.match(/(['"])((?:\\\1|.)+?)\1|([^\s"']+)/g);
           cmd = args[0];
-          // Remove cmd from arg list.
-          args = args.splice(1);
+          // Remove cmd from arg list, extra quotes around args and apostrophe escape character.
+          args = args.splice(1).map(elem => elem.slice(1,-1).replace(/\\'/g, "'"));
           // Otherwise, just pass the entire command line as the command.
         } else {
           cmd = cmdline;
