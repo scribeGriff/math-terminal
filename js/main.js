@@ -4,8 +4,6 @@
 /* globals */
 /* For debugging autocomplete and later perhaps as an option to disable. */
 var awesomplete = true;
-/* Detect when autocomplete menu is open to prevent terminal behavior on Enter key. */
-var acIsOpen = false;
 /* For terminal to detect if command completion should be above or below input */
 var awesompleteDivUl = null;
 
@@ -197,51 +195,6 @@ var awesompleteDivUl = null;
 
   // Import chart commands to mathjs.
   math.import({
-    // Adds and xaxis label
-    xaxis: function xaxisp(xaxisTitle) {
-      if (chart) {
-        chart.xAxis[0].setTitle({
-          text: xaxisTitle,
-        });
-      }
-    },
-    // Adds a y axis label
-    yaxis: function yaxis(yaxisTitle) {
-      if (chart) {
-        chart.yAxis[0].setTitle({
-          text: yaxisTitle
-        });
-      }
-    },
-    // Adds a chart title
-    title: function title(chartTitle, titleColor) {
-      if (chart) {
-        chart.setTitle({
-          text: chartTitle
-        });
-        if (titleColor !== null) {
-          chart.setTitle({
-            style: { 
-              color: titleColor 
-            } 
-          });
-        }
-      }
-    },
-    subtitle: function title(chartSubTitle, subTitleColor) {
-      if (chart) {
-        chart.setTitle(null, {
-          text: chartSubTitle
-        });
-        if (subTitleColor !== null) {
-          chart.setTitle(null, {
-            style: { 
-              color: subTitleColor 
-            } 
-          });
-        }
-      }
-    },
     // For functions that return multiple values, getData
     // retrieves and returns each value.
     getData: function getData(key, object) {
@@ -908,7 +861,7 @@ var awesompleteDivUl = null;
         // Draws a polar plot.
         polar: function polar() {
           var dataSeries = [], 
-              ydata, argVal, argsLen,
+              ydata, argVal, argsLen = args.length,
               argsZeroLen, interval;
 
           if (argsLen === 0) {
@@ -917,7 +870,7 @@ var awesompleteDivUl = null;
             // Try to parse the data and format it for plotting.
             try {
               // Check if argument is a terminal variable by trying to retrieve the value.
-              for (var i = 0; i < args.length; i++) {
+              for (var i = 0; i < argsLen; i++) {
                 argVal = parser.eval(args[i]);
                 if (typeof argVal != 'undefined') {
                   args[i] = argVal;
@@ -927,11 +880,11 @@ var awesompleteDivUl = null;
               if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
                 throw new Error('The polar chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help polar</em> for more information.');
               }
-              
-              argsLen = args.length;
+
+              //argsLen = args.length;
               argsZeroLen = args[0].length;
               interval = 360 / argsZeroLen;
-              
+
               for (var k = 0; k < argsLen; k++) {
                 ydata = new Array(argsZeroLen);
                 for (var l = 0; l < argsZeroLen; l++) {
@@ -1001,7 +954,10 @@ var awesompleteDivUl = null;
             },
             series: dataSeries
           });
+          
+          return '';
         },
+        
         // Draws a stem chart using bar and points.
         // Does not accept time information.  All samples start at n = 0.
         // See samplen() for sample plot that takes time information.
@@ -1082,7 +1038,10 @@ var awesompleteDivUl = null;
             },
             series: dataSeries
           });
+          
+          return '';
         },
+        
         // Like sample plot, but accepts timing information.
         samplen: function samplen() {
           var dataSeries = [], 
@@ -1197,6 +1156,58 @@ var awesompleteDivUl = null;
             },
             series: dataSeries
           });
+          
+          return '';
+        },
+
+        // Adds and xaxis label
+        xaxis: function xaxis() {
+          if (chart) {
+            chart.xAxis[0].setTitle({
+              text: JSON.parse(args[0]),
+            });
+          }
+          return '';
+        },
+        // Adds a y axis label
+        yaxis: function yaxis() {
+          if (chart) {
+            chart.yAxis[0].setTitle({
+              text: JSON.parse(args[0])
+            });
+          }
+          return '';
+        },
+        // Adds a chart title
+        title: function title() {
+          if (chart) {
+            chart.setTitle({
+              text: JSON.parse(args[0])
+            });
+            if (args[1] !== null) {
+              chart.setTitle({
+                style: { 
+                  color: JSON.parse(args[1]) 
+                } 
+              });
+            }
+          }
+          return '';
+        },
+        subtitle: function title() {
+          if (chart) {
+            chart.setTitle(null, {
+              text: JSON.parse(args[0])
+            });
+            if (args[1] !== null) {
+              chart.setTitle(null, {
+                style: { 
+                  color: JSON.parse(args[1]) 
+                } 
+              });
+            }
+          }
+        return '';
         }
       };
 

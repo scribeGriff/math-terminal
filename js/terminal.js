@@ -25,7 +25,8 @@
     options.separator = options.separator || defaults.separator;
     options.theme = options.theme || defaults.theme;
 
-    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|ver.*|version.*|line.*|linepts.*|curve.*|curvepts.*|sample.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*|xaxis.*|yaxis.*|title.*|subtitle.*$/i;
+    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|ver.*|version.*|line.*|linepts.*|curve.*|curvepts.*|sample.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*$/i;
+    var matchChartTextCmds = /^xaxis.*|yaxis.*|title.*|subtitle.*$/i;
     var matchSupportCmds = /^getData.*$/i;
 
     var extensions = Array.prototype.slice.call(arguments, 2);
@@ -39,6 +40,9 @@
     if (sUsrAg.indexOf("Firefox") > -1) {
       ffOptions = true;
     }
+    
+    /* Detect when autocomplete menu is open to prevent terminal behavior on Enter key. */
+    var acIsOpen = false;
 
     // Create terminal and cache DOM nodes;
     var _terminal = document.getElementById(containerID);
@@ -64,6 +68,14 @@
     if (options.welcome) {
       output(options.welcome);
     }
+
+    _terminal.addEventListener('awesomplete-open', function(e) {
+      acIsOpen = true;
+    }, false);
+
+    _terminal.addEventListener('awesomplete-close', function(e) {
+      acIsOpen = false;
+    }, false);
 
     window.addEventListener('click', function(e) {
       _cmdLine.focus();
@@ -167,7 +179,7 @@
       // Check if a valid built-in command name or is just an array of values.  
       // If not, try to format as tex and render with KaTeX.
       // With awesomplete, we now have an extra layer of heirarchy with the added div.
-      if (input.value.match(matchAllBuiltIns) || input.value.match(/\[([^\]]+)];?/) || input.value.match(matchSupportCmds)) {
+      if (input.value.match(matchAllBuiltIns) || input.value.match(/\[([^\]]+)];?/) || input.value.match(matchSupportCmds) || input.value.match(matchChartTextCmds)) {
         if (awesomplete) {
           input.parentNode.insertAdjacentHTML('beforebegin', input.value);
         } else {
@@ -223,6 +235,12 @@
           cmd = args[0];
           // Remove cmd from arg list.
           args = args.splice(1);
+          // Else it is a chart command which will be using double quoted strings for arguments.
+        } else if (cmdline.match(matchChartTextCmds)) {
+          args = cmdline.match(/\w+|"(?:\\"|[^"])+"/g);
+          cmd = args[0];
+          // Remove cmd from arg list.
+          args = args.splice(1);
           // Otherwise, just pass the entire command line as the command.
         } else {
           cmd = cmdline;
@@ -264,7 +282,7 @@
       } else {
         _inputLine.scrollIntoView();
       }
-      
+
       if (awesompleteDivUl !== null) {
         if (_container.clientHeight < _terminal.clientHeight / 2) {
           awesompleteDivUl.classList.remove('bottom50');
