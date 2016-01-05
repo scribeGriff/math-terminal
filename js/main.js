@@ -18,7 +18,8 @@ var awesompleteDivUl = null;
       precisionVar = 8;  // default output format significant digits.
 
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
-      chart = null, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData, terminal, createBaseChart;
+      chart = null, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData,
+      parseDataPolar, terminal, createBaseChart, createPolarChart;
 
   var hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348'];
 
@@ -860,9 +861,9 @@ var awesompleteDivUl = null;
 
         // Draws a polar plot.
         polar: function polar() {
-          var dataSeries = [], 
-              ydata, argVal, argsLen = args.length,
-              argsZeroLen, interval;
+          var dataSeries, 
+              argVal,
+              argsLen = args.length;
 
           if (argsLen === 0) {
             return preerr + 'The polar chart needs to know what data to plot.  Please see <em>help polar</em> for more information.' + sufans;
@@ -880,30 +881,9 @@ var awesompleteDivUl = null;
               if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
                 throw new Error('The polar chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help polar</em> for more information.');
               }
-
-              //argsLen = args.length;
-              argsZeroLen = args[0].length;
-              interval = 360 / argsZeroLen;
-
-              for (var k = 0; k < argsLen; k++) {
-                ydata = new Array(argsZeroLen);
-                for (var l = 0; l < argsZeroLen; l++) {
-                  ydata[l] = parseFloat(arguments[k][l]);
-                }
-                // drop the last point since in polar charts 0 and 2pi
-                // should overlap.
-                // TODO: consider cases where this is not valid.
-                ydata.splice(-1,1);
-
-                var dataObj = {
-                  type: 'line',
-                  name: 'set' + k + 1,
-                  data: ydata,
-                  dashStyle: 'LongDash'
-                };
-
-                dataSeries.push(dataObj);
-              }
+              // Format the data for plotting.
+              dataSeries = parseDataPolar.apply(null, args.map(JSON.parse));
+              
               // Catch any errors.
             } catch(error) {
               // This usually means the data was passed without using pairs of arrays for x and y values.
@@ -914,47 +894,14 @@ var awesompleteDivUl = null;
               return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
             }
           }
-
+          
+          // Recommended by Highcharts for memory management.
           if (chart) chart.destroy();
+          
+          // Chart the data in the correct div.
+          chart = createPolarChart(chartDiv, dataSeries);
 
-          chart = Highcharts.chart(chartDiv, {
-            chart: {
-              polar: true
-            },
-            pane: {
-              startAngle: 0,
-              endAngle: 360
-            },
-            xAxis: {
-              tickInterval: 30,
-              min: 0,
-              max: 360,
-              labels: {
-                formatter: function () {
-                  return this.value + '°';
-                },
-                step: 3
-              }
-            },
-            yAxis: {
-              min: 0
-            },
-            plotOptions: {
-              series: {
-                pointStart: 0,
-                pointInterval: interval,
-                marker: {
-                  enabled: false
-                }
-              },
-              column: {
-                pointPadding: 0,
-                groupPadding: 0
-              }
-            },
-            series: dataSeries
-          });
-
+          // If all went well, just return an empty string to the terminal.
           return '';
         },
 
@@ -1323,6 +1270,36 @@ var awesompleteDivUl = null;
     return dataSeries;
   };
 
+  parseDataPolar = function parseDataPolar(args) {
+    var dataSeries = [],
+        argsLen = arguments.length,
+        argsZeroLen = arguments[0].length,
+        ydata,
+        dataObj,
+        count = 1;
+
+    for (var k = 0; k < argsLen; k++) {
+      ydata = new Array(argsZeroLen);
+      for (var l = 0; l < argsZeroLen; l++) {
+        ydata[l] = parseFloat(arguments[k][l]);
+      }
+      // drop the last point since in polar charts 0 and 2pi
+      // should overlap.
+      // TODO: consider cases where this is not valid.
+      ydata.splice(-1,1);
+
+      dataObj = {
+        type: 'line',
+        name: 'set' + count++,
+        data: ydata,
+        dashStyle: 'LongDash'
+      };
+
+      dataSeries.push(dataObj);
+    }
+    return dataSeries;
+  };
+
   createBaseChart = function createBaseChart(container, chartData, uoptions) {
 
     var defaults = {
@@ -1383,4 +1360,56 @@ var awesompleteDivUl = null;
       series: chartData
     });
   };
+
+  createPolarChart = function createPolarChart(container, chartData) {
+
+    var interval = 360 / chartData[0].data.length;
+
+    return Highcharts.chart(chartDiv, {
+      chart: {
+        polar: true,
+        plotBorderWidth: 0
+      },
+      pane: {
+        startAngle: 0,
+        endAngle: 360
+      },
+      xAxis: {
+        tickInterval: 30,
+        offset: 0,
+        min: 0,
+        max: 360,
+        labels: {
+          formatter: function () {
+            return this.value + '°';
+          },
+          step: 3,
+          y: null
+        }
+      },
+      yAxis: {
+        min: 0,
+        offset: 0
+      },
+      plotOptions: {
+        series: {
+          pointStart: 0,
+          pointInterval: interval,
+          marker: {
+            enabled: false
+          }
+        },
+        column: {
+          pointPadding: 0,
+          groupPadding: 0
+        }
+      },
+      tooltip: {
+        valueDecimals: 6,
+        shared: true,
+      },
+      series: chartData
+    });
+  };
+  
 }());
