@@ -954,10 +954,10 @@ var awesompleteDivUl = null;
             },
             series: dataSeries
           });
-          
+
           return '';
         },
-        
+
         // Draws a stem chart using bar and points.
         // Does not accept time information.  All samples start at n = 0.
         // See samplen() for sample plot that takes time information.
@@ -1038,10 +1038,10 @@ var awesompleteDivUl = null;
             },
             series: dataSeries
           });
-          
+
           return '';
         },
-        
+
         // Like sample plot, but accepts timing information.
         samplen: function samplen() {
           var dataSeries = [], 
@@ -1156,58 +1156,94 @@ var awesompleteDivUl = null;
             },
             series: dataSeries
           });
-          
+
           return '';
         },
 
-        // Adds and xaxis label
+        // Adds an x axis label
         xaxis: function xaxis() {
-          if (chart) {
-            chart.xAxis[0].setTitle({
-              text: args[0],
-            });
+          if (args.length === 0) {
+            return preerr + 'The xaxis command adds a label to the x axis of a chart.  Please see <em>help xaxis</em> for more information.' + sufans;
+          } else {
+            if (chart) {
+              try {
+                chart.xAxis[0].setTitle({
+                  text: args[0],
+                });
+              } catch(error) {
+                return preerr + 'The label for the x axis seems to be improperly formatted.  Please see <em>help xaxis</em> for more information.' + sufans;
+              }
+            }
+            return '';
           }
-          return '';
         },
+
         // Adds a y axis label
         yaxis: function yaxis() {
-          if (chart) {
-            chart.yAxis[0].setTitle({
-              text: args[0]
-            });
+          if (args.length === 0) {
+            return preerr + 'The yaxis command adds a label to the y axis of a chart.  Please see <em>help yaxis</em> for more information.' + sufans;
+          } else {
+            if (chart) {
+              try {
+                chart.yAxis[0].setTitle({
+                  text: args[0]
+                });
+              } catch(error) {
+                return preerr + 'The label for the y axis seems to be improperly formatted.  Please see <em>help yaxis</em> for more information.' + sufans;
+              }
+            }
+            return '';
           }
-          return '';
         },
+
         // Adds a chart title
         title: function title() {
-          if (chart) {
-            chart.setTitle({
-              text: args[0]
-            });
-            if (args[1] !== null) {
-              chart.setTitle({
-                style: { 
-                  color: args[1] 
-                } 
-              });
+          if (args.length === 0) {
+            return preerr + 'The title command adds a title to a chart if one exists.  Please see <em>help title</em> for more information.' + sufans;
+          } else {
+            if (chart) {
+              try {
+                chart.setTitle({
+                  text: args[0]
+                });
+                if (args[1] !== null) {
+                  chart.setTitle({
+                    style: { 
+                      color: args[1] 
+                    } 
+                  });
+                }
+              } catch(error) {
+                return preerr + 'The text label or color for the title command seems to be improperly formatted.  Please see <em>help title</em> for more information.' + sufans;
+              }
             }
+            return '';
           }
-          return '';
         },
-        subtitle: function title() {
-          if (chart) {
-            chart.setTitle(null, {
-              text: args[0]
-            });
-            if (args[1] !== null) {
-              chart.setTitle(null, {
-                style: { 
-                  color: args[1] 
-                } 
-              });
+
+        // Adds a chart subtitle
+        subtitle: function subtitle() {
+          if (args.length === 0) {
+            return preerr + 'The subtitle command adds a subtitle to a chart if one exists.  Please see <em>help subtitle</em> for more information.' + sufans;
+          } else {
+            if (chart) {
+              try {
+                chart.setTitle(null, {
+                  text: args[0]
+                });
+                if (args[1] !== null) {
+                  chart.setTitle(null, {
+                    style: { 
+                      color: args[1] 
+                    } 
+                  });
+                }
+              } catch(error) {
+                return preerr + 'The text label or color for the subtitle command seems to be improperly formatted.  Please see <em>help subtitle</em> for more information.' + sufans;
+              }
             }
+            return '';
           }
-        return '';
         }
       };
 
@@ -1220,10 +1256,7 @@ var awesompleteDivUl = null;
           // Unknown command.
           return false;
         }
-        if (cmd.match(matchChartCmds)) {
-          // Generate chart but don't return any result for now.
-          return '';
-        } else if (cmd.match(/[;]$/)) {
+        if (cmd.match(/[;]$/)) {
           // Suppress the empty array symbol if line ends in a ;
           return '';
         } else if (cmd.match(matchWaveGenCmds)) {
