@@ -19,7 +19,7 @@ var awesompleteDivUl = null;
 
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
       chart = null, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData,
-      parseDataPolar, terminal, createBaseChart, createPolarChart;
+      parseDataPolar, parseDataSample, terminal, createBaseChart, createPolarChart, createSampleChart;
 
   var hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348'];
 
@@ -883,7 +883,7 @@ var awesompleteDivUl = null;
               }
               // Format the data for plotting.
               dataSeries = parseDataPolar.apply(null, args.map(JSON.parse));
-              
+
               // Catch any errors.
             } catch(error) {
               // This usually means the data was passed without using pairs of arrays for x and y values.
@@ -894,10 +894,10 @@ var awesompleteDivUl = null;
               return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
             }
           }
-          
+
           // Recommended by Highcharts for memory management.
           if (chart) chart.destroy();
-          
+
           // Chart the data in the correct div.
           chart = createPolarChart(chartDiv, dataSeries);
 
@@ -909,83 +909,49 @@ var awesompleteDivUl = null;
         // Does not accept time information.  All samples start at n = 0.
         // See samplen() for sample plot that takes time information.
         sample: function sample() {
-          var dataSeries = [], 
-              ydata,
-              count,
-              argsLen = arguments.length;
+          var dataSeries = [],
+              argVal,
+              argsLen = args.length;
 
           if (argsLen === 0) {
-            return;
+            return preerr + 'The sample chart needs to know what data to plot.  Please see <em>help sample</em> for more information.' + sufans;
           } else {
-            count = 1;
-            for (var k = 0; k < argsLen; k++) {
-              ydata = new Array(arguments[k].length);
-              for (var l = 0; l < arguments[k].length; l++) {
-                ydata[l] = parseFloat(arguments[k][l]);
-              }
-
-              var dataObj = [{
-                type: 'column',
-                cropThreshold: 600,
-                name: 'set ' + count++,
-                data: ydata,
-                color: hccolors[k]
-              }, {
-                type: 'scatter',
-                cropThreshold: 600,
-                data: ydata,
-                name: 'sample data',
-                linkedTo: ':previous',
-                marker: {
-                  symbol: 'circle',
-                  lineWidth: 2,
-                  lineColor: hccolors[k],
-                  fillColor: 'transparent'
+            // Try to parse the data and format it for plotting.
+            try {
+              // Check if argument is a terminal variable by trying to retrieve the value.
+              for (var i = 0; i < argsLen; i++) {
+                argVal = parser.eval(args[i]);
+                if (typeof argVal != 'undefined') {
+                  args[i] = argVal;
                 }
-              }];
-              Array.prototype.push.apply(dataSeries, dataObj);
+              }
+              console.log(Array.isArray(args[0]));
+              // Check if all the arguments are arrays.  If not throw an error.
+              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+                throw new Error('The sample chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help sample</em> for more information.');
+              }
+              // Format the data for plotting.
+              dataSeries = parseDataSample.apply(null, args.map(JSON.parse));
+              //dataSeries = parseDataSample.apply(null, args);
+
+              // Catch any errors.
+            } catch(error) {
+              // This usually means the data was passed without using pairs of arrays for x and y values.
+              if (error.name.toString() == "TypeError") {
+                return preerr + error.name + ': The sample chart requires data to be submitted as [x1] [x1] [x3] etc.  Please see <em>help sample</em> for more information.' + sufans;
+              }
+              // Some other kind of error has occurred.
+              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
             }
           }
 
+          // Recommended by Highcharts for memory management.
           if (chart) chart.destroy();
 
-          chart = Highcharts.chart(chartDiv, {
-            chart: {
-              zoomType: 'x',
-              panning: true,
-              panKey: 'shift'
-            },
-            tooltip: {
-              valueDecimals: 6,
-              shared: true,
-            },
-            plotOptions: {
-              column: {
-                grouping: false,
-                shadow: false,
-                borderWidth: 0
-              },
-              series: {
-                pointWidth: 3,
-                stickyTracking: false,
-                states: {
-                  hover: {
-                    enabled: false
-                  }
-                }
-              }
-            },
-            yAxis: {
-              plotLines: [{
-                color: '#76767A',
-                width: 2,
-                value: 0,
-                zIndex: 5
-              }]
-            },
-            series: dataSeries
-          });
+          // Chart the data in the correct div.
+          chart = createSampleChart(chartDiv, dataSeries);
 
+          // If all went well, just return an empty string to the terminal.
           return '';
         },
 
@@ -1067,42 +1033,7 @@ var awesompleteDivUl = null;
 
           if (chart) chart.destroy();
 
-          chart = Highcharts.chart(chartDiv, {
-            chart: {
-              zoomType: 'x',
-              panning: true,
-              panKey: 'shift'
-            },
-            tooltip: {
-              valueDecimals: 6,
-              shared: true,
-            },
-            plotOptions: {
-              column: {
-                grouping: false,
-                shadow: false,
-                borderWidth: 0
-              },
-              series: {
-                pointWidth: 3,
-                stickyTracking: false,
-                states: {
-                  hover: {
-                    enabled: false
-                  }
-                }
-              }
-            },
-            yAxis: {
-              plotLines: [{
-                color: '#76767A',
-                width: 2,
-                value: 0,
-                zIndex: 5
-              }]
-            },
-            series: dataSeries
-          });
+          chart = createSampleChart(chartDiv, dataSeries);
 
           return '';
         },
@@ -1300,6 +1231,45 @@ var awesompleteDivUl = null;
     return dataSeries;
   };
 
+  parseDataSample = function parseDataSample(args) {
+    var dataSeries = [],
+        argsLen = arguments.length,
+        argsZeroLen = arguments[0].length,
+        ydata,
+        dataObj,
+        count = 1;
+
+    for (var k = 0; k < argsLen; k++) {
+      ydata = new Array(arguments[k].length);
+      for (var l = 0; l < arguments[k].length; l++) {
+        ydata[l] = parseFloat(arguments[k][l]);
+      }
+
+      dataObj = [{
+        type: 'column',
+        cropThreshold: 600,
+        name: 'set ' + count++,
+        data: ydata,
+        color: hccolors[k]
+      }, {
+        type: 'scatter',
+        cropThreshold: 600,
+        data: ydata,
+        name: 'sample data',
+        linkedTo: ':previous',
+        marker: {
+          symbol: 'circle',
+          lineWidth: 2,
+          lineColor: hccolors[k],
+          fillColor: 'transparent'
+        }
+      }];
+      Array.prototype.push.apply(dataSeries, dataObj);
+    }
+
+    return dataSeries;
+  };
+
   createBaseChart = function createBaseChart(container, chartData, uoptions) {
 
     var defaults = {
@@ -1411,5 +1381,45 @@ var awesompleteDivUl = null;
       series: chartData
     });
   };
-  
+
+  createSampleChart = function createSampleChart(container, chartData) {
+
+    return Highcharts.chart(container, {
+      chart: {
+        zoomType: 'x',
+        panning: true,
+        panKey: 'shift'
+      },
+      tooltip: {
+        valueDecimals: 6,
+        shared: true,
+      },
+      plotOptions: {
+        column: {
+          grouping: false,
+          shadow: false,
+          borderWidth: 0
+        },
+        series: {
+          pointWidth: 3,
+          stickyTracking: false,
+          states: {
+            hover: {
+              enabled: false
+            }
+          }
+        }
+      },
+      yAxis: {
+        plotLines: [{
+          color: '#76767A',
+          width: 2,
+          value: 0,
+          zIndex: 5
+        }]
+      },
+      series: chartData
+    });
+  };
+
 }());
