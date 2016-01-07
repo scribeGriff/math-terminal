@@ -18,13 +18,13 @@ var awesompleteDivUl = null;
       precisionVar = 8;  // default output format significant digits.
 
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
-      chart = null, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData,
-      parseDataPolar, parseDataSample, terminal, createBaseChart, createPolarChart, createSampleChart;
+      chart = null, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData, terminal, 
+      parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart;
 
   var hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348'];
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
-      matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|sample.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*|xaxis.*|yaxis.*|title.*|subtitle.*$/,
+      matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|sample.*|samplen.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*|xaxis.*|yaxis.*|title.*|subtitle.*$/,
       matchWaveGenCmds = /sinewave.*|squarewave.*|sawtoothwave.*|trianglewave.*|impulse.*|step.*|gauss.*$/,
       matchMathExtensions = /fft.*|ifft.*|fsps.*|conv.*|deconv.*|corr.*|filter1d.*|length.*|addSeqs.*$/;
 
@@ -190,8 +190,7 @@ var awesompleteDivUl = null;
   };
 
   math.config({
-    // bignumber causes erroneous calculations of sine(x).
-    //number: 'bignumber'
+    matrix: 'array'
   });
 
   // Import chart commands to mathjs.
@@ -342,13 +341,16 @@ var awesompleteDivUl = null;
                 if (typeof argVal != 'undefined') {
                   args[i] = argVal;
                 }
+                if (math.typeof(args[i]) === 'Matrix') {
+                  args[i] = JSON.parse(args[i]);
+                }
               }
               // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+              if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The curve chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help curve</em> for more information.');
               }
               // Format the data for plotting.
-              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              dataSeries = parseData.apply(null, args);
               // Catch any errors.
             } catch(error) {
               // This usually means the data was passed without using pairs of arrays for x and y values.
@@ -387,13 +389,16 @@ var awesompleteDivUl = null;
                 if (typeof argVal != 'undefined') {
                   args[i] = argVal;
                 }
+                if (math.typeof(args[i]) === 'Matrix') {
+                  args[i] = JSON.parse(args[i]);
+                }
               }
               // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+              if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The line chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help line</em> for more information.');
               }
               // Format the data for plotting.
-              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              dataSeries = parseData.apply(null, args);
               // Catch any errors.
             } catch(error) {
               // This usually means the data was passed without using pairs of arrays for x and y values.
@@ -433,13 +438,16 @@ var awesompleteDivUl = null;
                 if (typeof argVal != 'undefined') {
                   args[i] = argVal;
                 }
+                if (math.typeof(args[i]) === 'Matrix') {
+                  args[i] = JSON.parse(args[i]);
+                }
               }
               // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+              if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The curvepts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help curvepts</em> for more information.');
               }
               // Format the data for plotting.
-              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              dataSeries = parseData.apply(null, args);
               // Catch any errors.
             } catch(error) {
               // This usually means the data was passed without using pairs of arrays for x and y values.
@@ -478,13 +486,16 @@ var awesompleteDivUl = null;
                 if (typeof argVal != 'undefined') {
                   args[i] = argVal;
                 }
+                if (math.typeof(args[i]) === 'Matrix') {
+                  args[i] = JSON.parse(args[i]);
+                }
               }
               // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+              if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The linepts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linepts</em> for more information.');
               }
               // Format the data for plotting.
-              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              dataSeries = parseData.apply(null, args);
               // Catch any errors.
             } catch(error) {
               // This usually means the data was passed without using pairs of arrays for x and y values.
@@ -545,13 +556,16 @@ var awesompleteDivUl = null;
                 if (typeof argVal != 'undefined') {
                   args[i] = argVal;
                 }
+                if (math.typeof(args[i]) === 'Matrix') {
+                  args[i] = JSON.parse(args[i]);
+                }
               }
               // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+              if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The scatter chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help scatter</em> for more information.');
               }
               // Format the data for plotting.
-              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              dataSeries = parseData.apply(null, args);
               // Catch any errors.
             } catch(error) {
               // This usually means the data was passed without using pairs of arrays for x and y values.
@@ -592,13 +606,16 @@ var awesompleteDivUl = null;
                 if (typeof argVal != 'undefined') {
                   args[i] = argVal;
                 }
+                if (math.typeof(args[i]) === 'Matrix') {
+                  args[i] = JSON.parse(args[i]);
+                }
               }
               // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+              if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The linlog chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linlog</em> for more information.');
               }
               // Format the data for plotting.
-              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              dataSeries = parseData.apply(null, args);
               // Catch any errors.
             } catch(error) {
               // This usually means the data was passed without using pairs of arrays for x and y values.
@@ -639,13 +656,16 @@ var awesompleteDivUl = null;
                 if (typeof argVal != 'undefined') {
                   args[i] = argVal;
                 }
+                if (math.typeof(args[i]) === 'Matrix') {
+                  args[i] = JSON.parse(args[i]);
+                }
               }
               // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+              if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The loglin chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglin</em> for more information.');
               }
               // Format the data for plotting.
-              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              dataSeries = parseData.apply(null, args);
               // Catch any errors.
             } catch(error) {
               // This usually means the data was passed without using pairs of arrays for x and y values.
@@ -688,13 +708,16 @@ var awesompleteDivUl = null;
                 if (typeof argVal != 'undefined') {
                   args[i] = argVal;
                 }
+                if (math.typeof(args[i]) === 'Matrix') {
+                  args[i] = JSON.parse(args[i]);
+                }
               }
               // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+              if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The loglog chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglog</em> for more information.');
               }
               // Format the data for plotting.
-              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              dataSeries = parseData.apply(null, args);
               // Catch any errors.
             } catch(error) {
               // This usually means the data was passed without using pairs of arrays for x and y values.
@@ -735,13 +758,16 @@ var awesompleteDivUl = null;
                 if (typeof argVal != 'undefined') {
                   args[i] = argVal;
                 }
+                if (math.typeof(args[i]) === 'Matrix') {
+                  args[i] = JSON.parse(args[i]);
+                }
               }
               // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+              if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The linlogpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linlogpts</em> for more information.');
               }
               // Format the data for plotting.
-              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              dataSeries = parseData.apply(null, args);
               // Catch any errors.
             } catch(error) {
               // This usually means the data was passed without using pairs of arrays for x and y values.
@@ -782,13 +808,16 @@ var awesompleteDivUl = null;
                 if (typeof argVal != 'undefined') {
                   args[i] = argVal;
                 }
+                if (math.typeof(args[i]) === 'Matrix') {
+                  args[i] = JSON.parse(args[i]);
+                }
               }
               // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+              if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The loglinpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglinpts</em> for more information.');
               }
               // Format the data for plotting.
-              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              dataSeries = parseData.apply(null, args);
               // Catch any errors.
             } catch(error) {
               // This usually means the data was passed without using pairs of arrays for x and y values.
@@ -831,13 +860,16 @@ var awesompleteDivUl = null;
                 if (typeof argVal != 'undefined') {
                   args[i] = argVal;
                 }
+                if (math.typeof(args[i]) === 'Matrix') {
+                  args[i] = JSON.parse(args[i]);
+                }
               }
               // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+              if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The loglogpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglogpts</em> for more information.');
               }
               // Format the data for plotting.
-              dataSeries = parseData.apply(null, args.map(JSON.parse));
+              dataSeries = parseData.apply(null, args);
               // Catch any errors.
             } catch(error) {
               // This usually means the data was passed without using pairs of arrays for x and y values.
@@ -876,13 +908,16 @@ var awesompleteDivUl = null;
                 if (typeof argVal != 'undefined') {
                   args[i] = argVal;
                 }
+                if (math.typeof(args[i]) === 'Matrix') {
+                  args[i] = JSON.parse(args[i]);
+                }
               }
               // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+              if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The polar chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help polar</em> for more information.');
               }
               // Format the data for plotting.
-              dataSeries = parseDataPolar.apply(null, args.map(JSON.parse));
+              dataSeries = parseDataPolar.apply(null, args);
 
               // Catch any errors.
             } catch(error) {
@@ -924,21 +959,22 @@ var awesompleteDivUl = null;
                 if (typeof argVal != 'undefined') {
                   args[i] = argVal;
                 }
+                if (math.typeof(args[i]) === 'Matrix') {
+                  args[i] = JSON.parse(args[i]);
+                }
               }
-              console.log(Array.isArray(args[0]));
               // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.map(JSON.parse).every(elem => Array.isArray(elem))) {
+              if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The sample chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help sample</em> for more information.');
               }
               // Format the data for plotting.
-              dataSeries = parseDataSample.apply(null, args.map(JSON.parse));
-              //dataSeries = parseDataSample.apply(null, args);
+              dataSeries = parseDataSample.apply(null, args);
 
               // Catch any errors.
             } catch(error) {
               // This usually means the data was passed without using pairs of arrays for x and y values.
               if (error.name.toString() == "TypeError") {
-                return preerr + error.name + ': The sample chart requires data to be submitted as [x1] [x1] [x3] etc.  Please see <em>help sample</em> for more information.' + sufans;
+                return preerr + error.name + ': The sample chart requires data to be submitted as [x1] [x2] [x3] etc.  Please see <em>help sample</em> for more information.' + sufans;
               }
               // Some other kind of error has occurred.
               return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
@@ -957,77 +993,40 @@ var awesompleteDivUl = null;
 
         // Like sample plot, but accepts timing information.
         samplen: function samplen() {
-          var dataSeries = [], 
-              ydata,
-              count,
-              dataObj,
-              buffer,
-              argsLen = arguments.length;
+          var dataSeries = [],
+              argVal,
+              argsLen = args.length;
 
           if (argsLen === 0) {
-            return;
-          } else if (argsLen === 1) {
-            ydata = new Array(arguments[0].length);
-            for (var j = 0; j < arguments[0].length; j++) {
-              ydata[j] = parseFloat(arguments[0][j]);
-            }
-
-            dataObj = [{
-              type: 'column',
-              cropThreshold: 600,
-              name: 'set ' + 1,
-              data: ydata,
-              color: hccolors[0]
-            }, {
-              type: 'scatter',
-              cropThreshold: 600,
-              data: ydata,
-              name: 'sample data',
-              linkedTo: ':previous',
-              marker: {
-                symbol: 'circle',
-                lineWidth: 2,
-                lineColor: hccolors[0],
-                fillColor: 'transparent'
-              }
-            }];
-            Array.prototype.push.apply(dataSeries, dataObj);
+            return preerr + 'The samplen chart needs to know what data to plot.  Please see <em>help samplen</em> for more information.' + sufans;
           } else {
-            // need to generate n,y pairs
-            count = 1;
-            for (var k = 0; k < argsLen; k += 2) {
-              ydata = new Array(arguments[k].length);
-              for (var l = 0; l < arguments[k].length; l++) {
-                buffer = new Array(2);
-                buffer[0] = parseFloat(arguments[k][l]);
-                if (l >= arguments[k + 1].length) {
-                  buffer[1] = null;
-                } else {
-                  buffer[1] = parseFloat(arguments[k + 1][l]);
+            // Try to parse the data and format it for plotting.
+            try {
+              // Check if argument is a terminal variable by trying to retrieve the value.
+              for (var i = 0; i < argsLen; i++) {
+                argVal = parser.eval(args[i]);
+                if (typeof argVal != 'undefined') {
+                  args[i] = argVal;
                 }
-
-                ydata[l] = buffer;
+                if (math.typeof(args[i]) === 'Matrix') {
+                  args[i] = JSON.parse(args[i]);
+                }
               }
-              dataObj = [{
-                type: 'column',
-                cropThreshold: 600,
-                name: 'set ' + count++,
-                data: ydata,
-                color: hccolors[k]
-              }, {
-                type: 'scatter',
-                cropThreshold: 600,
-                data: ydata,
-                name: 'sample data',
-                linkedTo: ':previous',
-                marker: {
-                  symbol: 'circle',
-                  lineWidth: 2,
-                  lineColor: hccolors[k],
-                  fillColor: 'transparent'
-                }
-              }];
-              Array.prototype.push.apply(dataSeries, dataObj);
+              // Check if all the arguments are arrays.  If not throw an error.
+              if (!args.every(elem => Array.isArray(elem))) {
+                throw new Error('The samplen chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help samplen</em> for more information.');
+              }
+              // Format the data for plotting.
+              dataSeries = parseDataSamplen.apply(null, args);
+
+              // Catch any errors.
+            } catch(error) {
+              // This usually means the data was passed without using pairs of arrays for x and y values.
+              if (error.name.toString() == "TypeError") {
+                return preerr + error.name + ': The samplen chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help samplen</em> for more information.' + sufans;
+              }
+              // Some other kind of error has occurred.
+              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
             }
           }
 
@@ -1137,8 +1136,6 @@ var awesompleteDivUl = null;
         if (cmd.match(/[;]$/)) {
           // Suppress the empty array symbol if line ends in a ;
           return '';
-        } else if (cmd.match(matchWaveGenCmds)) {
-          return 'generated waveform';
         } else {
           // Check for Katex format of solution.
           try {
@@ -1265,6 +1262,83 @@ var awesompleteDivUl = null;
         }
       }];
       Array.prototype.push.apply(dataSeries, dataObj);
+    }
+
+    return dataSeries;
+  };
+
+  parseDataSamplen = function parseDataSamplen(args) {
+    var dataSeries = [],
+        argsLen = arguments.length,
+        argsZeroLen = arguments[0].length,
+        buffer,
+        ydata,
+        dataObj,
+        count = 1;
+
+    if (argsLen === 1) {
+      ydata = new Array(arguments[0].length);
+      for (var j = 0; j < arguments[0].length; j++) {
+        ydata[j] = parseFloat(arguments[0][j]);
+      }
+
+      dataObj = [{
+        type: 'column',
+        cropThreshold: 600,
+        name: 'set ' + 1,
+        data: ydata,
+        color: hccolors[0]
+      }, {
+        type: 'scatter',
+        cropThreshold: 600,
+        data: ydata,
+        name: 'sample data',
+        linkedTo: ':previous',
+        marker: {
+          symbol: 'circle',
+          lineWidth: 2,
+          lineColor: hccolors[0],
+          fillColor: 'transparent'
+        }
+      }];
+      Array.prototype.push.apply(dataSeries, dataObj);
+    } else {
+      // need to generate n,y pairs
+      count = 1;
+      for (var k = 0; k < argsLen; k += 2) {
+        ydata = new Array(arguments[k].length);
+        for (var l = 0; l < arguments[k].length; l++) {
+          buffer = new Array(2);
+          buffer[0] = parseFloat(arguments[k][l]);
+          if (l >= arguments[k + 1].length) {
+            buffer[1] = null;
+          } else {
+            buffer[1] = parseFloat(arguments[k + 1][l]);
+          }
+
+          ydata[l] = buffer;
+        }
+        dataObj = [{
+          type: 'column',
+          cropThreshold: 600,
+          name: 'set ' + count++,
+          data: ydata,
+          color: hccolors[k]
+        }, {
+          type: 'scatter',
+          cropThreshold: 600,
+          data: ydata,
+          name: 'sample data',
+          linkedTo: ':previous',
+          marker: {
+            symbol: 'circle',
+            lineWidth: 2,
+            lineColor: hccolors[k],
+            fillColor: 'transparent'
+          }
+        }];
+        Array.prototype.push.apply(dataSeries, dataObj);
+      }
     }
 
     return dataSeries;

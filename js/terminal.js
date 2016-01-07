@@ -25,7 +25,7 @@
     options.separator = options.separator || defaults.separator;
     options.theme = options.theme || defaults.theme;
 
-    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|ver.*|version.*|line.*|linepts.*|curve.*|curvepts.*|sample.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*$/i;
+    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|ver.*|version.*|line.*|linepts.*|curve.*|curvepts.*|sample.*|samplen.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*$/i;
     var matchChartTextCmds = /^xaxis.*|yaxis.*|title.*|subtitle.*$/i;
     var matchSupportCmds = /^getData.*$/i;
 
