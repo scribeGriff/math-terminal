@@ -18,10 +18,10 @@ var awesompleteDivUl = null;
       precisionVar = 8;  // default output format significant digits.
 
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
-      chart = null, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData, terminal, 
-      parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart;
+      hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348'];
 
-  var hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348'];
+  var chart = null, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData, terminal, 
+      parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart;
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
       matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|sample.*|samplen.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*|xaxis.*|yaxis.*|title.*|subtitle.*$/,
@@ -145,9 +145,9 @@ var awesompleteDivUl = null;
     '<tr><td>clear vars</td><td class="answer">clears workspace variables</td></tr>',
     '<tr><td>clear all</td><td class="answer">clears window and variables</td></tr>',
     '<tr><td>clear chart</td><td class="answer">clears current chart</td></tr>',
-    '<tr><td>getData(<em>"name", var</em>)</td><td class="answer">retrieves <em>name</em> value for a <em>var</em> that contains multiple values</td></tr>',
     '<tr><td>help</td><td class="answer">displays this help screen</td></tr>',
-    '<tr><td>help <em>command</em></td><td class="answer">displays Math.js <em>command</em> documentation</td></tr>',
+    '<tr><td>help <em>command</em></td><td class="answer">displays the <em>command</em> documentation</td></tr>',
+    '<tr><td>line <em>[data]</em></td><td class="answer">creates a line chart and plots the <em>[data]</em>.  See also help for curve, linepts, curvepts, polar, sample, samplen, linlog, loglin, loglog</td></tr>',
     '<tr><td>precision</td><td class="answer">displays number of significant digits in formatted answer</td></tr>',
     '<tr><td>precision  <em>value</em></td><td class="answer">set precision of answer to <em>[0 - 16]</em> significant digits</td></tr>',
     '<tr><td>theme</td><td class="answer">displays current theme</td></tr>',
@@ -189,47 +189,9 @@ var awesompleteDivUl = null;
     }
   };
 
+  // Set default data type for mathjs to 'array' to be compatible with vanilla js.
   math.config({
     matrix: 'array'
-  });
-
-  // Import chart commands to mathjs.
-  math.import({
-    // For functions that return multiple values, getData
-    // retrieves and returns each value.
-    getData: function getData(key, object) {
-      return math.eval(key, object);
-    },
-    // A shortcut to retrieve the y data.
-    gety: function gety(object) {
-      return math.eval("y", object);
-    },
-    // A shortcut to retrieve the n data.
-    getn: function getn(object) {
-      return math.eval("n", object);
-    },
-    // A shortcut to retrieve the q data.
-    getq: function getq(object) {
-      return math.eval("q", object);
-    },
-    // A shortcut to retrieve the r data.
-    getr: function getr(object) {
-      return math.eval("r", object);
-    },
-    // A shortcut to retrieve the qn data.
-    getqn: function getqn(object) {
-      return math.eval("qn", object);
-    },
-    // A shortcut to retrieve the rn data.
-    getrn: function getrn(object) {
-      return math.eval("rn", object);
-    },
-    // A shortcut to retrieve the z data.
-    getz: function getz(object) {
-      return math.eval("z", object);
-    }
-  }, {
-    wrap: true
   });
 
   // Convert the 'terminal' DOM element into a live terminal.
