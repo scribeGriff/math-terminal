@@ -20,8 +20,7 @@ var awesompleteDivUl = null;
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
       hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348'];
 
-  var //chart = null, 
-      bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData, terminal, 
+  var terminal1, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData, 
       parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart, consoleCommands;
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
@@ -197,9 +196,9 @@ var awesompleteDivUl = null;
 
   // Convert the 'terminal' DOM element into a live terminal.
   // This example defines several custom commands for the terminal.
-  terminal = new Terminal('terminal', {}, {
+  terminal1 = new Terminal('terminal1', {}, {
     execute: function execute(cmd, args) {
-      var cmds = consoleCommands(cmd, args, chartDiv);
+      var cmds = consoleCommands(cmd, args, terminal1, chartDiv);
 
       if (typeof cmds[cmd] !== 'function') {
         var result, katstr, formres;
@@ -573,7 +572,7 @@ var awesompleteDivUl = null;
     });
   };
   
-  consoleCommands = function consoleCommands(cmd, args, chartDiv) {
+  consoleCommands = function consoleCommands(cmd, args, terminal, chartDiv) {
     return {
         clear: function clear() {
           var chart = terminal.getChart();
