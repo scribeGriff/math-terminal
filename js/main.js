@@ -24,9 +24,9 @@ var awesompleteDivUl = null;
       parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart;
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
-      matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|sample.*|samplen.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*|xaxis.*|yaxis.*|title.*|subtitle.*$/,
+      matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|sample.*|samplen.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*|linlogpts.*|loglinpts.*|loglogpts.*|xaxis.*|yaxis.*|title.*|subtitle.*$/,
       matchWaveGenCmds = /sinewave.*|squarewave.*|sawtoothwave.*|trianglewave.*|impulse.*|step.*|gauss.*$/,
-      matchMathExtensions = /fft.*|ifft.*|fsps.*|conv.*|deconv.*|corr.*|filter1d.*|length.*|addSeqs.*$/;
+      matchMathExtensions = /fft.*|ifft.*|fsps.*|conv.*|deconv.*|corr.*|filter1d.*|length.*|addseqs.*|getdata.*|gety.*|getn.*|getq.*|getqn.*|getr.*|getrn.*|getz.*$/;
 
   var bgcolors = {
     monokai: "#272822",

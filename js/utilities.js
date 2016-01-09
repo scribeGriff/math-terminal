@@ -9,7 +9,7 @@
   math.import({
     // For functions that return multiple values, getData
     // retrieves and returns each value.
-    getData: function getData(key, object) {
+    getdata: function getdata(key, object) {
       return math.eval(key, object);
     },
     // A shortcut to retrieve the y data.

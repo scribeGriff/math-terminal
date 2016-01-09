@@ -224,7 +224,7 @@
      *     // Generate gaussian noise.
      *     w = gauss(length(x));
      *     // Add the noise to the shifted signal
-     *     seqsum = addSeqs(x, w, nm2, nm2);
+     *     seqsum = addseqs(x, w, nm2, nm2);
      *     // Compute cross correlation between x(n) and y(n)
      *     // with added noise.
      *     xcorr = corr(x, gety(seqsum), n, getn(seqsum));
@@ -280,7 +280,7 @@
       };
     },
 
-    addSeqs: function addSeqs(seq1, seq2, pos1, pos2) {
+    addseqs: function addseqs(seq1, seq2, pos1, pos2) {
       var start, end, n, y1, y1f, y2, y2f, y, _seq1, _seq2, _pos1, _pos2;
       _seq1 = math.number(seq1);
       _seq2 = math.number(seq2);
