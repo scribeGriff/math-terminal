@@ -3,7 +3,7 @@
    The original license can be found here: https://github.com/SDA/terminal/blob/master/LICENSE
 */
 
-/* global math:false, katex: false, awesomplete: false, acIsOpen: false, awesompleteDivUl: false */
+/* global math:false, katex: false, awesomplete: false, awesompleteDivUl: false */
 /* jshint node: true, browser: true, esnext: true  */
 
 (function (global, undefined) {
@@ -35,7 +35,8 @@
     var _histpos = _history.length;
     var _histtemp = '';
 
-    var ffOptions = false, sUsrAg = navigator.userAgent;
+    var ffOptions = false, 
+        sUsrAg = navigator.userAgent;
 
     if (sUsrAg.indexOf("Firefox") > -1) {
       ffOptions = true;
@@ -43,6 +44,8 @@
     
     /* Detect when autocomplete menu is open to prevent terminal behavior on Enter key. */
     var acIsOpen = false;
+    
+    var _chart = null;
 
     // Create terminal and cache DOM nodes;
     var _terminal = document.getElementById(containerID);
@@ -294,13 +297,13 @@
 
     return {
       clear: clear,
-      setPrompt: function(prompt) { 
+      setPrompt: function setPrompt(prompt) { 
         _prompt.innerHTML = prompt + options.separator; 
       },
-      getPrompt: function() { 
+      getPrompt: function getPrompt() { 
         return _prompt.innerHTML.replace(new RegExp(options.separator + '$'), ''); 
       },
-      setTheme: function(theme) {
+      setTheme: function setTheme(theme) {
         _terminal.classList.remove('terminal-' + options.theme);
         _mathterm.classList.remove('terminal-' + options.theme + '-background');
         _chartcont.classList.remove('chart-' + options.theme);
@@ -309,10 +312,16 @@
         _mathterm.classList.add('terminal-' + options.theme + '-background');
         _chartcont.classList.add('chart-' + options.theme);
       },
-      getTheme: function() {
+      getTheme: function getTheme() {
         return options.theme; 
       },
-      clearWelcome: function() {
+      setChart: function setChart(chart) {
+        _chart = chart;
+      },
+      getChart: function getChart() {
+        return _chart;
+      },
+      clearWelcome: function clearWelcome() {
         options.welcome = '';
       }
     };
