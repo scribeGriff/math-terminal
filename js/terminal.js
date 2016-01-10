@@ -3,7 +3,7 @@
    The original license can be found here: https://github.com/SDA/terminal/blob/master/LICENSE
 */
 
-/* global math:false, katex: false, awesomplete: false, awesompleteDivUl: false */
+/* global math:false, katex: false, awesomplete: false */
 /* jshint node: true, browser: true, esnext: true  */
 
 (function (global, undefined) {
@@ -41,11 +41,13 @@
     if (sUsrAg.indexOf("Firefox") > -1) {
       ffOptions = true;
     }
-    
-    /* Detect when autocomplete menu is open to prevent terminal behavior on Enter key. */
-    var acIsOpen = false;
-    
+
+    // Detect when autocomplete menu is open to prevent terminal behavior on Enter key.
+    var _acIsOpen = false;
+    // Declare a chart as empty.
     var _chart = null;
+    // For terminal to detect if command completion should be above or below input.
+    var _awesompleteDivUl = null;
 
     // Create terminal and cache DOM nodes;
     var _terminal = document.getElementById(containerID);
@@ -73,11 +75,11 @@
     }
 
     _terminal.addEventListener('awesomplete-open', function(e) {
-      acIsOpen = true;
+      _acIsOpen = true;
     }, false);
 
     _terminal.addEventListener('awesomplete-close', function(e) {
-      acIsOpen = false;
+      _acIsOpen = false;
     }, false);
 
     window.addEventListener('click', function(e) {
@@ -124,14 +126,14 @@
           _histtemp = this.value;
         }
 
-        if (e.keyCode == 38 && !acIsOpen) {
+        if (e.keyCode == 38 && !_acIsOpen) {
           // Up arrow key.
           _histpos--;
           if (_histpos < 0) {
             _histpos = 0;
           }
         }
-        else if (e.keyCode == 40 && !acIsOpen) {
+        else if (e.keyCode == 40 && !_acIsOpen) {
           // Down arrow key.
           _histpos++;
           if (_histpos > _history.length) {
@@ -152,7 +154,7 @@
 
       // If autocomplete list is open, let awesomplete
       // handle Enter key.
-      if (awesomplete && acIsOpen) return;
+      if (awesomplete && _acIsOpen) return;
 
       var cmd, args, line, input, acdiv;
       var cmdline = this.value;
@@ -232,9 +234,7 @@
       if (cmdline && cmdline.trim()) {
         // If command line starts with a predefined console function, parse arguments, if any.
         if (cmdline.match(matchAllBuiltIns)) {
-          args = cmdline.split(' ').filter(function(val, i) {
-            return val;
-          });
+          args = cmdline.match(/\[[^\]]+\]|[^\s]+/g);
           cmd = args[0];
           // Remove cmd from arg list.
           args = args.splice(1);
@@ -275,7 +275,7 @@
     function clear() {
       _output.innerHTML = '';
       _cmdLine.value = '';
-      awesompleteDivUl.classList.remove('bottom50');
+      _awesompleteDivUl.classList.remove('bottom50');
     }
 
     function output(html) {
@@ -286,11 +286,11 @@
         _inputLine.scrollIntoView();
       }
 
-      if (awesompleteDivUl !== null) {
+      if (_awesompleteDivUl !== null) {
         if (_container.clientHeight < _terminal.clientHeight / 2) {
-          awesompleteDivUl.classList.remove('bottom50');
+          _awesompleteDivUl.classList.remove('bottom50');
         } else {
-          awesompleteDivUl.classList.add('bottom50');
+          _awesompleteDivUl.classList.add('bottom50');
         }
       }
     }
@@ -320,6 +320,9 @@
       },
       getChart: function getChart() {
         return _chart;
+      },
+      setAwesompleteDiv: function setAwesompleteDiv (divUl) {
+        _awesompleteDivUl = divUl;
       },
       clearWelcome: function clearWelcome() {
         options.welcome = '';

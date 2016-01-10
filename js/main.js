@@ -4,9 +4,6 @@
 /* globals */
 /* For debugging autocomplete and later perhaps as an option to disable. */
 var awesomplete = true;
-/* For terminal to detect if command completion should be above or below input */
-var awesompleteDivUl = null;
-
 
 (function () {
   "use: strict";
@@ -20,7 +17,7 @@ var awesompleteDivUl = null;
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
       hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348'];
 
-  var terminal1, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData, 
+  var terminal1, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData, awesompleteDivUl,
       parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart, consoleCommands;
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
@@ -183,7 +180,9 @@ var awesompleteDivUl = null;
         helpExt = helpext.json();
       });
 
+      // For terminal to detect if command completion should be above or below input
       awesompleteDivUl = document.querySelector('div.awesomplete > ul');
+      terminal1.setAwesompleteDiv(awesompleteDivUl);
 
       chartDiv = document.getElementById('chart-div');
     }
@@ -239,7 +238,7 @@ var awesompleteDivUl = null;
       // use the default x vector
       ydata = new Array(arguments[0].length);
       for (var j = 0; j < arguments[0].length; j++) {
-        ydata[j] = parseFloat(arguments[0][j]);
+        ydata[j] = arguments[0][j];
       }
       dataObj = {
         cropThreshold: 600,
@@ -254,11 +253,11 @@ var awesompleteDivUl = null;
         ydata = new Array(arguments[k].length);
         for (var l = 0; l < arguments[k].length; l++) {
           buffer = new Array(2);
-          buffer[0] = parseFloat(arguments[k][l]);
+          buffer[0] = arguments[k][l];
           if (l >= arguments[k + 1].length) {
             buffer[1] = null;
           } else {
-            buffer[1] = parseFloat(arguments[k + 1][l]);
+            buffer[1] = arguments[k + 1][l];
           }
 
           ydata[l] = buffer;
@@ -285,7 +284,7 @@ var awesompleteDivUl = null;
     for (var k = 0; k < argsLen; k++) {
       ydata = new Array(argsZeroLen);
       for (var l = 0; l < argsZeroLen; l++) {
-        ydata[l] = parseFloat(arguments[k][l]);
+        ydata[l] = arguments[k][l];
       }
       // drop the last point since in polar charts 0 and 2pi
       // should overlap.
@@ -315,7 +314,7 @@ var awesompleteDivUl = null;
     for (var k = 0; k < argsLen; k++) {
       ydata = new Array(arguments[k].length);
       for (var l = 0; l < arguments[k].length; l++) {
-        ydata[l] = parseFloat(arguments[k][l]);
+        ydata[l] = arguments[k][l];
       }
 
       dataObj = [{
@@ -355,7 +354,7 @@ var awesompleteDivUl = null;
     if (argsLen === 1) {
       ydata = new Array(arguments[0].length);
       for (var j = 0; j < arguments[0].length; j++) {
-        ydata[j] = parseFloat(arguments[0][j]);
+        ydata[j] = arguments[0][j];
       }
 
       dataObj = [{
@@ -385,11 +384,11 @@ var awesompleteDivUl = null;
         ydata = new Array(arguments[k].length);
         for (var l = 0; l < arguments[k].length; l++) {
           buffer = new Array(2);
-          buffer[0] = parseFloat(arguments[k][l]);
+          buffer[0] = arguments[k][l];
           if (l >= arguments[k + 1].length) {
             buffer[1] = null;
           } else {
-            buffer[1] = parseFloat(arguments[k + 1][l]);
+            buffer[1] = arguments[k + 1][l];
           }
 
           ydata[l] = buffer;
@@ -427,6 +426,7 @@ var awesompleteDivUl = null;
       zoomDir: 'x',
       scatterOps: {},
       enableMarkers: false,
+      xCategory: null,
       xEndOnTic: false,
       xStartOnTic: false,
       xmTickInterval: null,
@@ -440,6 +440,7 @@ var awesompleteDivUl = null;
     options.enableMarkers = options.enableMarkers || defaults.enableMarkers;
     options.zoomDir = options.zoomDir || defaults.zoomDir;
     options.scatterOps = options.scatterOps || defaults.scatterOps;
+    options.xCategory = options.xCategory || defaults.xCategory;
     options.xEndOnTic = options.xEndOnTic || defaults.xEndOnTic;
     options.xStartOnTic = options.xStartOnTic || defaults.xStartOnTic;
     options.xmTickInterval = options.xmTickInterval || defaults.xmTickInterval;
@@ -464,6 +465,7 @@ var awesompleteDivUl = null;
         scatter: options.scatterOps
       },
       xAxis: {
+        categories: options.xCategory,
         endOnTic: options.xEndOnTic,
         startOnTic: options.xStartOnTic,
         type: options.xType,
@@ -666,7 +668,8 @@ var awesompleteDivUl = null;
               chart = terminal.getChart(),
               options = {
                 type: 'spline',
-                enableMarkers: false
+                enableMarkers: false,
+                xCategory: null
               };
 
           if (args.length === 0) {
@@ -688,6 +691,11 @@ var awesompleteDivUl = null;
               if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The curve chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help curve</em> for more information.');
               }
+              // If the xaxis values are strings, then pass the array as the x category option.  
+              // This is only valid for an x axis with a single array of category definitions.
+              if (args[0].every(elem => typeof elem === "string")) {
+                options.xCategory = args[0];
+              }
               // Format the data for plotting.
               dataSeries = parseData.apply(null, args);
               // Catch any errors.
@@ -697,7 +705,7 @@ var awesompleteDivUl = null;
                 return preerr + error.name + ': The curve chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help curve</em> for more information.' + sufans;
               }
               // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
             }
           }
 
@@ -717,7 +725,8 @@ var awesompleteDivUl = null;
               argVal,
               chart = terminal.getChart(),
               options = {
-                enableMarkers: false
+                enableMarkers: false,
+                xCategory: null
               };
           if (args.length === 0) {
             return preerr + 'The line chart needs to know what data to plot.  Please see <em>help line</em> for more information.' + sufans;
@@ -738,6 +747,11 @@ var awesompleteDivUl = null;
               if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The line chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help line</em> for more information.');
               }
+              // If the xaxis values are strings, then pass the array as the x category option.  
+              // This is only valid for an x axis with a single array of category definitions.
+              if (args[0].every(elem => typeof elem === "string")) {
+                options.xCategory = args[0];
+              }
               // Format the data for plotting.
               dataSeries = parseData.apply(null, args);
               // Catch any errors.
@@ -747,7 +761,7 @@ var awesompleteDivUl = null;
                 return preerr + error.name + ': The line chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help line</em> for more information.' + sufans;
               }
               // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
             }
           }
 
@@ -768,7 +782,8 @@ var awesompleteDivUl = null;
               chart = terminal.getChart(),
               options = {
                 type: 'spline',
-                enableMarkers: true
+                enableMarkers: true,
+                xCategory: null
               };
           if (args.length === 0) {
             return preerr + 'The curvepts chart needs to know what data to plot.  Please see <em>help curvepts</em> for more information.' + sufans;
@@ -789,6 +804,11 @@ var awesompleteDivUl = null;
               if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The curvepts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help curvepts</em> for more information.');
               }
+              // If the xaxis values are strings, then pass the array as the x category option.  
+              // This is only valid for an x axis with a single array of category definitions.
+              if (args[0].every(elem => typeof elem === "string")) {
+                options.xCategory = args[0];
+              }
               // Format the data for plotting.
               dataSeries = parseData.apply(null, args);
               // Catch any errors.
@@ -798,7 +818,7 @@ var awesompleteDivUl = null;
                 return preerr + error.name + ': The curvepts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help curvepts</em> for more information.' + sufans;
               }
               // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
             }
           }
 
@@ -818,7 +838,8 @@ var awesompleteDivUl = null;
               argVal,
               chart = terminal.getChart(),
               options = {
-                enableMarkers: true
+                enableMarkers: true,
+                xCategory: null
               };
           if (args.length === 0) {
             return preerr + 'The linepts chart needs to know what data to plot.  Please see <em>help linepts</em> for more information.' + sufans;
@@ -839,6 +860,11 @@ var awesompleteDivUl = null;
               if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The linepts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linepts</em> for more information.');
               }
+              // If the xaxis values are strings, then pass the array as the x category option.  
+              // This is only valid for an x axis with a single array of category definitions.
+              if (args[0].every(elem => typeof elem === "string")) {
+                options.xCategory = args[0];
+              }
               // Format the data for plotting.
               dataSeries = parseData.apply(null, args);
               // Catch any errors.
@@ -848,7 +874,7 @@ var awesompleteDivUl = null;
                 return preerr + error.name + ': The linepts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linepts</em> for more information.' + sufans;
               }
               // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
             }
           }
 
@@ -871,6 +897,7 @@ var awesompleteDivUl = null;
                 type: 'line',
                 zoomDir: 'xy',
                 enableMarkers: true,
+                xCategory: null,
                 xEndOnTic: true,
                 xStartOnTic: true,
                 scatterOps: {
@@ -911,6 +938,11 @@ var awesompleteDivUl = null;
               if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The scatter chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help scatter</em> for more information.');
               }
+              // If the xaxis values are strings, then pass the array as the x category option.  
+              // This is only valid for an x axis with a single array of category definitions.
+              if (args[0].every(elem => typeof elem === "string")) {
+                options.xCategory = args[0];
+              }
               // Format the data for plotting.
               dataSeries = parseData.apply(null, args);
               // Catch any errors.
@@ -920,7 +952,7 @@ var awesompleteDivUl = null;
                 return preerr + error.name + ': The scatter chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help scatter</em> for more information.' + sufans;
               }
               // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
             }
           }
 
@@ -942,7 +974,8 @@ var awesompleteDivUl = null;
               options = {
                 enableMarkers: false,
                 ymTickInterval: 0.1,
-                yType: 'logarithmic'
+                yType: 'logarithmic',
+                xCategory: null
               };
           if (arguments.length === 0) {
             return preerr + 'The linlog chart needs to know what data to plot.  Please see <em>help linlog</em> for more information.' + sufans;
@@ -963,6 +996,11 @@ var awesompleteDivUl = null;
               if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The linlog chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linlog</em> for more information.');
               }
+              // If the xaxis values are strings, then pass the array as the x category option.  
+              // This is only valid for an x axis with a single array of category definitions.
+              if (args[0].every(elem => typeof elem === "string")) {
+                options.xCategory = args[0];
+              }
               // Format the data for plotting.
               dataSeries = parseData.apply(null, args);
               // Catch any errors.
@@ -972,7 +1010,7 @@ var awesompleteDivUl = null;
                 return preerr + error.name + ': The linlog chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linlog</em> for more information.' + sufans;
               }
               // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
             }
           }
 
@@ -994,7 +1032,8 @@ var awesompleteDivUl = null;
               options = {
                 enableMarkers: false,
                 xmTickInterval: 0.1,
-                xType: 'logarithmic'
+                xType: 'logarithmic',
+                xCategory: null
               };
           if (arguments.length === 0) {
             return preerr + 'The loglin chart needs to know what data to plot.  Please see <em>help loglin</em> for more information.' + sufans;
@@ -1015,6 +1054,11 @@ var awesompleteDivUl = null;
               if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The loglin chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglin</em> for more information.');
               }
+              // If the xaxis values are strings, then pass the array as the x category option.  
+              // This is only valid for an x axis with a single array of category definitions.
+              if (args[0].every(elem => typeof elem === "string")) {
+                options.xCategory = args[0];
+              }
               // Format the data for plotting.
               dataSeries = parseData.apply(null, args);
               // Catch any errors.
@@ -1024,7 +1068,7 @@ var awesompleteDivUl = null;
                 return preerr + error.name + ': The loglin chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglin</em> for more information.' + sufans;
               }
               // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
             }
           }
 
@@ -1048,7 +1092,8 @@ var awesompleteDivUl = null;
                 xmTickInterval: 0.1,
                 xType: 'logarithmic',
                 ymTickInterval: 0.1,
-                yType: 'logarithmic'
+                yType: 'logarithmic',
+                xCategory: null
               };
           if (arguments.length === 0) {
             return preerr + 'The loglog chart needs to know what data to plot.  Please see <em>help loglog</em> for more information.' + sufans;
@@ -1069,6 +1114,11 @@ var awesompleteDivUl = null;
               if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The loglog chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglog</em> for more information.');
               }
+              // If the xaxis values are strings, then pass the array as the x category option.  
+              // This is only valid for an x axis with a single array of category definitions.
+              if (args[0].every(elem => typeof elem === "string")) {
+                options.xCategory = args[0];
+              }
               // Format the data for plotting.
               dataSeries = parseData.apply(null, args);
               // Catch any errors.
@@ -1078,7 +1128,7 @@ var awesompleteDivUl = null;
                 return preerr + error.name + ': The loglog chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglog</em> for more information.' + sufans;
               }
               // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
             }
           }
 
@@ -1100,7 +1150,8 @@ var awesompleteDivUl = null;
               options = {
                 enableMarkers: true,
                 ymTickInterval: 0.1,
-                yType: 'logarithmic'
+                yType: 'logarithmic',
+                xCategory: null
               };
           if (arguments.length === 0) {
             return preerr + 'The linlogpts chart needs to know what data to plot.  Please see <em>help linlogpts</em> for more information.' + sufans;
@@ -1121,6 +1172,11 @@ var awesompleteDivUl = null;
               if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The linlogpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linlogpts</em> for more information.');
               }
+              // If the xaxis values are strings, then pass the array as the x category option.  
+              // This is only valid for an x axis with a single array of category definitions.
+              if (args[0].every(elem => typeof elem === "string")) {
+                options.xCategory = args[0];
+              }
               // Format the data for plotting.
               dataSeries = parseData.apply(null, args);
               // Catch any errors.
@@ -1130,7 +1186,7 @@ var awesompleteDivUl = null;
                 return preerr + error.name + ': The linlogpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linlogpts</em> for more information.' + sufans;
               }
               // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
             }
           }
 
@@ -1152,7 +1208,8 @@ var awesompleteDivUl = null;
               options = {
                 enableMarkers: true,
                 xmTickInterval: 0.1,
-                xType: 'logarithmic'
+                xType: 'logarithmic',
+                xCategory: null
               };
           if (arguments.length === 0) {
             return preerr + 'The loglinpts chart needs to know what data to plot.  Please see <em>help loglinpts</em> for more information.' + sufans;
@@ -1173,6 +1230,11 @@ var awesompleteDivUl = null;
               if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The loglinpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglinpts</em> for more information.');
               }
+              // If the xaxis values are strings, then pass the array as the x category option.  
+              // This is only valid for an x axis with a single array of category definitions.
+              if (args[0].every(elem => typeof elem === "string")) {
+                options.xCategory = args[0];
+              }
               // Format the data for plotting.
               dataSeries = parseData.apply(null, args);
               // Catch any errors.
@@ -1182,7 +1244,7 @@ var awesompleteDivUl = null;
                 return preerr + error.name + ': The loglinpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglinpts</em> for more information.' + sufans;
               }
               // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
             }
           }
 
@@ -1206,7 +1268,8 @@ var awesompleteDivUl = null;
                 xmTickInterval: 0.1,
                 xType: 'logarithmic',
                 ymTickInterval: 0.1,
-                yType: 'logarithmic'
+                yType: 'logarithmic',
+                xCategory: null
               };
           if (arguments.length === 0) {
             return preerr + 'The loglogpts chart needs to know what data to plot.  Please see <em>help loglogpts</em> for more information.' + sufans;
@@ -1227,6 +1290,11 @@ var awesompleteDivUl = null;
               if (!args.every(elem => Array.isArray(elem))) {
                 throw new Error('The loglogpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglogpts</em> for more information.');
               }
+              // If the xaxis values are strings, then pass the array as the x category option.  
+              // This is only valid for an x axis with a single array of category definitions.
+              if (args[0].every(elem => typeof elem === "string")) {
+                options.xCategory = args[0];
+              }
               // Format the data for plotting.
               dataSeries = parseData.apply(null, args);
               // Catch any errors.
@@ -1236,7 +1304,7 @@ var awesompleteDivUl = null;
                 return preerr + error.name + ': The loglogpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglogpts</em> for more information.' + sufans;
               }
               // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
             }
           }
 
@@ -1287,7 +1355,7 @@ var awesompleteDivUl = null;
                 return preerr + error.name + ': The polar chart requires data to be submitted as [x1] [x1] [x3] etc.  Please see <em>help polar</em> for more information.' + sufans;
               }
               // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
             }
           }
 
@@ -1340,7 +1408,7 @@ var awesompleteDivUl = null;
                 return preerr + error.name + ': The sample chart requires data to be submitted as [x1] [x2] [x3] etc.  Please see <em>help sample</em> for more information.' + sufans;
               }
               // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
             }
           }
 
@@ -1391,7 +1459,7 @@ var awesompleteDivUl = null;
                 return preerr + error.name + ': The samplen chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help samplen</em> for more information.' + sufans;
               }
               // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. ' + error + sufans; 
+              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
             }
           }
 
