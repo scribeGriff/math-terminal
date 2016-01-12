@@ -23,7 +23,7 @@ var _ = function (input, o) {
 
 	configure.call(this, {
 		minChars: 2,
-		maxItems: 10,
+		maxItems: 5,
 		autoFirst: false,
 		filter: _.FILTER_CONTAINS,
 		sort: _.SORT_BYLENGTH,

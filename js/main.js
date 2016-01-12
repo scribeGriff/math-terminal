@@ -21,7 +21,7 @@ var awesomplete = true;
       parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart, consoleCommands;
 
   var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
-      matchChartCmds = /^line.*|linepts.*|curve.*|curvepts.*|sample.*|samplen.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*|linlogpts.*|loglinpts.*|loglogpts.*|xaxis.*|yaxis.*|title.*|subtitle.*$/,
+      matchChartCmds = /^line.*|linepts.*|bar.*|curve.*|curvepts.*|sample.*|samplen.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*|linlogpts.*|loglinpts.*|loglogpts.*|xaxis.*|yaxis.*|title.*|subtitle.*$/,
       matchWaveGenCmds = /sinewave.*|squarewave.*|sawtoothwave.*|trianglewave.*|impulse.*|step.*|gauss.*$/,
       matchMathExtensions = /fft.*|ifft.*|fsps.*|conv.*|deconv.*|corr.*|filter1d.*|length.*|addseqs.*|getdata.*|gety.*|getn.*|getq.*|getqn.*|getr.*|getrn.*|getz.*$/;
 
@@ -41,7 +41,7 @@ var awesomplete = true;
     colors: hccolors,
     chart: {
       backgroundColor: 'transparent',
-      plotBorderWidth: 1
+      plotBorderWidth: 0
     },
     title: {
       text: ' ',
@@ -59,14 +59,11 @@ var awesomplete = true;
     xAxis: {
       lineColor: '#76767A',
       tickColor: '#76767A',
-      gridLineWidth: 1,
       gridLineDashStyle: 'dot',
       gridLineColor: '#76767A',
       gridZIndex: 0,
-      offset: 10,
       endOnTick: false,
       labels: {
-        y: 25,
         style: {
           color: '#76767A',
           font: '12px "open_sansregular", sans-serif'
@@ -86,9 +83,6 @@ var awesomplete = true;
       gridLineColor: '#76767A',
       gridZIndex: 0,
       lineColor: '#76767A',
-      lineWidth: 1,
-      offset: 10,
-      tickWidth: 1,
       tickColor: '#76767A',
       labels: {
         style: {
@@ -428,25 +422,37 @@ var awesomplete = true;
       enableMarkers: false,
       xCategory: null,
       xEndOnTic: false,
+      xGridLineWidth: 1,
+      xLabelsY: 25,
       xStartOnTic: false,
       xmTickInterval: null,
+      xOffset: 10,
       xType: 'linear',
       ymTickInterval: null,
-      yType: 'linear'
+      yType: 'linear',
+      yLineWidth: 1,
+      yTickWidth: 1,
+      yOffset: 10
     };
 
     var options = uoptions || defaults;
-    options.type = options.type || defaults.type;
-    options.enableMarkers = options.enableMarkers || defaults.enableMarkers;
-    options.zoomDir = options.zoomDir || defaults.zoomDir;
-    options.scatterOps = options.scatterOps || defaults.scatterOps;
-    options.xCategory = options.xCategory || defaults.xCategory;
-    options.xEndOnTic = options.xEndOnTic || defaults.xEndOnTic;
-    options.xStartOnTic = options.xStartOnTic || defaults.xStartOnTic;
-    options.xmTickInterval = options.xmTickInterval || defaults.xmTickInterval;
-    options.xType = options.xType || defaults.xType;
-    options.ymTickInterval = options.ymTickInterval || defaults.ymTickInterval;
-    options.yType = options.yType || defaults.yType;
+    options.type = typeof options.type === "undefined" ? defaults.type : options.type;
+    options.enableMarkers = typeof options.enableMarkers === "undefined" ? defaults.enableMarkers : options.enableMarkers;
+    options.zoomDir = typeof options.zoomDir === "undefined" ? defaults.zoomDir : options.zoomDir;
+    options.scatterOps = typeof options.scatterOps === "undefined" ? defaults.scatterOps : options.scatterOps;
+    options.xCategory = typeof options.xCategory === "undefined" ? defaults.xCategory : options.xCategory;
+    options.xGridLineWidth = typeof options.xGridLineWidth === "undefined" ? defaults.xGridLineWidth : options.xGridLineWidth;
+    options.xLabelsY = typeof options.xLabelsY === "undefined" ? defaults.xLabelsY : options.xLabelsY;
+    options.xEndOnTic = typeof options.xEndOnTic === "undefined" ? defaults.xEndOnTic : options.xEndOnTic;
+    options.xStartOnTic = typeof options.xStartOnTic === "undefined" ? defaults.xStartOnTic : options.xStartOnTic;
+    options.xmTickInterval = typeof options.xmTickInterval === "undefined" ? defaults.xmTickInterval : options.xmTickInterval;
+    options.xOffset = typeof options.xOffset === "undefined" ? defaults.xOffset : options.xOffset;
+    options.xType = typeof options.xType === "undefined" ? defaults.xType : options.xType;
+    options.ymTickInterval = typeof options.ymTickInterval === "undefined" ? defaults.ymTickInterval : options.ymTickInterval;
+    options.yType = typeof options.yType === "undefined" ? defaults.yType : options.yType;
+    options.yLineWidth = typeof options.yLineWidth === "undefined" ? defaults.yLineWidth : options.yLineWidth;
+    options.yTickWidth = typeof options.yTickWidth === "undefined" ? defaults.yTickWidth : options.yTickWidth;
+    options.yOffset = typeof options.yOffset === "undefined" ? defaults.yOffset : options.yOffset;
 
     return Highcharts.chart(container, {
       chart: {
@@ -469,11 +475,19 @@ var awesomplete = true;
         endOnTic: options.xEndOnTic,
         startOnTic: options.xStartOnTic,
         type: options.xType,
-        minorTickInterval: options.xmTickInterval
+        minorTickInterval: options.xmTickInterval,
+        offset: options.xOffset,
+        gridLineWidth: options.xGridLineWidth,
+        labels: {
+          y: options.xLabelsY
+        }
       },
       yAxis: {
         type: options.yType,
-        minorTickInterval: options.ymTickInterval
+        minorTickInterval: options.ymTickInterval,
+        lineWidth: options.yLineWidth,
+        tickWidth: options.yTickWidth,
+        offset:options.yOffset
       },
       tooltip: {
         valueDecimals: 6,
@@ -562,7 +576,11 @@ var awesomplete = true;
           }
         }
       },
+      xAxis: {
+        gridLineWidth: 1
+      },
       yAxis: {
+        lineWidth: 1,
         plotLines: [{
           color: '#76767A',
           width: 2,
@@ -573,997 +591,1049 @@ var awesomplete = true;
       series: chartData
     });
   };
-  
+
   consoleCommands = function consoleCommands(cmd, args, terminal, chartDiv) {
     return {
-        clear: function clear() {
-          var chart = terminal.getChart();
-          if (args && args[0]) {
-            if (args.length > 1) {
-              return preerr + 'Too many arguments' + sufans;
-            }
-            else if (args[0] === 'vars') {
-              parser.clear();
-              return preans + 'Cleared workspace variables.' + sufans;
-            } else if (args[0] === 'all') {
-              parser.clear();
-              terminal.clear();
-              terminal.clearWelcome();
-              if (chart) {
-                chart.destroy();
-              }
-              return '';
-            } else if (args[0] === 'chart') {
-              if (chart) {
-                chart.destroy();
-              }
-              return '';
-            } else {
-              return preerr + 'Invalid clear argument' + sufans;
-            }
+      clear: function clear() {
+        var chart = terminal.getChart();
+        if (args && args[0]) {
+          if (args.length > 1) {
+            return preerr + 'Too many arguments' + sufans;
           }
-          terminal.clear();
-          terminal.clearWelcome();
-          return '';
-        },
-
-        help: function help() {
-          if (args && args[0]) {
-            if (args.length > 1) {
-              return preerr + 'Too many arguments' + sufans;
-            } else if (args[0].match(matchChartCmds) || args[0].match(matchWaveGenCmds) || args[0].match(matchMathExtensions)) {
-              return preans + helpExt[args[0]] + sufans;
-            } else {
-              try {
-                var helpStr = math.help(args[0]).toString();
-                return preans + helpStr + sufans + '<br>' + preans + '<a href="http://mathjs.org/docs/reference/functions/' + args[0] + '.html" target="_blank">' + args[0] + ' docs at mathjs.org</a>' + sufans;
-              } catch(error) {
-                // Unknown command.
-                return preerr + 'Unknown command: ' + args[0] + sufans;
-              }
+          else if (args[0] === 'vars') {
+            parser.clear();
+            return preans + 'Cleared workspace variables.' + sufans;
+          } else if (args[0] === 'all') {
+            parser.clear();
+            terminal.clear();
+            terminal.clearWelcome();
+            if (chart) {
+              chart.destroy();
             }
-          }
-          return helpinfo;
-        },
-
-        theme: function theme() {
-          if (args && args[0]) {
-            if (args.length > 1) {
-              return preerr + 'Too many arguments' + sufans;
-            } else if (args[0].match(matchThemes)) { 
-              terminal.setTheme(args[0]);
-              return ''; 
-            } else {
-              return preerr + 'Invalid theme' + sufans;
+            return '';
+          } else if (args[0] === 'chart') {
+            if (chart) {
+              chart.destroy();
             }
-          }
-          return preans + terminal.getTheme() + sufans;
-        },
-
-        precision: function precision() {
-          if (args && args[0]) {
-            if (args.length > 1) {
-              return preerr + 'Too many arguments' + sufans;
-            } else if (args[0].match(/^([0-9]|1[0-6])$/)) { 
-              precisionVar = parseInt(args[0]);
-              return ''; 
-            } else {
-              return preerr + 'Invalid precision value' + sufans;
-            }
-          }
-          return preans + precisionVar + sufans;
-        },
-
-        ver: function ver() {
-          return math.version;
-        },
-
-        version: function version() {
-          return math.version;
-        },
-
-        curve: function curve() {
-          var dataSeries,
-              argVal,
-              chart = terminal.getChart(),
-              options = {
-                type: 'spline',
-                enableMarkers: false,
-                xCategory: null
-              };
-
-          if (args.length === 0) {
-            return preerr + 'The curve chart needs to know what data to plot.  Please see <em>help curve</em> for more information.' + sufans;
+            return '';
           } else {
-            // Try to parse the data and format it for plotting.
-            try {
-              // Check if argument is a terminal variable by trying to retrieve the value.
-              for (var i = 0; i < args.length; i++) {
-                argVal = parser.eval(args[i]);
-                if (typeof argVal != 'undefined') {
-                  args[i] = argVal;
-                }
-                if (math.typeof(args[i]) === 'Matrix') {
-                  args[i] = JSON.parse(args[i]);
-                }
-              }
-              // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.every(elem => Array.isArray(elem))) {
-                throw new Error('The curve chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help curve</em> for more information.');
-              }
-              // If the xaxis values are strings, then pass the array as the x category option.  
-              // This is only valid for an x axis with a single array of category definitions.
-              if (args[0].every(elem => typeof elem === "string")) {
-                options.xCategory = args[0];
-              }
-              // Format the data for plotting.
-              dataSeries = parseData.apply(null, args);
-              // Catch any errors.
-            } catch(error) {
-              // This usually means the data was passed without using pairs of arrays for x and y values.
-              if (error.name.toString() == "TypeError") {
-                return preerr + error.name + ': The curve chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help curve</em> for more information.' + sufans;
-              }
-              // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
-            }
+            return preerr + 'Invalid clear argument' + sufans;
           }
+        }
+        terminal.clear();
+        terminal.clearWelcome();
+        return '';
+      },
 
-          // Recommended by Highcharts for memory management.
-          if (chart) chart.destroy();
-
-          // Chart the data in the correct div and with the required options.
-          chart = createBaseChart(chartDiv, dataSeries, options);
-
-          // If all went well, just return an empty string to the terminal.
-          terminal.setChart(chart);
-          return '';
-        },
-
-        line: function line() {
-          var dataSeries,
-              argVal,
-              chart = terminal.getChart(),
-              options = {
-                enableMarkers: false,
-                xCategory: null
-              };
-          if (args.length === 0) {
-            return preerr + 'The line chart needs to know what data to plot.  Please see <em>help line</em> for more information.' + sufans;
+      help: function help() {
+        if (args && args[0]) {
+          if (args.length > 1) {
+            return preerr + 'Too many arguments' + sufans;
+          } else if (args[0].match(matchChartCmds) || args[0].match(matchWaveGenCmds) || args[0].match(matchMathExtensions)) {
+            return preans + helpExt[args[0]] + sufans;
           } else {
-            // Try to parse the data and format it for plotting.
             try {
-              // Check if argument is a terminal variable by trying to retrieve the value.
-              for (var i = 0; i < args.length; i++) {
-                argVal = parser.eval(args[i]);
-                if (typeof argVal != 'undefined') {
-                  args[i] = argVal;
-                }
-                if (math.typeof(args[i]) === 'Matrix') {
-                  args[i] = JSON.parse(args[i]);
-                }
-              }
-              // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.every(elem => Array.isArray(elem))) {
-                throw new Error('The line chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help line</em> for more information.');
-              }
-              // If the xaxis values are strings, then pass the array as the x category option.  
-              // This is only valid for an x axis with a single array of category definitions.
-              if (args[0].every(elem => typeof elem === "string")) {
-                options.xCategory = args[0];
-              }
-              // Format the data for plotting.
-              dataSeries = parseData.apply(null, args);
-              // Catch any errors.
+              var helpStr = math.help(args[0]).toString();
+              return preans + helpStr + sufans + '<br>' + preans + '<a href="http://mathjs.org/docs/reference/functions/' + args[0] + '.html" target="_blank">' + args[0] + ' docs at mathjs.org</a>' + sufans;
             } catch(error) {
-              // This usually means the data was passed without using pairs of arrays for x and y values.
-              if (error.name.toString() == "TypeError") {
-                return preerr + error.name + ': The line chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help line</em> for more information.' + sufans;
-              }
-              // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+              // Unknown command.
+              return preerr + 'Unknown command: ' + args[0] + sufans;
             }
           }
+        }
+        return helpinfo;
+      },
 
-          // Recommended by Highcharts for memory management.
-          if (chart) chart.destroy();
-
-          // Chart the data in the correct div and with the required options.
-          chart = createBaseChart(chartDiv, dataSeries, options);
-
-          // If all went well, just return an empty string to the terminal.
-          terminal.setChart(chart);
-          return '';
-        },
-
-        curvepts: function curvepts() {
-          var dataSeries,
-              argVal,
-              chart = terminal.getChart(),
-              options = {
-                type: 'spline',
-                enableMarkers: true,
-                xCategory: null
-              };
-          if (args.length === 0) {
-            return preerr + 'The curvepts chart needs to know what data to plot.  Please see <em>help curvepts</em> for more information.' + sufans;
+      theme: function theme() {
+        if (args && args[0]) {
+          if (args.length > 1) {
+            return preerr + 'Too many arguments' + sufans;
+          } else if (args[0].match(matchThemes)) { 
+            terminal.setTheme(args[0]);
+            return ''; 
           } else {
-            // Try to parse the data and format it for plotting.
-            try {
-              // Check if argument is a terminal variable by trying to retrieve the value.
-              for (var i = 0; i < args.length; i++) {
-                argVal = parser.eval(args[i]);
-                if (typeof argVal != 'undefined') {
-                  args[i] = argVal;
-                }
-                if (math.typeof(args[i]) === 'Matrix') {
-                  args[i] = JSON.parse(args[i]);
-                }
-              }
-              // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.every(elem => Array.isArray(elem))) {
-                throw new Error('The curvepts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help curvepts</em> for more information.');
-              }
-              // If the xaxis values are strings, then pass the array as the x category option.  
-              // This is only valid for an x axis with a single array of category definitions.
-              if (args[0].every(elem => typeof elem === "string")) {
-                options.xCategory = args[0];
-              }
-              // Format the data for plotting.
-              dataSeries = parseData.apply(null, args);
-              // Catch any errors.
-            } catch(error) {
-              // This usually means the data was passed without using pairs of arrays for x and y values.
-              if (error.name.toString() == "TypeError") {
-                return preerr + error.name + ': The curvepts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help curvepts</em> for more information.' + sufans;
-              }
-              // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
-            }
+            return preerr + 'Invalid theme' + sufans;
           }
+        }
+        return preans + terminal.getTheme() + sufans;
+      },
 
-          // Recommended by Highcharts for memory management.
-          if (chart) chart.destroy();
-
-          // Chart the data in the correct div and with the required options.
-          chart = createBaseChart(chartDiv, dataSeries, options);
-
-          // If all went well, just return an empty string to the terminal.
-          terminal.setChart(chart);
-          return '';
-        },
-
-        linepts: function linepts() {
-          var dataSeries,
-              argVal,
-              chart = terminal.getChart(),
-              options = {
-                enableMarkers: true,
-                xCategory: null
-              };
-          if (args.length === 0) {
-            return preerr + 'The linepts chart needs to know what data to plot.  Please see <em>help linepts</em> for more information.' + sufans;
+      precision: function precision() {
+        if (args && args[0]) {
+          if (args.length > 1) {
+            return preerr + 'Too many arguments' + sufans;
+          } else if (args[0].match(/^([0-9]|1[0-6])$/)) { 
+            precisionVar = parseInt(args[0]);
+            return ''; 
           } else {
-            // Try to parse the data and format it for plotting.
-            try {
-              // Check if argument is a terminal variable by trying to retrieve the value.
-              for (var i = 0; i < args.length; i++) {
-                argVal = parser.eval(args[i]);
-                if (typeof argVal != 'undefined') {
-                  args[i] = argVal;
-                }
-                if (math.typeof(args[i]) === 'Matrix') {
-                  args[i] = JSON.parse(args[i]);
-                }
-              }
-              // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.every(elem => Array.isArray(elem))) {
-                throw new Error('The linepts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linepts</em> for more information.');
-              }
-              // If the xaxis values are strings, then pass the array as the x category option.  
-              // This is only valid for an x axis with a single array of category definitions.
-              if (args[0].every(elem => typeof elem === "string")) {
-                options.xCategory = args[0];
-              }
-              // Format the data for plotting.
-              dataSeries = parseData.apply(null, args);
-              // Catch any errors.
-            } catch(error) {
-              // This usually means the data was passed without using pairs of arrays for x and y values.
-              if (error.name.toString() == "TypeError") {
-                return preerr + error.name + ': The linepts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linepts</em> for more information.' + sufans;
-              }
-              // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
-            }
+            return preerr + 'Invalid precision value' + sufans;
           }
+        }
+        return preans + precisionVar + sufans;
+      },
 
-          // Recommended by Highcharts for memory management.
-          if (chart) chart.destroy();
+      ver: function ver() {
+        return math.version;
+      },
 
-          // Chart the data in the correct div and with the required options.
-          chart = createBaseChart(chartDiv, dataSeries, options);
+      version: function version() {
+        return math.version;
+      },
 
-          // If all went well, just return an empty string to the terminal.
-          terminal.setChart(chart);
-          return '';
-        },
+      bar: function bar() {
+        var dataSeries,
+            argVal,
+            chart = terminal.getChart(),
+            options = {
+              type: 'bar',
+              enableMarkers: false,
+              xGridLineWidth: 0,
+              xLabelsY: null,
+              xOffset: 0,
+              yLineWidth: 0,
+              yTickWidth: 0,
+              yOffset: 0
+            };
 
-        scatter: function scatter() {
-          var dataSeries,
-              argVal,
-              chart = terminal.getChart(),
-              options = {
-                type: 'line',
-                zoomDir: 'xy',
-                enableMarkers: true,
-                xCategory: null,
-                xEndOnTic: true,
-                xStartOnTic: true,
-                scatterOps: {
-                  marker: {
-                    radius: 5,
-                    states: {
-                      hover: {
-                        lineColor: 'rgb(100,100,100)'
-                      }
-                    }
-                  },
+        if (args.length === 0) {
+          return preerr + 'The bar chart needs to know what data to plot.  Please see <em>help bar</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < args.length; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The bar chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help bar</em> for more information.');
+            }
+            // If the xaxis values are strings, then pass the array as the x category option.  
+            // This is only valid for an x axis with a single array of category definitions.
+            if (args[0].every(elem => typeof elem === "string")) {
+              options.xCategory = args[0];
+            }
+            // Format the data for plotting.
+            dataSeries = parseData.apply(null, args);
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The bar chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help bar</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div and with the required options.
+        chart = createBaseChart(chartDiv, dataSeries, options);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+
+      curve: function curve() {
+        var dataSeries,
+            argVal,
+            chart = terminal.getChart(),
+            options = {
+              type: 'spline',
+              enableMarkers: false
+            };
+
+        if (args.length === 0) {
+          return preerr + 'The curve chart needs to know what data to plot.  Please see <em>help curve</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < args.length; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The curve chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help curve</em> for more information.');
+            }
+            // If the xaxis values are strings, then pass the array as the x category option.  
+            // This is only valid for an x axis with a single array of category definitions.
+            if (args[0].every(elem => typeof elem === "string")) {
+              options.xCategory = args[0];
+            }
+            // Format the data for plotting.
+            dataSeries = parseData.apply(null, args);
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The curve chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help curve</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div and with the required options.
+        chart = createBaseChart(chartDiv, dataSeries, options);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+
+      line: function line() {
+        var dataSeries,
+            argVal,
+            chart = terminal.getChart(),
+            options = {
+              enableMarkers: false
+            };
+        if (args.length === 0) {
+          return preerr + 'The line chart needs to know what data to plot.  Please see <em>help line</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < args.length; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The line chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help line</em> for more information.');
+            }
+            // If the xaxis values are strings, then pass the array as the x category option.  
+            // This is only valid for an x axis with a single array of category definitions.
+            if (args[0].every(elem => typeof elem === "string")) {
+              options.xCategory = args[0];
+            }
+            // Format the data for plotting.
+            dataSeries = parseData.apply(null, args);
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The line chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help line</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div and with the required options.
+        chart = createBaseChart(chartDiv, dataSeries, options);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+
+      curvepts: function curvepts() {
+        var dataSeries,
+            argVal,
+            chart = terminal.getChart(),
+            options = {
+              type: 'spline',
+              enableMarkers: true
+            };
+        if (args.length === 0) {
+          return preerr + 'The curvepts chart needs to know what data to plot.  Please see <em>help curvepts</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < args.length; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The curvepts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help curvepts</em> for more information.');
+            }
+            // If the xaxis values are strings, then pass the array as the x category option.  
+            // This is only valid for an x axis with a single array of category definitions.
+            if (args[0].every(elem => typeof elem === "string")) {
+              options.xCategory = args[0];
+            }
+            // Format the data for plotting.
+            dataSeries = parseData.apply(null, args);
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The curvepts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help curvepts</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div and with the required options.
+        chart = createBaseChart(chartDiv, dataSeries, options);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+
+      linepts: function linepts() {
+        var dataSeries,
+            argVal,
+            chart = terminal.getChart(),
+            options = {
+              enableMarkers: true
+            };
+        if (args.length === 0) {
+          return preerr + 'The linepts chart needs to know what data to plot.  Please see <em>help linepts</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < args.length; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The linepts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linepts</em> for more information.');
+            }
+            // If the xaxis values are strings, then pass the array as the x category option.  
+            // This is only valid for an x axis with a single array of category definitions.
+            if (args[0].every(elem => typeof elem === "string")) {
+              options.xCategory = args[0];
+            }
+            // Format the data for plotting.
+            dataSeries = parseData.apply(null, args);
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The linepts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linepts</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div and with the required options.
+        chart = createBaseChart(chartDiv, dataSeries, options);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+
+      scatter: function scatter() {
+        var dataSeries,
+            argVal,
+            chart = terminal.getChart(),
+            options = {
+              type: 'line',
+              zoomDir: 'xy',
+              enableMarkers: true,
+              xEndOnTic: true,
+              xStartOnTic: true,
+              scatterOps: {
+                marker: {
+                  radius: 5,
                   states: {
                     hover: {
-                      marker: {
-                        enabled: false
-                      }
+                      lineColor: 'rgb(100,100,100)'
+                    }
+                  }
+                },
+                states: {
+                  hover: {
+                    marker: {
+                      enabled: false
                     }
                   }
                 }
-              };
-
-          if (args.length === 0) {
-            return preerr + 'The scatter chart needs to know what data to plot.  Please see <em>help scatter</em> for more information.' + sufans;
-          } else {
-            // Try to parse the data and format it for plotting.
-            try {
-              // Check if argument is a terminal variable by trying to retrieve the value.
-              for (var i = 0; i < args.length; i++) {
-                argVal = parser.eval(args[i]);
-                if (typeof argVal != 'undefined') {
-                  args[i] = argVal;
-                }
-                if (math.typeof(args[i]) === 'Matrix') {
-                  args[i] = JSON.parse(args[i]);
-                }
               }
-              // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.every(elem => Array.isArray(elem))) {
-                throw new Error('The scatter chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help scatter</em> for more information.');
+            };
+
+        if (args.length === 0) {
+          return preerr + 'The scatter chart needs to know what data to plot.  Please see <em>help scatter</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < args.length; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
               }
-              // If the xaxis values are strings, then pass the array as the x category option.  
-              // This is only valid for an x axis with a single array of category definitions.
-              if (args[0].every(elem => typeof elem === "string")) {
-                options.xCategory = args[0];
-              }
-              // Format the data for plotting.
-              dataSeries = parseData.apply(null, args);
-              // Catch any errors.
-            } catch(error) {
-              // This usually means the data was passed without using pairs of arrays for x and y values.
-              if (error.name.toString() == "TypeError") {
-                return preerr + error.name + ': The scatter chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help scatter</em> for more information.' + sufans;
-              }
-              // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
-            }
-          }
-
-          // Recommended by Highcharts for memory management.
-          if (chart) chart.destroy();
-
-          // Chart the data in the correct div and with the required options.
-          terminal.setChart(chart);
-          chart = createBaseChart(chartDiv, dataSeries, options);
-
-          // If all went well, just return an empty string to the terminal.
-          return '';
-        },
-
-        linlog: function linlog() {
-          var dataSeries,
-              argVal,
-              chart = terminal.getChart(),
-              options = {
-                enableMarkers: false,
-                ymTickInterval: 0.1,
-                yType: 'logarithmic',
-                xCategory: null
-              };
-          if (arguments.length === 0) {
-            return preerr + 'The linlog chart needs to know what data to plot.  Please see <em>help linlog</em> for more information.' + sufans;
-          } else {
-            // Try to parse the data and format it for plotting.
-            try {
-              // Check if argument is a terminal variable by trying to retrieve the value.
-              for (var i = 0; i < args.length; i++) {
-                argVal = parser.eval(args[i]);
-                if (typeof argVal != 'undefined') {
-                  args[i] = argVal;
-                }
-                if (math.typeof(args[i]) === 'Matrix') {
-                  args[i] = JSON.parse(args[i]);
-                }
-              }
-              // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.every(elem => Array.isArray(elem))) {
-                throw new Error('The linlog chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linlog</em> for more information.');
-              }
-              // If the xaxis values are strings, then pass the array as the x category option.  
-              // This is only valid for an x axis with a single array of category definitions.
-              if (args[0].every(elem => typeof elem === "string")) {
-                options.xCategory = args[0];
-              }
-              // Format the data for plotting.
-              dataSeries = parseData.apply(null, args);
-              // Catch any errors.
-            } catch(error) {
-              // This usually means the data was passed without using pairs of arrays for x and y values.
-              if (error.name.toString() == "TypeError") {
-                return preerr + error.name + ': The linlog chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linlog</em> for more information.' + sufans;
-              }
-              // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
-            }
-          }
-
-          // Recommended by Highcharts for memory management.
-          if (chart) chart.destroy();
-
-          // Chart the data in the correct div and with the required options.
-          terminal.setChart(chart);
-          chart = createBaseChart(chartDiv, dataSeries, options);
-
-          // If all went well, just return an empty string to the terminal.
-          return '';
-        },
-
-        loglin: function loglin() {
-          var dataSeries,
-              argVal,
-              chart = terminal.getChart(),
-              options = {
-                enableMarkers: false,
-                xmTickInterval: 0.1,
-                xType: 'logarithmic',
-                xCategory: null
-              };
-          if (arguments.length === 0) {
-            return preerr + 'The loglin chart needs to know what data to plot.  Please see <em>help loglin</em> for more information.' + sufans;
-          } else {
-            // Try to parse the data and format it for plotting.
-            try {
-              // Check if argument is a terminal variable by trying to retrieve the value.
-              for (var i = 0; i < args.length; i++) {
-                argVal = parser.eval(args[i]);
-                if (typeof argVal != 'undefined') {
-                  args[i] = argVal;
-                }
-                if (math.typeof(args[i]) === 'Matrix') {
-                  args[i] = JSON.parse(args[i]);
-                }
-              }
-              // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.every(elem => Array.isArray(elem))) {
-                throw new Error('The loglin chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglin</em> for more information.');
-              }
-              // If the xaxis values are strings, then pass the array as the x category option.  
-              // This is only valid for an x axis with a single array of category definitions.
-              if (args[0].every(elem => typeof elem === "string")) {
-                options.xCategory = args[0];
-              }
-              // Format the data for plotting.
-              dataSeries = parseData.apply(null, args);
-              // Catch any errors.
-            } catch(error) {
-              // This usually means the data was passed without using pairs of arrays for x and y values.
-              if (error.name.toString() == "TypeError") {
-                return preerr + error.name + ': The loglin chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglin</em> for more information.' + sufans;
-              }
-              // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
-            }
-          }
-
-          // Recommended by Highcharts for memory management.
-          if (chart) chart.destroy();
-
-          // Chart the data in the correct div and with the required options.
-          chart = createBaseChart(chartDiv, dataSeries, options);
-
-          // If all went well, just return an empty string to the terminal.
-          terminal.setChart(chart);
-          return '';
-        },
-
-        loglog: function loglog() {
-          var dataSeries,
-              argVal,
-              chart = terminal.getChart(),
-              options = {
-                enableMarkers: false,
-                xmTickInterval: 0.1,
-                xType: 'logarithmic',
-                ymTickInterval: 0.1,
-                yType: 'logarithmic',
-                xCategory: null
-              };
-          if (arguments.length === 0) {
-            return preerr + 'The loglog chart needs to know what data to plot.  Please see <em>help loglog</em> for more information.' + sufans;
-          } else {
-            // Try to parse the data and format it for plotting.
-            try {
-              // Check if argument is a terminal variable by trying to retrieve the value.
-              for (var i = 0; i < args.length; i++) {
-                argVal = parser.eval(args[i]);
-                if (typeof argVal != 'undefined') {
-                  args[i] = argVal;
-                }
-                if (math.typeof(args[i]) === 'Matrix') {
-                  args[i] = JSON.parse(args[i]);
-                }
-              }
-              // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.every(elem => Array.isArray(elem))) {
-                throw new Error('The loglog chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglog</em> for more information.');
-              }
-              // If the xaxis values are strings, then pass the array as the x category option.  
-              // This is only valid for an x axis with a single array of category definitions.
-              if (args[0].every(elem => typeof elem === "string")) {
-                options.xCategory = args[0];
-              }
-              // Format the data for plotting.
-              dataSeries = parseData.apply(null, args);
-              // Catch any errors.
-            } catch(error) {
-              // This usually means the data was passed without using pairs of arrays for x and y values.
-              if (error.name.toString() == "TypeError") {
-                return preerr + error.name + ': The loglog chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglog</em> for more information.' + sufans;
-              }
-              // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
-            }
-          }
-
-          // Recommended by Highcharts for memory management.
-          if (chart) chart.destroy();
-
-          // Chart the data in the correct div and with the required options.
-          chart = createBaseChart(chartDiv, dataSeries, options);
-
-          // If all went well, just return an empty string to the terminal.
-          terminal.setChart(chart);
-          return '';
-        },
-
-        linlogpts: function linlogpts() {
-          var dataSeries,
-              argVal,
-              chart = terminal.getChart(),
-              options = {
-                enableMarkers: true,
-                ymTickInterval: 0.1,
-                yType: 'logarithmic',
-                xCategory: null
-              };
-          if (arguments.length === 0) {
-            return preerr + 'The linlogpts chart needs to know what data to plot.  Please see <em>help linlogpts</em> for more information.' + sufans;
-          } else {
-            // Try to parse the data and format it for plotting.
-            try {
-              // Check if argument is a terminal variable by trying to retrieve the value.
-              for (var i = 0; i < args.length; i++) {
-                argVal = parser.eval(args[i]);
-                if (typeof argVal != 'undefined') {
-                  args[i] = argVal;
-                }
-                if (math.typeof(args[i]) === 'Matrix') {
-                  args[i] = JSON.parse(args[i]);
-                }
-              }
-              // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.every(elem => Array.isArray(elem))) {
-                throw new Error('The linlogpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linlogpts</em> for more information.');
-              }
-              // If the xaxis values are strings, then pass the array as the x category option.  
-              // This is only valid for an x axis with a single array of category definitions.
-              if (args[0].every(elem => typeof elem === "string")) {
-                options.xCategory = args[0];
-              }
-              // Format the data for plotting.
-              dataSeries = parseData.apply(null, args);
-              // Catch any errors.
-            } catch(error) {
-              // This usually means the data was passed without using pairs of arrays for x and y values.
-              if (error.name.toString() == "TypeError") {
-                return preerr + error.name + ': The linlogpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linlogpts</em> for more information.' + sufans;
-              }
-              // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
-            }
-          }
-
-          // Recommended by Highcharts for memory management.
-          if (chart) chart.destroy();
-
-          // Chart the data in the correct div and with the required options.
-          chart = createBaseChart(chartDiv, dataSeries, options);
-
-          // If all went well, just return an empty string to the terminal.
-          terminal.setChart(chart);
-          return '';
-        },
-
-        loglinpts: function loglinpts() {
-          var dataSeries,
-              argVal,
-              chart = terminal.getChart(),
-              options = {
-                enableMarkers: true,
-                xmTickInterval: 0.1,
-                xType: 'logarithmic',
-                xCategory: null
-              };
-          if (arguments.length === 0) {
-            return preerr + 'The loglinpts chart needs to know what data to plot.  Please see <em>help loglinpts</em> for more information.' + sufans;
-          } else {
-            // Try to parse the data and format it for plotting.
-            try {
-              // Check if argument is a terminal variable by trying to retrieve the value.
-              for (var i = 0; i < args.length; i++) {
-                argVal = parser.eval(args[i]);
-                if (typeof argVal != 'undefined') {
-                  args[i] = argVal;
-                }
-                if (math.typeof(args[i]) === 'Matrix') {
-                  args[i] = JSON.parse(args[i]);
-                }
-              }
-              // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.every(elem => Array.isArray(elem))) {
-                throw new Error('The loglinpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglinpts</em> for more information.');
-              }
-              // If the xaxis values are strings, then pass the array as the x category option.  
-              // This is only valid for an x axis with a single array of category definitions.
-              if (args[0].every(elem => typeof elem === "string")) {
-                options.xCategory = args[0];
-              }
-              // Format the data for plotting.
-              dataSeries = parseData.apply(null, args);
-              // Catch any errors.
-            } catch(error) {
-              // This usually means the data was passed without using pairs of arrays for x and y values.
-              if (error.name.toString() == "TypeError") {
-                return preerr + error.name + ': The loglinpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglinpts</em> for more information.' + sufans;
-              }
-              // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
-            }
-          }
-
-          // Recommended by Highcharts for memory management.
-          if (chart) chart.destroy();
-
-          // Chart the data in the correct div and with the required options.
-          chart = createBaseChart(chartDiv, dataSeries, options);
-
-          // If all went well, just return an empty string to the terminal.
-          terminal.setChart(chart);
-          return '';
-        },
-
-        loglogpts: function loglogpts() {
-          var dataSeries,
-              argVal,
-              chart = terminal.getChart(),
-              options = {
-                enableMarkers: true,
-                xmTickInterval: 0.1,
-                xType: 'logarithmic',
-                ymTickInterval: 0.1,
-                yType: 'logarithmic',
-                xCategory: null
-              };
-          if (arguments.length === 0) {
-            return preerr + 'The loglogpts chart needs to know what data to plot.  Please see <em>help loglogpts</em> for more information.' + sufans;
-          } else {
-            // Try to parse the data and format it for plotting.
-            try {
-              // Check if argument is a terminal variable by trying to retrieve the value.
-              for (var i = 0; i < args.length; i++) {
-                argVal = parser.eval(args[i]);
-                if (typeof argVal != 'undefined') {
-                  args[i] = argVal;
-                }
-                if (math.typeof(args[i]) === 'Matrix') {
-                  args[i] = JSON.parse(args[i]);
-                }
-              }
-              // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.every(elem => Array.isArray(elem))) {
-                throw new Error('The loglogpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglogpts</em> for more information.');
-              }
-              // If the xaxis values are strings, then pass the array as the x category option.  
-              // This is only valid for an x axis with a single array of category definitions.
-              if (args[0].every(elem => typeof elem === "string")) {
-                options.xCategory = args[0];
-              }
-              // Format the data for plotting.
-              dataSeries = parseData.apply(null, args);
-              // Catch any errors.
-            } catch(error) {
-              // This usually means the data was passed without using pairs of arrays for x and y values.
-              if (error.name.toString() == "TypeError") {
-                return preerr + error.name + ': The loglogpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglogpts</em> for more information.' + sufans;
-              }
-              // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
-            }
-          }
-
-          // Recommended by Highcharts for memory management.
-          if (chart) chart.destroy();
-
-          // Chart the data in the correct div and with the required options.
-          chart = createBaseChart(chartDiv, dataSeries, options);
-
-          // If all went well, just return an empty string to the terminal.
-          terminal.setChart(chart);
-          return '';
-        },
-
-        // Draws a polar plot.
-        polar: function polar() {
-          var dataSeries, 
-              argVal,
-              chart = terminal.getChart(),
-              argsLen = args.length;
-
-          if (argsLen === 0) {
-            return preerr + 'The polar chart needs to know what data to plot.  Please see <em>help polar</em> for more information.' + sufans;
-          } else {
-            // Try to parse the data and format it for plotting.
-            try {
-              // Check if argument is a terminal variable by trying to retrieve the value.
-              for (var i = 0; i < argsLen; i++) {
-                argVal = parser.eval(args[i]);
-                if (typeof argVal != 'undefined') {
-                  args[i] = argVal;
-                }
-                if (math.typeof(args[i]) === 'Matrix') {
-                  args[i] = JSON.parse(args[i]);
-                }
-              }
-              // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.every(elem => Array.isArray(elem))) {
-                throw new Error('The polar chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help polar</em> for more information.');
-              }
-              // Format the data for plotting.
-              dataSeries = parseDataPolar.apply(null, args);
-
-              // Catch any errors.
-            } catch(error) {
-              // This usually means the data was passed without using pairs of arrays for x and y values.
-              if (error.name.toString() == "TypeError") {
-                return preerr + error.name + ': The polar chart requires data to be submitted as [x1] [x1] [x3] etc.  Please see <em>help polar</em> for more information.' + sufans;
-              }
-              // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
-            }
-          }
-
-          // Recommended by Highcharts for memory management.
-          if (chart) chart.destroy();
-
-          // Chart the data in the correct div.
-          chart = createPolarChart(chartDiv, dataSeries);
-
-          // If all went well, just return an empty string to the terminal.
-          terminal.setChart(chart);
-          return '';
-        },
-
-        // Draws a stem chart using bar and points.
-        // Does not accept time information.  All samples start at n = 0.
-        // See samplen() for sample plot that takes time information.
-        sample: function sample() {
-          var dataSeries = [],
-              argVal,
-              chart = terminal.getChart(),
-              argsLen = args.length;
-
-          if (argsLen === 0) {
-            return preerr + 'The sample chart needs to know what data to plot.  Please see <em>help sample</em> for more information.' + sufans;
-          } else {
-            // Try to parse the data and format it for plotting.
-            try {
-              // Check if argument is a terminal variable by trying to retrieve the value.
-              for (var i = 0; i < argsLen; i++) {
-                argVal = parser.eval(args[i]);
-                if (typeof argVal != 'undefined') {
-                  args[i] = argVal;
-                }
-                if (math.typeof(args[i]) === 'Matrix') {
-                  args[i] = JSON.parse(args[i]);
-                }
-              }
-              // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.every(elem => Array.isArray(elem))) {
-                throw new Error('The sample chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help sample</em> for more information.');
-              }
-              // Format the data for plotting.
-              dataSeries = parseDataSample.apply(null, args);
-
-              // Catch any errors.
-            } catch(error) {
-              // This usually means the data was passed without using pairs of arrays for x and y values.
-              if (error.name.toString() == "TypeError") {
-                return preerr + error.name + ': The sample chart requires data to be submitted as [x1] [x2] [x3] etc.  Please see <em>help sample</em> for more information.' + sufans;
-              }
-              // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
-            }
-          }
-
-          // Recommended by Highcharts for memory management.
-          if (chart) chart.destroy();
-
-          // Chart the data in the correct div.
-          chart = createSampleChart(chartDiv, dataSeries);
-
-          // If all went well, just return an empty string to the terminal.
-          terminal.setChart(chart);
-          return '';
-        },
-
-        // Like sample plot, but accepts timing information.
-        samplen: function samplen() {
-          var dataSeries = [],
-              argVal,
-              chart = terminal.getChart(),
-              argsLen = args.length;
-
-          if (argsLen === 0) {
-            return preerr + 'The samplen chart needs to know what data to plot.  Please see <em>help samplen</em> for more information.' + sufans;
-          } else {
-            // Try to parse the data and format it for plotting.
-            try {
-              // Check if argument is a terminal variable by trying to retrieve the value.
-              for (var i = 0; i < argsLen; i++) {
-                argVal = parser.eval(args[i]);
-                if (typeof argVal != 'undefined') {
-                  args[i] = argVal;
-                }
-                if (math.typeof(args[i]) === 'Matrix') {
-                  args[i] = JSON.parse(args[i]);
-                }
-              }
-              // Check if all the arguments are arrays.  If not throw an error.
-              if (!args.every(elem => Array.isArray(elem))) {
-                throw new Error('The samplen chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help samplen</em> for more information.');
-              }
-              // Format the data for plotting.
-              dataSeries = parseDataSamplen.apply(null, args);
-
-              // Catch any errors.
-            } catch(error) {
-              // This usually means the data was passed without using pairs of arrays for x and y values.
-              if (error.name.toString() == "TypeError") {
-                return preerr + error.name + ': The samplen chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help samplen</em> for more information.' + sufans;
-              }
-              // Some other kind of error has occurred.
-              return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
-            }
-          }
-
-          // Recommended by Highcharts for memory management.
-          if (chart) chart.destroy();
-
-          // Chart the data in the correct div.
-          chart = createSampleChart(chartDiv, dataSeries);
-          
-          // If all went well, just return an empty string to the terminal.
-          terminal.setChart(chart);
-          return '';
-        },
-
-        // Adds an x axis label
-        xaxis: function xaxis() {
-          if (args.length === 0) {
-            return preerr + 'The xaxis command adds a label to the x axis of a chart.  Please see <em>help xaxis</em> for more information.' + sufans;
-          } else {
-            var chart = terminal.getChart();
-            if (chart) {
-              try {
-                chart.xAxis[0].setTitle({
-                  text: args[0],
-                });
-              } catch(error) {
-                return preerr + 'The label for the x axis seems to be improperly formatted.  Please see <em>help xaxis</em> for more information.' + sufans;
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
               }
             }
-            return '';
-          }
-        },
-
-        // Adds a y axis label
-        yaxis: function yaxis() {
-          if (args.length === 0) {
-            return preerr + 'The yaxis command adds a label to the y axis of a chart.  Please see <em>help yaxis</em> for more information.' + sufans;
-          } else {
-            var chart = terminal.getChart();
-            if (chart) {
-              try {
-                chart.yAxis[0].setTitle({
-                  text: args[0]
-                });
-              } catch(error) {
-                return preerr + 'The label for the y axis seems to be improperly formatted.  Please see <em>help yaxis</em> for more information.' + sufans;
-              }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The scatter chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help scatter</em> for more information.');
             }
-            return '';
-          }
-        },
-
-        // Adds a chart title
-        title: function title() {
-          if (args.length === 0) {
-            return preerr + 'The title command adds a title to a chart if one exists.  Please see <em>help title</em> for more information.' + sufans;
-          } else {
-            var chart = terminal.getChart();
-            if (chart) {
-              try {
-                chart.setTitle({
-                  text: args[0]
-                });
-                if (args[1] !== null) {
-                  chart.setTitle({
-                    style: { 
-                      color: args[1] 
-                    } 
-                  });
-                }
-              } catch(error) {
-                return preerr + 'The text label or color for the title command seems to be improperly formatted.  Please see <em>help title</em> for more information.' + sufans;
-              }
+            // If the xaxis values are strings, then pass the array as the x category option.  
+            // This is only valid for an x axis with a single array of category definitions.
+            if (args[0].every(elem => typeof elem === "string")) {
+              options.xCategory = args[0];
             }
-            return '';
-          }
-        },
-
-        // Adds a chart subtitle
-        subtitle: function subtitle() {
-          if (args.length === 0) {
-            return preerr + 'The subtitle command adds a subtitle to a chart if one exists.  Please see <em>help subtitle</em> for more information.' + sufans;
-          } else {
-            var chart = terminal.getChart();
-            if (chart) {
-              try {
-                chart.setTitle(null, {
-                  text: args[0]
-                });
-                if (args[1] !== null) {
-                  chart.setTitle(null, {
-                    style: { 
-                      color: args[1] 
-                    } 
-                  });
-                }
-              } catch(error) {
-                return preerr + 'The text label or color for the subtitle command seems to be improperly formatted.  Please see <em>help subtitle</em> for more information.' + sufans;
-              }
+            // Format the data for plotting.
+            dataSeries = parseData.apply(null, args);
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The scatter chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help scatter</em> for more information.' + sufans;
             }
-            return '';
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
           }
         }
-      };
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div and with the required options.
+        terminal.setChart(chart);
+        chart = createBaseChart(chartDiv, dataSeries, options);
+
+        // If all went well, just return an empty string to the terminal.
+        return '';
+      },
+
+      linlog: function linlog() {
+        var dataSeries,
+            argVal,
+            chart = terminal.getChart(),
+            options = {
+              enableMarkers: false,
+              ymTickInterval: 0.1,
+              yType: 'logarithmic'
+            };
+        if (arguments.length === 0) {
+          return preerr + 'The linlog chart needs to know what data to plot.  Please see <em>help linlog</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < args.length; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The linlog chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linlog</em> for more information.');
+            }
+            // If the xaxis values are strings, then pass the array as the x category option.  
+            // This is only valid for an x axis with a single array of category definitions.
+            if (args[0].every(elem => typeof elem === "string")) {
+              options.xCategory = args[0];
+            }
+            // Format the data for plotting.
+            dataSeries = parseData.apply(null, args);
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The linlog chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linlog</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div and with the required options.
+        terminal.setChart(chart);
+        chart = createBaseChart(chartDiv, dataSeries, options);
+
+        // If all went well, just return an empty string to the terminal.
+        return '';
+      },
+
+      loglin: function loglin() {
+        var dataSeries,
+            argVal,
+            chart = terminal.getChart(),
+            options = {
+              enableMarkers: false,
+              xmTickInterval: 0.1,
+              xType: 'logarithmic'
+            };
+        if (arguments.length === 0) {
+          return preerr + 'The loglin chart needs to know what data to plot.  Please see <em>help loglin</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < args.length; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The loglin chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglin</em> for more information.');
+            }
+            // If the xaxis values are strings, then pass the array as the x category option.  
+            // This is only valid for an x axis with a single array of category definitions.
+            if (args[0].every(elem => typeof elem === "string")) {
+              options.xCategory = args[0];
+            }
+            // Format the data for plotting.
+            dataSeries = parseData.apply(null, args);
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The loglin chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglin</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div and with the required options.
+        chart = createBaseChart(chartDiv, dataSeries, options);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+
+      loglog: function loglog() {
+        var dataSeries,
+            argVal,
+            chart = terminal.getChart(),
+            options = {
+              enableMarkers: false,
+              xmTickInterval: 0.1,
+              xType: 'logarithmic',
+              ymTickInterval: 0.1,
+              yType: 'logarithmic'
+            };
+        if (arguments.length === 0) {
+          return preerr + 'The loglog chart needs to know what data to plot.  Please see <em>help loglog</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < args.length; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The loglog chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglog</em> for more information.');
+            }
+            // If the xaxis values are strings, then pass the array as the x category option.  
+            // This is only valid for an x axis with a single array of category definitions.
+            if (args[0].every(elem => typeof elem === "string")) {
+              options.xCategory = args[0];
+            }
+            // Format the data for plotting.
+            dataSeries = parseData.apply(null, args);
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The loglog chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglog</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div and with the required options.
+        chart = createBaseChart(chartDiv, dataSeries, options);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+
+      linlogpts: function linlogpts() {
+        var dataSeries,
+            argVal,
+            chart = terminal.getChart(),
+            options = {
+              enableMarkers: true,
+              ymTickInterval: 0.1,
+              yType: 'logarithmic'
+            };
+        if (arguments.length === 0) {
+          return preerr + 'The linlogpts chart needs to know what data to plot.  Please see <em>help linlogpts</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < args.length; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The linlogpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linlogpts</em> for more information.');
+            }
+            // If the xaxis values are strings, then pass the array as the x category option.  
+            // This is only valid for an x axis with a single array of category definitions.
+            if (args[0].every(elem => typeof elem === "string")) {
+              options.xCategory = args[0];
+            }
+            // Format the data for plotting.
+            dataSeries = parseData.apply(null, args);
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The linlogpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linlogpts</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div and with the required options.
+        chart = createBaseChart(chartDiv, dataSeries, options);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+
+      loglinpts: function loglinpts() {
+        var dataSeries,
+            argVal,
+            chart = terminal.getChart(),
+            options = {
+              enableMarkers: true,
+              xmTickInterval: 0.1,
+              xType: 'logarithmic'
+            };
+        if (arguments.length === 0) {
+          return preerr + 'The loglinpts chart needs to know what data to plot.  Please see <em>help loglinpts</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < args.length; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The loglinpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglinpts</em> for more information.');
+            }
+            // If the xaxis values are strings, then pass the array as the x category option.  
+            // This is only valid for an x axis with a single array of category definitions.
+            if (args[0].every(elem => typeof elem === "string")) {
+              options.xCategory = args[0];
+            }
+            // Format the data for plotting.
+            dataSeries = parseData.apply(null, args);
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The loglinpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglinpts</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div and with the required options.
+        chart = createBaseChart(chartDiv, dataSeries, options);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+
+      loglogpts: function loglogpts() {
+        var dataSeries,
+            argVal,
+            chart = terminal.getChart(),
+            options = {
+              enableMarkers: true,
+              xmTickInterval: 0.1,
+              xType: 'logarithmic',
+              ymTickInterval: 0.1,
+              yType: 'logarithmic'
+            };
+        if (arguments.length === 0) {
+          return preerr + 'The loglogpts chart needs to know what data to plot.  Please see <em>help loglogpts</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < args.length; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The loglogpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglogpts</em> for more information.');
+            }
+            // If the xaxis values are strings, then pass the array as the x category option.  
+            // This is only valid for an x axis with a single array of category definitions.
+            if (args[0].every(elem => typeof elem === "string")) {
+              options.xCategory = args[0];
+            }
+            // Format the data for plotting.
+            dataSeries = parseData.apply(null, args);
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The loglogpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglogpts</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div and with the required options.
+        chart = createBaseChart(chartDiv, dataSeries, options);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+
+      // Draws a polar plot.
+      polar: function polar() {
+        var dataSeries, 
+            argVal,
+            chart = terminal.getChart(),
+            argsLen = args.length;
+
+        if (argsLen === 0) {
+          return preerr + 'The polar chart needs to know what data to plot.  Please see <em>help polar</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < argsLen; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The polar chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help polar</em> for more information.');
+            }
+            // Format the data for plotting.
+            dataSeries = parseDataPolar.apply(null, args);
+
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The polar chart requires data to be submitted as [x1] [x1] [x3] etc.  Please see <em>help polar</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div.
+        chart = createPolarChart(chartDiv, dataSeries);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+
+      // Draws a stem chart using bar and points.
+      // Does not accept time information.  All samples start at n = 0.
+      // See samplen() for sample plot that takes time information.
+      sample: function sample() {
+        var dataSeries = [],
+            argVal,
+            chart = terminal.getChart(),
+            argsLen = args.length;
+
+        if (argsLen === 0) {
+          return preerr + 'The sample chart needs to know what data to plot.  Please see <em>help sample</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < argsLen; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The sample chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help sample</em> for more information.');
+            }
+            // Format the data for plotting.
+            dataSeries = parseDataSample.apply(null, args);
+
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The sample chart requires data to be submitted as [x1] [x2] [x3] etc.  Please see <em>help sample</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div.
+        chart = createSampleChart(chartDiv, dataSeries);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+
+      // Like sample plot, but accepts timing information.
+      samplen: function samplen() {
+        var dataSeries = [],
+            argVal,
+            chart = terminal.getChart(),
+            argsLen = args.length;
+
+        if (argsLen === 0) {
+          return preerr + 'The samplen chart needs to know what data to plot.  Please see <em>help samplen</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < argsLen; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The samplen chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help samplen</em> for more information.');
+            }
+            // Format the data for plotting.
+            dataSeries = parseDataSamplen.apply(null, args);
+
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The samplen chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help samplen</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div.
+        chart = createSampleChart(chartDiv, dataSeries);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+
+      // Adds an x axis label
+      xaxis: function xaxis() {
+        if (args.length === 0) {
+          return preerr + 'The xaxis command adds a label to the x axis of a chart.  Please see <em>help xaxis</em> for more information.' + sufans;
+        } else {
+          var chart = terminal.getChart();
+          if (chart) {
+            try {
+              chart.xAxis[0].setTitle({
+                text: args[0],
+              });
+            } catch(error) {
+              return preerr + 'The label for the x axis seems to be improperly formatted.  Please see <em>help xaxis</em> for more information.' + sufans;
+            }
+          }
+          return '';
+        }
+      },
+
+      // Adds a y axis label
+      yaxis: function yaxis() {
+        if (args.length === 0) {
+          return preerr + 'The yaxis command adds a label to the y axis of a chart.  Please see <em>help yaxis</em> for more information.' + sufans;
+        } else {
+          var chart = terminal.getChart();
+          if (chart) {
+            try {
+              chart.yAxis[0].setTitle({
+                text: args[0]
+              });
+            } catch(error) {
+              return preerr + 'The label for the y axis seems to be improperly formatted.  Please see <em>help yaxis</em> for more information.' + sufans;
+            }
+          }
+          return '';
+        }
+      },
+
+      // Adds a chart title
+      title: function title() {
+        if (args.length === 0) {
+          return preerr + 'The title command adds a title to a chart if one exists.  Please see <em>help title</em> for more information.' + sufans;
+        } else {
+          var chart = terminal.getChart();
+          if (chart) {
+            try {
+              chart.setTitle({
+                text: args[0]
+              });
+              if (args[1] !== null) {
+                chart.setTitle({
+                  style: { 
+                    color: args[1] 
+                  } 
+                });
+              }
+            } catch(error) {
+              return preerr + 'The text label or color for the title command seems to be improperly formatted.  Please see <em>help title</em> for more information.' + sufans;
+            }
+          }
+          return '';
+        }
+      },
+
+      // Adds a chart subtitle
+      subtitle: function subtitle() {
+        if (args.length === 0) {
+          return preerr + 'The subtitle command adds a subtitle to a chart if one exists.  Please see <em>help subtitle</em> for more information.' + sufans;
+        } else {
+          var chart = terminal.getChart();
+          if (chart) {
+            try {
+              chart.setTitle(null, {
+                text: args[0]
+              });
+              if (args[1] !== null) {
+                chart.setTitle(null, {
+                  style: { 
+                    color: args[1] 
+                  } 
+                });
+              }
+            } catch(error) {
+              return preerr + 'The text label or color for the subtitle command seems to be improperly formatted.  Please see <em>help subtitle</em> for more information.' + sufans;
+            }
+          }
+          return '';
+        }
+      }
+    };
   };
 
 }());
