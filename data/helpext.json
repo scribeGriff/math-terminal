@@ -63,6 +63,8 @@
 
   "subtitle": "Description: Adds a subtitle to the current chart.  Arguments are space delimited.  The subtitle string is required and a color string for styling the subtitle is optional.  String name should be single or double quoted.  Apostrophes should be escaped.  Syntax: subtitle 'This is the subtitle' 'red'  Example: x = 1:10; y = square(x); sample x y  title 'The square of x' '#90ed7d' subtitle 'for x from 1 to 10'  See also: line, linepts, curve, curvepts, sample, samplen, title, xaxis, yaxis",
 
+  "series": "Description: This is a placeholder.  See also: line, linepts, curve, curvepts, sample, samplen, title, subtitle, xaxis, yaxis",
+
   "getdata": "Description: Functions that return multiple parameters return them as objects (for example, conv, deconv, corr, filter1d).  This function allows you to retrieve a specific parameter.  Parameter name should be double quoted.  Syntax: getdata(\"y\", myConv);  Example: xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = getdata(\"y\", yc); n = getdata(\"n\", yc); sample n y See also: gety, getn, getq, getqn, getr, getrn, getz, conv, deconv, corr, filter1d",
 
   "gety": "Description: A shortcut for y = getdata(\"y\", myVar);  Syntax: y = gety(myVar); Example: xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = gety(yc); n = getn(yc); samples(n,y)  See also: getdata, getn, getq, getqn, getr, getrn, getz, conv, corr",

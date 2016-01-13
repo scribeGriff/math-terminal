@@ -20,10 +20,10 @@ var awesomplete = true;
   var terminal1, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData, awesompleteDivUl,
       parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart, consoleCommands;
 
-  var matchThemes = /^monokai|github|xcode|obsidian|vs|arta|railcasts|chalkboard|dark$/,
-      matchChartCmds = /^line.*|linepts.*|bar.*|curve.*|curvepts.*|sample.*|samplen.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*|linlogpts.*|loglinpts.*|loglogpts.*|xaxis.*|yaxis.*|title.*|subtitle.*$/,
-      matchWaveGenCmds = /sinewave.*|squarewave.*|sawtoothwave.*|trianglewave.*|impulse.*|step.*|gauss.*$/,
-      matchMathExtensions = /fft.*|ifft.*|fsps.*|conv.*|deconv.*|corr.*|filter1d.*|length.*|addseqs.*|getdata.*|gety.*|getn.*|getq.*|getqn.*|getr.*|getrn.*|getz.*$/;
+  var matchThemes = /^monokai|^github|^xcode|^obsidian|^vs|^arta|^railcasts|^chalkboard|^dark/,
+      matchChartCmds = /^line$|^linepts$|^bar$|^curve$|^curvepts$|^sample$|^samplen$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$/,
+      matchWaveGenCmds = /^sinewave$|^squarewave$|^sawtoothwave$|^trianglewave$|^impulse$|^step$|^gauss$/,
+      matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^getdata$|^gety$|^getn$|^getq$|^getqn$|^getr$|^getrn$|^getz$/;
 
   var bgcolors = {
     monokai: "#272822",
@@ -225,7 +225,6 @@ var awesomplete = true;
         buffer,
         ydata,
         dataObj,
-        count,
         argsLen = arguments.length;
 
     if (argsLen === 1) {
@@ -236,13 +235,11 @@ var awesomplete = true;
       }
       dataObj = {
         cropThreshold: 600,
-        name: 'set 1',
         data: ydata
       };
       dataSeries.push(dataObj);
     } else {
       // will need to create x,y pairs
-      count = 1;
       for (var k = 0; k < argsLen; k += 2) {
         ydata = new Array(arguments[k].length);
         for (var l = 0; l < arguments[k].length; l++) {
@@ -258,7 +255,6 @@ var awesomplete = true;
         }
         dataObj = {
           cropThreshold: 600,
-          name: 'set ' + count++,
           data: ydata
         };
         dataSeries.push(dataObj);
@@ -272,8 +268,7 @@ var awesomplete = true;
         argsLen = arguments.length,
         argsZeroLen = arguments[0].length,
         ydata,
-        dataObj,
-        count = 1;
+        dataObj;
 
     for (var k = 0; k < argsLen; k++) {
       ydata = new Array(argsZeroLen);
@@ -287,7 +282,6 @@ var awesomplete = true;
 
       dataObj = {
         type: 'line',
-        name: 'set' + count++,
         data: ydata,
         dashStyle: 'LongDash'
       };
@@ -314,7 +308,7 @@ var awesomplete = true;
       dataObj = [{
         type: 'column',
         cropThreshold: 600,
-        name: 'set ' + count++,
+        name: 'Series ' + count++,
         data: ydata,
         color: hccolors[k]
       }, {
@@ -354,7 +348,7 @@ var awesomplete = true;
       dataObj = [{
         type: 'column',
         cropThreshold: 600,
-        name: 'set ' + 1,
+        name: 'Series ' + 1,
         data: ydata,
         color: hccolors[0]
       }, {
@@ -390,7 +384,7 @@ var awesomplete = true;
         dataObj = [{
           type: 'column',
           cropThreshold: 600,
-          name: 'set ' + count++,
+          name: 'Series ' + count++,
           data: ydata,
           color: hccolors[k]
         }, {
@@ -1632,7 +1626,30 @@ var awesomplete = true;
           }
           return '';
         }
-      }
+      },
+
+      // Changes the names of each series.
+      series: function series() {
+        if (args.length === 0) {
+          return preerr + 'The series command adds a custom name to each series of a chart if one exists.  Please see <em>help series</em> for more information.' + sufans;
+        } else {
+          var chart = terminal.getChart();
+          if (chart) {
+            try {
+              for (var i = 0; i < chart.series.length; i++) {
+                chart.series[i].update({
+                  name: args[i]
+                }, false);
+              }
+              chart.redraw();
+            } catch(error) {
+              return preerr + 'The text label for the series command seems to be improperly formatted.  Please see <em>help series</em> for more information.' + sufans;
+            }
+          }
+          return '';
+        }
+      },
+
     };
   };
 

@@ -25,9 +25,9 @@
     options.separator = options.separator || defaults.separator;
     options.theme = options.theme || defaults.theme;
 
-    var matchAllBuiltIns = /^help.*|clear.*|theme.*|precision.*|ver.*|version.*|line.*|linepts.*|bar.*|curve.*|curvepts.*|sample.*|samplen.*|polar.*|scatter.*|linlog.*|loglin.*|loglog.*|linlogpts.*|loglinpts.*|loglogpts.*$/i;
-    var matchChartTextCmds = /^xaxis.*|yaxis.*|title.*|subtitle.*$/i;
-    var matchSupportCmds = /^getdata.*|gety.*|getn.*|getq.*|getqn.*|getr.*|getrn.*|getz.*|length.*|addseqs.*$/i;
+    var matchAllBuiltIns = /\b^help\b.*|\b^clear\b.*|\b^theme\b.*|\b^precision\b.*|\b^ver\b.*|\b^version\b.*|\b^line\b.*|\b^linepts\b.*|\b^bar\b.*|\b^curve\b.*|\b^curvepts\b.*|\b^sample\b.*|\b^samplen\b.*|\b^polar\b.*|\b^scatter\b.*|\b^linlog\b.*|\b^loglin\b.*|\b^loglog\b.*|\b^linlogpts\b.*|\b^loglinpts\b.*|\b^loglogpts\b.*$/;
+    var matchChartTextCmds = /\b^xaxis\b.*|\b^yaxis\b.*|\b^title\b.*|\b^subtitle\b.*|\b^series\b.*$/i;
+    var matchSupportCmds = /\b^getdata\b.*|\b^gety\b.*|\b^getn\b.*|\b^getq\b.*|\b^getqn\b.*|\b^getr\b.*|\b^getrn\b.*|\b^getz\b.*|\b^length\b.*|\b^addseqs\b.*$/;
 
     var extensions = Array.prototype.slice.call(arguments, 2);
 
