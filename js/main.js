@@ -21,7 +21,7 @@ var awesomplete = true;
       parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart, consoleCommands;
 
   var matchThemes = /^monokai|^github|^xcode|^obsidian|^vs|^arta|^railcasts|^chalkboard|^dark/,
-      matchChartCmds = /^line$|^linepts$|^bar$|^curve$|^curvepts$|^sample$|^samplen$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$/,
+      matchChartCmds = /^line$|^linepts$|^bar$|^curve$|^curvepts$|^sample$|^samplen$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$|^series$/,
       matchWaveGenCmds = /^sinewave$|^squarewave$|^sawtoothwave$|^trianglewave$|^impulse$|^step$|^gauss$/,
       matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^getdata$|^gety$|^getn$|^getq$|^getqn$|^getr$|^getrn$|^getz$/;
 
@@ -138,7 +138,7 @@ var awesomplete = true;
     '<tr><td>clear chart</td><td class="answer">clears current chart</td></tr>',
     '<tr><td>help</td><td class="answer">displays this help screen</td></tr>',
     '<tr><td>help <em>command</em></td><td class="answer">displays the <em>command</em> documentation</td></tr>',
-    '<tr><td>line <em>[data]</em></td><td class="answer">creates a line chart and plots the <em>[data]</em>.  See also help for curve, linepts, curvepts, polar, sample, samplen, linlog, loglin, loglog</td></tr>',
+    '<tr><td>line <em>[data]</em></td><td class="answer">creates a line chart and plots the <em>[data]</em>.  See also help for bar, curve, linepts, curvepts, polar, sample, samplen, linlog, loglin, loglog, title, subtitle, xaxis, yaxis, series</td></tr>',
     '<tr><td>precision</td><td class="answer">displays number of significant digits in formatted answer</td></tr>',
     '<tr><td>precision  <em>value</em></td><td class="answer">set precision of answer to <em>[0 - 16]</em> significant digits</td></tr>',
     '<tr><td>theme</td><td class="answer">displays current theme</td></tr>',
@@ -548,7 +548,8 @@ var awesomplete = true;
       chart: {
         zoomType: 'x',
         panning: true,
-        panKey: 'shift'
+        panKey: 'shift',
+        plotBorderWidth: 1
       },
       tooltip: {
         valueDecimals: 6,
@@ -571,10 +572,16 @@ var awesomplete = true;
         }
       },
       xAxis: {
-        gridLineWidth: 1
+        gridLineWidth: 1,
+        offset: 10,
+        labels: {
+          y: 25
+        }
       },
       yAxis: {
         lineWidth: 1,
+        tickWidth: 1,
+        offset: 10,
         plotLines: [{
           color: '#76767A',
           width: 2,
@@ -1636,14 +1643,23 @@ var awesomplete = true;
           var chart = terminal.getChart();
           if (chart) {
             try {
-              for (var i = 0; i < chart.series.length; i++) {
-                chart.series[i].update({
-                  name: args[i]
-                }, false);
+              // Check if this is a sample plot which uses both column and scatter to make the stem.
+              if (chart.series.length > 1 && chart.series[1].options.linkedTo === ':previous') {
+                for (var i = 0; i < chart.series.length; i += 2) {
+                  chart.series[i].update({
+                    name: args[~~(i / 2)]
+                  }, false);
+                }
+              } else {
+                for (var j = 0; j < chart.series.length; j++) {
+                  chart.series[j].update({
+                    name: args[j]
+                  }, false);
+                }
               }
               chart.redraw();
             } catch(error) {
-              return preerr + 'The text label for the series command seems to be improperly formatted.  Please see <em>help series</em> for more information.' + sufans;
+              return preerr + 'The text labels for the series command seems to be improperly formatted.  Please see <em>help series</em> for more information.' + sufans;
             }
           }
           return '';
