@@ -85,5 +85,7 @@
 
   "length": "Description: Returns the length of a one dimensional array.  Syntax: len = length(x);  Example: x = squarewave(); len = length(x);  See also: size",
 
-  "addseqs": "Description: Adds two sequences (as arrays) including timing information.  Sequences do not have to be the same length.  Syntax: seqsum = addseqs(x, w, nx, nw);  Example: x = [3, 11, 7, 0, -1, 4, 2]; n = -3:3; nm2 = -1:5; w = gauss(length(x)); seqsum = addseqs(x, w, nm2, nm2); xcorr = corr(x, gety(seqsum), n, getn(seqsum));  See also: corr, add, gety, getn"
+  "addseqs": "Description: Adds two sequences (as arrays) including timing information.  Sequences do not have to be the same length.  Syntax: seqsum = addseqs(x, w, nx, nw);  Example: x = [3, 11, 7, 0, -1, 4, 2]; n = -3:3; nm2 = -1:5; w = gauss(length(x)); seqsum = addseqs(x, w, nm2, nm2); xcorr = corr(x, gety(seqsum), n, getn(seqsum));  See also: corr, add, gety, getn",
+  
+  "vars": "Description: Displays the terminal variables that have been defined to the scope using the equal sign.  Syntax: vars  Example: x = 3; y = [1,2,3,4]; vars  Displays x, y."
 }

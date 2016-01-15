@@ -8,8 +8,7 @@ var awesomplete = true;
 (function () {
   "use: strict";
 
-  var parser = new math.parser(),
-      preans = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">',
+  var preans = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">',
       preerr = '<i class="prefix fa fa-angle-double-right"></i> <span class="cmderror">',
       sufans = '</span>',
       precisionVar = 8;  // default output format significant digits.
@@ -23,7 +22,7 @@ var awesomplete = true;
   var matchThemes = /^monokai|^github|^xcode|^obsidian|^vs|^arta|^railcasts|^chalkboard|^dark/,
       matchChartCmds = /^line$|^linepts$|^bar$|^column$|^curve$|^curvepts$|^sample$|^samplen$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$|^series$/,
       matchWaveGenCmds = /^sinewave$|^squarewave$|^sawtoothwave$|^trianglewave$|^impulse$|^step$|^gauss$/,
-      matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^getdata$|^gety$|^getn$|^getq$|^getqn$|^getr$|^getrn$|^getz$/;
+      matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^getdata$|^gety$|^getn$|^getq$|^getqn$|^getr$|^getrn$|^getz$|^vars$/;
 
   var bgcolors = {
     monokai: "#272822",
@@ -191,7 +190,8 @@ var awesomplete = true;
   // This example defines several custom commands for the terminal.
   terminal1 = new Terminal('terminal1', {}, {
     execute: function execute(cmd, args) {
-      var cmds = consoleCommands(cmd, args, terminal1, chartDiv);
+      var parser = terminal1.getParser();
+      var cmds = consoleCommands(cmd, args, terminal1, chartDiv, parser);
 
       if (typeof cmds[cmd] !== 'function') {
         var result, katstr, formres;
@@ -596,7 +596,7 @@ var awesomplete = true;
     });
   };
 
-  consoleCommands = function consoleCommands(cmd, args, terminal, chartDiv) {
+  consoleCommands = function consoleCommands(cmd, args, terminal, chartDiv, parser) {
     return {
       clear: function clear() {
         var chart = terminal.getChart();
@@ -746,7 +746,7 @@ var awesomplete = true;
         terminal.setChart(chart);
         return '';
       },
-      
+
       column: function column() {
         var dataSeries,
             argVal,
@@ -1731,6 +1731,22 @@ var awesomplete = true;
           return '';
         }
       },
+
+      // List the workstation variables if there are any.
+      vars: function vars() {
+        var varstr = '';
+        for(var key in parser.scope) {
+          if (parser.scope.hasOwnProperty(key)) {
+            varstr = varstr + key + ', ';
+          }
+        }
+        if (!varstr.length) {
+          return preans + 'There are currently no variables defined.' + sufans;
+        }
+        varstr = varstr.trim().slice(0, -1);
+        
+        return preans + varstr + sufans;
+      }
 
     };
   };
