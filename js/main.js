@@ -21,7 +21,7 @@ var awesomplete = true;
       parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart, consoleCommands;
 
   var matchThemes = /^monokai|^github|^xcode|^obsidian|^vs|^arta|^railcasts|^chalkboard|^dark/,
-      matchChartCmds = /^line$|^linepts$|^bar$|^curve$|^curvepts$|^sample$|^samplen$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$|^series$/,
+      matchChartCmds = /^line$|^linepts$|^bar$|^column$|^curve$|^curvepts$|^sample$|^samplen$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$|^series$/,
       matchWaveGenCmds = /^sinewave$|^squarewave$|^sawtoothwave$|^trianglewave$|^impulse$|^step$|^gauss$/,
       matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^getdata$|^gety$|^getn$|^getq$|^getqn$|^getr$|^getrn$|^getz$/;
 
@@ -197,6 +197,9 @@ var awesomplete = true;
         var result, katstr, formres;
         // Check for valid Math.js command.
         try {
+          // This should allow the user to use either single or double quotes. Mathjs only allows strings in double quotes.
+          // Not at all sure if this will work for all Mathjs situations.  TODO: Figure out a way to test for this.
+          cmd = cmd.replace(/(\w)'(\w)/g, "$1@%$2").replace(/'([^']*)'/g, '"$1"').replace(/(\w)@%(\w)/g, "$1'$2");
           result = parser.eval(cmd);
         } catch(error) {
           // Unknown command.
@@ -727,6 +730,69 @@ var awesomplete = true;
             // This usually means the data was passed without using pairs of arrays for x and y values.
             if (error.name.toString() == "TypeError") {
               return preerr + error.name + ': The bar chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help bar</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div and with the required options.
+        chart = createBaseChart(chartDiv, dataSeries, options);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+      
+      column: function column() {
+        var dataSeries,
+            argVal,
+            chart = terminal.getChart(),
+            options = {
+              type: 'column',
+              enableMarkers: false,
+              xGridLineWidth: 0,
+              xLabelsY: null,
+              xOffset: 0,
+              yLineWidth: 0,
+              yTickWidth: 0,
+              yOffset: 0
+            };
+
+        if (args.length === 0) {
+          return preerr + 'The column chart needs to know what data to plot.  Please see <em>help column</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < args.length; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The column chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help column</em> for more information.');
+            }
+            // If the xaxis values are strings, then pass the array as the x category option.  
+            // This is only valid for an x axis with a single array of category definitions.
+            if (args[0].every(elem => typeof elem === "string")) {
+              options.xCategory = args[0];
+            }
+            // Format the data for plotting.
+            dataSeries = parseData.apply(null, args);
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The column chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help column</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
             return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
