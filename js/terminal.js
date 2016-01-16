@@ -25,7 +25,7 @@
     options.separator = options.separator || defaults.separator;
     options.theme = options.theme || defaults.theme;
 
-    var matchAllBuiltIns = /\b^help\b.*|\b^clear\b.*|\b^theme\b.*|\b^precision\b.*|\b^ver\b.*|\b^version\b.*|\b^line\b.*|\b^linepts\b.*|\b^bar\b.*|\b^column\b.*|\b^curve\b.*|\b^curvepts\b.*|\b^sample\b.*|\b^samplen\b.*|\b^polar\b.*|\b^scatter\b.*|\b^linlog\b.*|\b^loglin\b.*|\b^loglog\b.*|\b^linlogpts\b.*|\b^loglinpts\b.*|\b^loglogpts\b.*|\b^vars\b.*$/;
+    var matchAllBuiltIns = /\b^help\b.*|\b^clear\b.*|\b^theme\b.*|\b^precision\b.*|\b^ver\b.*|\b^version\b.*|\b^line\b.*|\b^linepts\b.*|\b^bar\b.*|\b^column\b.*|\b^curve\b.*|\b^curvepts\b.*|\b^sample\b.*|\b^samplen\b.*|\b^polar\b.*|\b^scatter\b.*|\b^linlog\b.*|\b^loglin\b.*|\b^loglog\b.*|\b^linlogpts\b.*|\b^loglinpts\b.*|\b^loglogpts\b.*|\b^vars\b.*|\b^loadvars\b.*|\b^savevars\b.*$/;
     var matchChartTextCmds = /\b^xaxis\b.*|\b^yaxis\b.*|\b^title\b.*|\b^subtitle\b.*|\b^series\b.*$/i;
     var matchSupportCmds = /\b^getdata\b.*|\b^gety\b.*|\b^getn\b.*|\b^getq\b.*|\b^getqn\b.*|\b^getr\b.*|\b^getrn\b.*|\b^getz\b.*|\b^length\b.*|\b^addseqs\b.*$/;
 
@@ -260,7 +260,7 @@
           if (response !== false) break;
         }
         if (response === false) {
-          response = '<i class="prefix fa fa-angle-double-right"></i> </span><span class="cmderror">' + cmd + ': No such variable or command</span>';
+          response = '<i class="prefix fa fa-angle-double-right"></i> </span><span class="cmderror">' + cmd + ': Sorry, this variable or command is not recognized.  Please check for spelling or syntax errors.</span>';
         }
         output(response);
       }

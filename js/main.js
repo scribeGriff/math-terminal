@@ -22,7 +22,7 @@ var awesomplete = true;
   var matchThemes = /^monokai|^github|^xcode|^obsidian|^vs|^arta|^railcasts|^chalkboard|^dark/,
       matchChartCmds = /^line$|^linepts$|^bar$|^column$|^curve$|^curvepts$|^sample$|^samplen$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$|^series$/,
       matchWaveGenCmds = /^sinewave$|^squarewave$|^sawtoothwave$|^trianglewave$|^impulse$|^step$|^gauss$/,
-      matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^getdata$|^gety$|^getn$|^getq$|^getqn$|^getr$|^getrn$|^getz$|^vars$/;
+      matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^getdata$|^gety$|^getn$|^getq$|^getqn$|^getr$|^getrn$|^getz$|^vars$|^loadvars$|^savevars$/;
 
   var bgcolors = {
     monokai: "#272822",
@@ -135,9 +135,10 @@ var awesomplete = true;
     '<tr><td>clear vars</td><td class="answer">clears workspace variables</td></tr>',
     '<tr><td>clear all</td><td class="answer">clears window and variables</td></tr>',
     '<tr><td>clear chart</td><td class="answer">clears current chart</td></tr>',
+    '<tr><td>clear storage</td><td class="answer">clears variables from local storage (see <em>help loadvars</em> and <em>help savevars</em> for more information).</td></tr>',
     '<tr><td>help</td><td class="answer">displays this help screen</td></tr>',
     '<tr><td>help <em>command</em></td><td class="answer">displays the <em>command</em> documentation</td></tr>',
-    '<tr><td>line <em>[data]</em></td><td class="answer">creates a line chart and plots the <em>[data]</em>.  See also help for bar, curve, linepts, curvepts, polar, sample, samplen, linlog, loglin, loglog, title, subtitle, xaxis, yaxis, series</td></tr>',
+    '<tr><td>line <em>[data]</em></td><td class="answer">creates a line chart and plots the <em>[data]</em>.  See <em>help line</em> for more information.  Also see help for bar, column, curve, linepts, curvepts, polar, sample, samplen, linlog, loglin, loglog, title, subtitle, xaxis, yaxis, series</td></tr>',
     '<tr><td>precision</td><td class="answer">displays number of significant digits in formatted answer</td></tr>',
     '<tr><td>precision  <em>value</em></td><td class="answer">set precision of answer to <em>[0 - 16]</em> significant digits</td></tr>',
     '<tr><td>theme</td><td class="answer">displays current theme</td></tr>',
@@ -191,7 +192,7 @@ var awesomplete = true;
   terminal1 = new Terminal('terminal1', {}, {
     execute: function execute(cmd, args) {
       var parser = terminal1.getParser();
-      var cmds = consoleCommands(cmd, args, terminal1, chartDiv, parser);
+      var cmds = consoleCommands(cmd, args, terminal1, chartDiv, parser, 'terminal1');
 
       if (typeof cmds[cmd] !== 'function') {
         var result, katstr, formres;
@@ -596,7 +597,7 @@ var awesomplete = true;
     });
   };
 
-  consoleCommands = function consoleCommands(cmd, args, terminal, chartDiv, parser) {
+  consoleCommands = function consoleCommands(cmd, args, terminal, chartDiv, parser, termName) {
     return {
       clear: function clear() {
         var chart = terminal.getChart();
@@ -606,11 +607,12 @@ var awesomplete = true;
           }
           else if (args[0] === 'vars') {
             parser.clear();
-            return preans + 'Cleared workspace variables.' + sufans;
+            return preans + 'Cleared terminal variables.' + sufans;
           } else if (args[0] === 'all') {
             parser.clear();
             terminal.clear();
             terminal.clearWelcome();
+            localStorage.removeItem(termName);
             if (chart) {
               chart.destroy();
             }
@@ -620,8 +622,11 @@ var awesomplete = true;
               chart.destroy();
             }
             return '';
+          } else if (args[0] === 'storage') {
+            localStorage.removeItem(termName);
+            return preans + 'Cleared variables saved to local storage.' + sufans;
           } else {
-            return preerr + 'Invalid clear argument' + sufans;
+            return preerr + 'Invalid clear argument.  Choose either no argument (clears just the console), all, chart, storage or vars.' + sufans;
           }
         }
         terminal.clear();
@@ -1734,20 +1739,42 @@ var awesomplete = true;
 
       // List the workstation variables if there are any.
       vars: function vars() {
+        if (!Object.keys(parser.scope).length) {
+          return preans + 'There are currently no variables defined.' + sufans;
+        }
         var varstr = '';
         for(var key in parser.scope) {
           if (parser.scope.hasOwnProperty(key)) {
             varstr = varstr + key + ', ';
           }
         }
-        if (!varstr.length) {
-          return preans + 'There are currently no variables defined.' + sufans;
-        }
+        // If we are done, remove the last comma and space.
         varstr = varstr.trim().slice(0, -1);
-        
         return preans + varstr + sufans;
-      }
+      },
 
+      // Load terminal variables from localStorage.
+      loadvars: function loadvars() {
+        var loadedvars = JSON.parse(localStorage.getItem(termName));
+        if (loadedvars === null) {
+          return preans + 'There are no stored variables in this terminal.' + sufans;
+        }
+        for(var key in loadedvars) {
+          if (loadedvars.hasOwnProperty(key)) {
+            parser.set(key, loadedvars[key]);
+          }
+        }
+        return preans + 'Terminal variables have been loaded.' + sufans;
+      },
+
+      // Store terminal variables in storage using localForage.
+      savevars: function savevars() {
+        if (!Object.keys(parser.scope).length) {
+          return preans + 'There are currently no variables defined in this terminal.' + sufans;
+        }
+        localStorage.setItem(termName, JSON.stringify(parser.scope));
+        return preans + 'Terminal variables have been saved.' + sufans;
+      }
     };
   };
 
