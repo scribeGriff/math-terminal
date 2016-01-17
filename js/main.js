@@ -12,12 +12,19 @@ var awesomplete = true;
       preerr = '<i class="prefix fa fa-angle-double-right"></i> <span class="cmderror">',
       sufans = '</span>',
       precisionVar = 8;  // default output format significant digits.
+  
+  var termName1 = 'terminal1',
+      termName2 = 'terminal2',
+      termName3 = 'terminal3',
+      termName4 = 'terminal4';
 
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
       hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348'];
 
-  var terminal1, bgcolor, chartDiv, lineShape, points, cmdinput, autocompleter, helpExt, parseData, awesompleteDivUl,
+  var terminal1, bgcolor, lineShape, points, cmdinput, autocompleter, helpExt, parseData, awesompleteDivUl,
       parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart, consoleCommands;
+  
+  var chartDiv1 = document.getElementById('chart-div1');
 
   var matchThemes = /^monokai|^github|^xcode|^obsidian|^vs|^arta|^railcasts|^chalkboard|^dark/,
       matchChartCmds = /^line$|^linepts$|^bar$|^column$|^curve$|^curvepts$|^sample$|^samplen$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$|^series$/,
@@ -133,9 +140,9 @@ var awesomplete = true;
     '<table class="ink-table">',
     '<tr><td>clear</td><td class="answer">clears command window</td></tr>',
     '<tr><td>clear vars</td><td class="answer">clears workspace variables</td></tr>',
-    '<tr><td>clear all</td><td class="answer">clears window and variables</td></tr>',
+    '<tr><td>clear all</td><td class="answer">clears command window, workspace and stored variables, and current chart</td></tr>',
     '<tr><td>clear chart</td><td class="answer">clears current chart</td></tr>',
-    '<tr><td>clear storage</td><td class="answer">clears variables from local storage (see <em>help loadvars</em> and <em>help savevars</em> for more information).</td></tr>',
+    '<tr><td>clear storage</td><td class="answer">clears variables from local storage (see <em>help vars</em>, <em>help loadvars</em> and <em>help savevars</em> for more information).</td></tr>',
     '<tr><td>help</td><td class="answer">displays this help screen</td></tr>',
     '<tr><td>help <em>command</em></td><td class="answer">displays the <em>command</em> documentation</td></tr>',
     '<tr><td>line <em>[data]</em></td><td class="answer">creates a line chart and plots the <em>[data]</em>.  See <em>help line</em> for more information.  Also see help for bar, column, curve, linepts, curvepts, polar, sample, samplen, linlog, loglin, loglog, title, subtitle, xaxis, yaxis, series</td></tr>',
@@ -175,10 +182,9 @@ var awesomplete = true;
       });
 
       // For terminal to detect if command completion should be above or below input
+      // TODO: This needs to be modified to handle multiple terminals.
       awesompleteDivUl = document.querySelector('div.awesomplete > ul');
       terminal1.setAwesompleteDiv(awesompleteDivUl);
-
-      chartDiv = document.getElementById('chart-div');
     }
   };
 
@@ -187,12 +193,11 @@ var awesomplete = true;
     matrix: 'array'
   });
 
-  // Convert the 'terminal' DOM element into a live terminal.
-  // This example defines several custom commands for the terminal.
-  terminal1 = new Terminal('terminal1', {}, {
+  // Convert the termName1 DOM element into an interactive terminal.
+  terminal1 = new Terminal(termName1, {}, {
     execute: function execute(cmd, args) {
       var parser = terminal1.getParser();
-      var cmds = consoleCommands(cmd, args, terminal1, chartDiv, parser, 'terminal1');
+      var cmds = consoleCommands(cmd, args, terminal1, chartDiv1, parser, termName1);
 
       if (typeof cmds[cmd] !== 'function') {
         var result, katstr, formres;
@@ -499,7 +504,7 @@ var awesomplete = true;
 
     var interval = 360 / chartData[0].data.length;
 
-    return Highcharts.chart(chartDiv, {
+    return Highcharts.chart(container, {
       chart: {
         polar: true,
         plotBorderWidth: 0
