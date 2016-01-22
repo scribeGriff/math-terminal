@@ -5,7 +5,7 @@
  * MIT license
  */
 
-/* global math: false, katex: false, Terminal: false, document: false, webix: false, Awesomplete: false, self: false, awesomplete: false */
+/* global math: false, document: false, Awesomplete: false, self: false, awesomplete: false */
 /* jshint node: true, browser: true, loopfunc: true */
 
 (function () {

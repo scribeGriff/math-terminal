@@ -1,4 +1,4 @@
-/* global math: false, katex: false, Terminal: false, document: false, webix: false, Awesomplete: false, Highcharts: false */
+/* global math: false, katex: false, Terminal: false, document: false, webix: false, Awesomplete: false, Highcharts: false, Papa: false, moment: false */
 /* jshint node: true, browser: true, loopfunc: true, esnext: true */
 
 /* globals */
@@ -12,7 +12,7 @@ var awesomplete = true;
       preerr = '<i class="prefix fa fa-angle-double-right"></i> <span class="cmderror">',
       sufans = '</span>',
       precisionVar = 8;  // default output format significant digits.
-  
+
   var termName1 = 'terminal1',
       termName2 = 'terminal2',
       termName3 = 'terminal3',
@@ -23,13 +23,13 @@ var awesomplete = true;
 
   var terminal1, bgcolor, lineShape, points, cmdinput, autocompleter, helpExt, parseData, awesompleteDivUl,
       parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart, consoleCommands;
-  
+
   var chartDiv1 = document.getElementById('chart-div1');
 
   var matchThemes = /^monokai|^github|^xcode|^obsidian|^vs|^arta|^railcasts|^chalkboard|^dark/,
       matchChartCmds = /^line$|^linepts$|^bar$|^column$|^curve$|^curvepts$|^sample$|^samplen$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$|^series$/,
       matchWaveGenCmds = /^sinewave$|^squarewave$|^sawtoothwave$|^trianglewave$|^impulse$|^step$|^gauss$/,
-      matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^getdata$|^gety$|^getn$|^getq$|^getqn$|^getr$|^getrn$|^getz$|^vars$|^loadvars$|^savevars$/;
+      matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^getdata$|^gety$|^getn$|^getq$|^getqn$|^getr$|^getrn$|^getz$|^vars$|^loadvars$|^savevars$|^importfile$|^importurl$|^importlog$/;
 
   var bgcolors = {
     monokai: "#272822",
@@ -1779,8 +1779,58 @@ var awesomplete = true;
         }
         localStorage.setItem(termName, JSON.stringify(parser.scope));
         return preans + 'Terminal variables have been saved.' + sufans;
+      },
+
+      importfile: function loadfile() {
+        var fileElem = document.getElementById("fileElem");
+
+        if (fileElem) {
+          fileElem.click();
+        }
+
+        fileElem.addEventListener('change', function(evt) {
+          var file = evt.target.files[0];
+          var logInfo = {
+            "File name": file.name,
+            "File size": file.size + ' bytes',
+            "File type": file.type,
+            "Last saved": moment(file.lastModifiedDate).format('MMM Do YYYY, h:mm:ss a'),
+            "Parse Began": moment().format('MMM Do YYYY, h:mm:ss a')
+          };
+          terminal.setImportLog(logInfo);
+          var start = Date.now(), 
+              end;
+          Papa.parse(file, {
+            dynamicTyping: true,
+            complete: function(results) {
+              end = Date.now();
+              logInfo["Parse complete"] = moment().format('MMM Do YYYY, h:mm:ss a');
+              logInfo["Elapsed time"] = (end - start) + " ms";
+              logInfo["Rows of data"] = results.data.length;
+              logInfo["Delimiter detected"] = results.meta.delimiter;
+              if (results.errors.length) {
+                for (var i = 0; i < results.errors.length; i++) {
+                  logInfo["Error code " + Number(i + 1)] = results.errors[i].code;
+                  logInfo["Error message " + Number(i + 1)] = results.errors[i].message;
+                }
+              } else {
+                logInfo["Error message"] = "File parsed with no errors.";
+              }
+             terminal.setImportLog(logInfo); 
+            }
+          });
+        }, false);
+
+        return '';
+      },
+      
+      importurl: function importurl() {
+        
+      },
+      
+      importlog: function importlog() {
+        return terminal.getImportLog();
       }
     };
   };
-
 }());

@@ -25,7 +25,7 @@
     options.separator = options.separator || defaults.separator;
     options.theme = options.theme || defaults.theme;
 
-    var matchAllBuiltIns = /\b^help\b.*|\b^clear\b.*|\b^theme\b.*|\b^precision\b.*|\b^ver\b.*|\b^version\b.*|\b^line\b.*|\b^linepts\b.*|\b^bar\b.*|\b^column\b.*|\b^curve\b.*|\b^curvepts\b.*|\b^sample\b.*|\b^samplen\b.*|\b^polar\b.*|\b^scatter\b.*|\b^linlog\b.*|\b^loglin\b.*|\b^loglog\b.*|\b^linlogpts\b.*|\b^loglinpts\b.*|\b^loglogpts\b.*|\b^vars\b.*|\b^loadvars\b.*|\b^savevars\b.*$/;
+    var matchAllBuiltIns = /\b^help\b.*|\b^clear\b.*|\b^theme\b.*|\b^precision\b.*|\b^ver\b.*|\b^version\b.*|\b^line\b.*|\b^linepts\b.*|\b^bar\b.*|\b^column\b.*|\b^curve\b.*|\b^curvepts\b.*|\b^sample\b.*|\b^samplen\b.*|\b^polar\b.*|\b^scatter\b.*|\b^linlog\b.*|\b^loglin\b.*|\b^loglog\b.*|\b^linlogpts\b.*|\b^loglinpts\b.*|\b^loglogpts\b.*|\b^vars\b.*|\b^loadvars\b.*|\b^savevars\b.*|\b^importfile\b.*|\b^importurl\b.*|\b^importlog\b.*$/;
     var matchChartTextCmds = /\b^xaxis\b.*|\b^yaxis\b.*|\b^title\b.*|\b^subtitle\b.*|\b^series\b.*$/i;
     var matchSupportCmds = /\b^getdata\b.*|\b^gety\b.*|\b^getn\b.*|\b^getq\b.*|\b^getqn\b.*|\b^getr\b.*|\b^getrn\b.*|\b^getz\b.*|\b^length\b.*|\b^addseqs\b.*$/;
 
@@ -48,8 +48,10 @@
     var _chart = null;
     // For terminal to detect if command completion should be above or below input.
     var _awesompleteDivUl = null;
-    
+    // Creates a new math parser for this terminal's scope.
     var _parser = new math.parser();
+    // Initialize log information for importing data.
+    var _logInfo = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">There is no data currently imported to this terminal for this session.</span>';
 
     // Create terminal and cache DOM nodes;
     var _terminal = document.getElementById(containerID);
@@ -325,6 +327,19 @@
       },
       getParser: function getParser() {
         return _parser;
+      },
+      setImportLog: function setImportLog(logInfo) {
+        var _buffer = ['<table class="ink-table">'];
+        for(var key in logInfo) {
+          if (logInfo.hasOwnProperty(key)) {
+            _buffer.push('<tr><td>' + key + '</td><td class="answer">' + logInfo[key] + '</td></tr>');
+          }
+        }
+        _buffer.push('</table>');
+        _logInfo = _buffer.join('');
+      },
+      getImportLog: function getImportLog() {
+        return _logInfo;
       },
       setAwesompleteDiv: function setAwesompleteDiv (divUl) {
         _awesompleteDivUl = divUl;

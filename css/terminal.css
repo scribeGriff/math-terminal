@@ -57,10 +57,6 @@ body {
   }
 }
 
-.webix_view {
-  background-color: transparent;
-}
-
 .terminal {
   font-family: Hack, monospace;
   font-weight: normal;
