@@ -204,7 +204,7 @@ var awesomplete = true;
         // Check for valid Math.js command.
         try {
           // This should allow the user to use either single or double quotes. Mathjs only allows strings in double quotes.
-          // Not at all sure if this will work for all Mathjs situations.  TODO: Figure out a way to test for this.
+          // TODO: Not at all sure if this will work for all Mathjs situations.  TODO: Figure out a way to test for this.
           cmd = cmd.replace(/(\w)'(\w)/g, "$1@%$2").replace(/'([^']*)'/g, '"$1"').replace(/(\w)@%(\w)/g, "$1'$2");
           result = parser.eval(cmd);
         } catch(error) {
@@ -215,7 +215,10 @@ var awesomplete = true;
           // Suppress the empty array symbol if line ends in a ;
           return '';
         } else {
-          // Check for Katex format of solution.
+          // Check for Katex format of solution if a number.
+          if (math.typeof(result) != 'number') {
+            return preans + result + sufans;
+          }
           try {
             formres = math.format(result, precisionVar);
             katstr = katex.renderToString(formres);
@@ -1715,21 +1718,28 @@ var awesomplete = true;
       series: function series() {
         if (args.length === 0) {
           return preerr + 'The series command adds a custom name to each series of a chart if one exists.  Please see <em>help series</em> for more information.' + sufans;
+        } else if (args.length > 1) {
+          return preerr + 'The series command accepts an array of strings as its single argument.  Please see <em>help series</em> for more information.' + sufans;
         } else {
-          var chart = terminal.getChart();
+          var chart = terminal.getChart(),
+              argVal;
           if (chart) {
+            argVal = parser.eval(args[0]);
+            if (typeof argVal != 'undefined') {
+              args[0] = argVal;
+            }
             try {
               // Check if this is a sample plot which uses both column and scatter to make the stem.
               if (chart.series.length > 1 && chart.series[1].options.linkedTo === ':previous') {
                 for (var i = 0; i < chart.series.length; i += 2) {
                   chart.series[i].update({
-                    name: args[~~(i / 2)]
+                    name: args[0][~~(i / 2)]
                   }, false);
                 }
               } else {
                 for (var j = 0; j < chart.series.length; j++) {
                   chart.series[j].update({
-                    name: args[j]
+                    name: args[0][j]
                   }, false);
                 }
               }
@@ -1790,6 +1800,7 @@ var awesomplete = true;
 
         fileElem.addEventListener('change', function(evt) {
           var file = evt.target.files[0];
+          console.log(typeof parser.get('nonexistent') === "undefined");
           var logInfo = {
             "File name": file.name,
             "File size": file.size + ' bytes',
@@ -1816,18 +1827,18 @@ var awesomplete = true;
               } else {
                 logInfo["Error message"] = "File parsed with no errors.";
               }
-             terminal.setImportLog(logInfo); 
+              terminal.setImportLog(logInfo); 
             }
           });
         }, false);
 
         return '';
       },
-      
+
       importurl: function importurl() {
-        
+
       },
-      
+
       importlog: function importlog() {
         return terminal.getImportLog();
       }

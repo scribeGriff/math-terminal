@@ -25,8 +25,8 @@
     options.separator = options.separator || defaults.separator;
     options.theme = options.theme || defaults.theme;
 
-    var matchAllBuiltIns = /\b^help\b.*|\b^clear\b.*|\b^theme\b.*|\b^precision\b.*|\b^ver\b.*|\b^version\b.*|\b^line\b.*|\b^linepts\b.*|\b^bar\b.*|\b^column\b.*|\b^curve\b.*|\b^curvepts\b.*|\b^sample\b.*|\b^samplen\b.*|\b^polar\b.*|\b^scatter\b.*|\b^linlog\b.*|\b^loglin\b.*|\b^loglog\b.*|\b^linlogpts\b.*|\b^loglinpts\b.*|\b^loglogpts\b.*|\b^vars\b.*|\b^loadvars\b.*|\b^savevars\b.*|\b^importfile\b.*|\b^importurl\b.*|\b^importlog\b.*$/;
-    var matchChartTextCmds = /\b^xaxis\b.*|\b^yaxis\b.*|\b^title\b.*|\b^subtitle\b.*|\b^series\b.*$/i;
+    var matchAllBuiltIns = /\b^help\b.*|\b^clear\b.*|\b^theme\b.*|\b^precision\b.*|\b^ver\b.*|\b^version\b.*|\b^line\b.*|\b^linepts\b.*|\b^bar\b.*|\b^column\b.*|\b^curve\b.*|\b^curvepts\b.*|\b^sample\b.*|\b^samplen\b.*|\b^polar\b.*|\b^scatter\b.*|\b^linlog\b.*|\b^loglin\b.*|\b^loglog\b.*|\b^linlogpts\b.*|\b^loglinpts\b.*|\b^loglogpts\b.*|\b^vars\b.*|\b^loadvars\b.*|\b^savevars\b.*|\b^importfile\b.*|\b^importurl\b.*|\b^importlog\b.*|\b^series\b.*$/;
+    var matchChartTextCmds = /\b^xaxis\b.*|\b^yaxis\b.*|\b^title\b.*|\b^subtitle\b.*$/i;
     var matchSupportCmds = /\b^getdata\b.*|\b^gety\b.*|\b^getn\b.*|\b^getq\b.*|\b^getqn\b.*|\b^getr\b.*|\b^getrn\b.*|\b^getz\b.*|\b^length\b.*|\b^addseqs\b.*$/;
 
     var extensions = Array.prototype.slice.call(arguments, 2);
@@ -185,40 +185,52 @@
       input.autofocus = false;
       input.readOnly = true;
 
-      // Check if a valid built-in command name or is just an array of values.  
+      // Check if a valid built-in command name or not a number.  
       // If not, try to format as tex and render with KaTeX.
       // With awesomplete, we now have an extra layer of heirarchy with the added div.
-      if (input.value.match(matchAllBuiltIns) || input.value.match(/\[([^\]]+)];?/) || input.value.match(matchSupportCmds) || input.value.match(matchChartTextCmds)) {
-        if (awesomplete) {
-          input.parentNode.insertAdjacentHTML('beforebegin', input.value);
-        } else {
-          input.insertAdjacentHTML('beforebegin', input.value);
-        }
-      } else {
-        try {
-          var rendstr = katex.renderToString(math.parse(input.value).toTex());
+      // TODO: Need to make sure this works in all scenarios.  What about for multiple terminals?
+      try {
+        input.value = input.value.replace(/(\w)'(\w)/g, "$1@%$2").replace(/'([^']*)'/g, '"$1"').replace(/(\w)@%(\w)/g, "$1'$2");
+        if (input.value.match(matchAllBuiltIns) || input.value.match(matchSupportCmds) || input.value.match(matchChartTextCmds) || math.typeof(_parser.eval(input.value)) != 'number') {
           if (awesomplete) {
-            input.parentNode.insertAdjacentHTML('beforebegin', rendstr);
+            input.parentNode.insertAdjacentHTML('beforebegin', input.value);
           } else {
-            input.insertAdjacentHTML('beforebegin', rendstr);
+            input.insertAdjacentHTML('beforebegin', input.value);
           }
-          // This part is a kluge since KaTex doesn't have full support of TeX yet.
-        } catch(error) {
+        } else {
           try {
+            var rendstr = katex.renderToString(math.parse(input.value).toTex());
             if (awesomplete) {
-              input.parentNode.insertAdjacentHTML('beforebegin', katex.renderToString(input.value));
+              input.parentNode.insertAdjacentHTML('beforebegin', rendstr);
             } else {
-              input.insertAdjacentHTML('beforebegin', katex.renderToString(input.value));
+              input.insertAdjacentHTML('beforebegin', rendstr);
             }
-          } catch(error2) {
-            if (awesomplete) {
-              input.parentNode.insertAdjacentHTML('beforebegin', input.value);
-            } else {
-              input.insertAdjacentHTML('beforebegin', input.value);
+            // This part is a kluge since KaTex doesn't have full support of TeX yet.
+          } catch(error) {
+            try {
+              if (awesomplete) {
+                input.parentNode.insertAdjacentHTML('beforebegin', katex.renderToString(input.value));
+              } else {
+                input.insertAdjacentHTML('beforebegin', katex.renderToString(input.value));
+              }
+            } catch(error2) {
+              if (awesomplete) {
+                input.parentNode.insertAdjacentHTML('beforebegin', input.value);
+              } else {
+                input.insertAdjacentHTML('beforebegin', input.value);
+              }
             }
           }
         }
+      } catch(error3) {
+        if (awesomplete) {
+            input.parentNode.insertAdjacentHTML('beforebegin', input.value + ': ' + error3.code);
+          } else {
+            input.insertAdjacentHTML('beforebegin', input.value + ': ' + error3.code);
+          }
+
       }
+
       // With awesomplete, need to get rid of the added div that wraps the input tag.
       if (awesomplete) {
         acdiv = line.querySelector('.awesomplete');
@@ -238,6 +250,9 @@
       if (cmdline && cmdline.trim()) {
         // If command line starts with a predefined console function, parse arguments, if any.
         if (cmdline.match(matchAllBuiltIns)) {
+          // This should allow the user to use either single or double quotes. Mathjs only allows strings in double quotes.
+          // TODO: Does this really work in all possible scenarios?
+          cmdline = cmdline.replace(/(\w)'(\w)/g, "$1@%$2").replace(/'([^']*)'/g, '"$1"').replace(/(\w)@%(\w)/g, "$1'$2");
           args = cmdline.match(/\[[^\]]+\]|[^\s]+/g);
           cmd = args[0];
           // Remove cmd from arg list.
@@ -262,7 +277,7 @@
           if (response !== false) break;
         }
         if (response === false) {
-          response = '<i class="prefix fa fa-angle-double-right"></i> </span><span class="cmderror">' + cmd + ': Sorry, this variable or command is not recognized.  Please check for spelling or syntax errors.</span>';
+          response = '<i class="prefix fa fa-angle-double-right"></i> </span><span class="cmderror">' + cmd + ': This variable or command is not recognized.  Please check for spelling or syntax errors.</span>';
         }
         output(response);
       }
