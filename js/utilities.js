@@ -39,6 +39,15 @@
     // A shortcut to retrieve the z data.
     getz: function getz(object) {
       return math.eval("z", object);
+    },
+    // Stores a header token for use with importurl.
+    settoken: function settoken(key, token) {
+      localStorage.setItem(key, token);
+      return '';
+    },
+    // Retrieves token for use with importurl. 
+    gettoken: function gettoken(key) {
+      return localStorage.getItem(key);
     }
   }, {
     wrap: true

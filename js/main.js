@@ -29,7 +29,7 @@ var awesomplete = true;
   var matchThemes = /^monokai|^github|^xcode|^obsidian|^vs|^arta|^railcasts|^chalkboard|^dark/,
       matchChartCmds = /^line$|^linepts$|^bar$|^column$|^curve$|^curvepts$|^sample$|^samplen$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$|^series$/,
       matchWaveGenCmds = /^sinewave$|^squarewave$|^sawtoothwave$|^trianglewave$|^impulse$|^step$|^gauss$/,
-      matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^getdata$|^gety$|^getn$|^getq$|^getqn$|^getr$|^getrn$|^getz$|^vars$|^loadvars$|^savevars$|^importfile$|^importurl$|^importlog$/;
+      matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^getdata$|^gety$|^getn$|^getq$|^getqn$|^getr$|^getrn$|^getz$|^vars$|^loadvars$|^savevars$|^importfile$|^importurl$|^importlog$|^settoken$|^gettoken$/;
 
   var bgcolors = {
     monokai: "#272822",
@@ -1791,6 +1791,8 @@ var awesomplete = true;
         return preans + 'Terminal variables have been saved.' + sufans;
       },
 
+      // Import a local file and (TODO) load variables into the scope.
+      // File is assumed to be CSV formatted.  Also generates an import log.
       importfile: function loadfile() {
         var fileElem = document.getElementById("fileElem");
 
@@ -1835,10 +1837,40 @@ var awesomplete = true;
         return '';
       },
 
+      // Import a file from a URL.  Supports passing a token to the URL
+      // through the header.  TODO: Not sure why I need to use parse the 
+      // parameters if the arguments are not from the scope.
+      // Imported data is assumed to be JSON.  TODO: Import data to scope, add try/catch.
       importurl: function importurl() {
+        var token = "",
+            argVal,
+            url;
 
+        argVal = parser.eval(args[0]);
+        if (typeof argVal != 'undefined') {
+          url = argVal;
+        } else {
+          url = JSON.parse(args[0]);
+        }
+
+        if (typeof args[1] !== "undefined") {
+          argVal = parser.eval(args[1]);
+          if (typeof argVal != 'undefined') {
+            token = argVal;
+          } else {
+            token = JSON.parse(args[1]);
+          }
+        }
+
+        webix.ajax().headers({"token": token})
+          .get(url).then(function(data) {
+          console.log(data.json().results);
+        });
+
+        return '';
       },
 
+      // Returns the import log in table form to the console.
       importlog: function importlog() {
         return terminal.getImportLog();
       }
