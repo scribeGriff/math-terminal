@@ -423,7 +423,7 @@ var awesomplete = true;
 
     var defaults = {
       type: 'line',
-      zoomDir: 'x',
+      zoomDir: 'xy',
       scatterOps: {},
       enableMarkers: false,
       xCategory: null,
@@ -496,7 +496,6 @@ var awesomplete = true;
         offset:options.yOffset
       },
       tooltip: {
-        valueDecimals: 6,
         shared: true,
       },
       series: chartData
@@ -1800,6 +1799,8 @@ var awesomplete = true;
           fileElem.click();
         }
 
+        console.log(args[0]);
+
         fileElem.addEventListener('change', function(evt) {
           var file = evt.target.files[0];
           console.log(typeof parser.get('nonexistent') === "undefined");
@@ -1813,12 +1814,21 @@ var awesomplete = true;
           terminal.setImportLog(logInfo);
           var start = Date.now(), 
               end;
+
           Papa.parse(file, {
             dynamicTyping: true,
+            header: true,
+            skipEmptyLines: true,
             complete: function(results) {
-              end = Date.now();
+              var output = {},
+                  removeSpaces = /[\s-]/g,
+                  keys = [],
+                  vars = [],
+                  varName,
+                  categories = file.name.slice(0, 5).replace(removeSpaces, "") + '_header';
+              
+              console.log(results);
               logInfo["Parse complete"] = moment().format('MMM Do YYYY, h:mm:ss a');
-              logInfo["Elapsed time"] = (end - start) + " ms";
               logInfo["Rows of data"] = results.data.length;
               logInfo["Delimiter detected"] = results.meta.delimiter;
               if (results.errors.length) {
@@ -1829,7 +1839,26 @@ var awesomplete = true;
               } else {
                 logInfo["Error message"] = "File parsed with no errors.";
               }
-              terminal.setImportLog(logInfo); 
+
+              for (var key in results.data[0]) {
+                if (results.data[0].hasOwnProperty(key) && key.length !== 0) {
+                  keys.push(key);
+                  varName = key.replace(removeSpaces, "");
+                  vars.push(varName);
+                  output[key] = [results.data[0][key]];
+                  for (var j = 1; j < results.data.length; j++) {
+                    output[key].push(results.data[j][key]);
+                  }
+                }
+                parser.set(varName, output[key]);
+              }
+              parser.set(categories, keys);
+              logInfo["Generated vars"] = categories + ", " + vars.join(", ");
+              end = Date.now();
+              logInfo["Elapsed time"] = (end - start) + " ms";
+              terminal.setImportLog(logInfo);
+
+              console.log(output);
             }
           });
         }, false);
