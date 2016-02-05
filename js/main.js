@@ -1669,6 +1669,14 @@ var awesomplete = true;
           var chart = terminal.getChart();
           if (chart) {
             try {
+              for (var i = 0; i < args.length; i++) {
+                try {
+                  args[i] = parser.eval(args[i]);
+                } catch (error) {
+                  // Not a variable in the console.
+                  // No need to catch this, just proceed.
+                }
+              }
               chart.setTitle({
                 text: args[0]
               });
@@ -1717,28 +1725,34 @@ var awesomplete = true;
       series: function series() {
         if (args.length === 0) {
           return preerr + 'The series command adds a custom name to each series of a chart if one exists.  Please see <em>help series</em> for more information.' + sufans;
-        } else if (args.length > 1) {
-          return preerr + 'The series command accepts an array of strings as its single argument.  Please see <em>help series</em> for more information.' + sufans;
+          //} else if (args.length > 1) {
+          //console.log(args);
+          //return preerr + 'The series command accepts an array of strings as its single argument.  Please see <em>help series</em> for more information.' + sufans;
         } else {
           var chart = terminal.getChart(),
               argVal;
           if (chart) {
-            argVal = parser.eval(args[0]);
-            if (typeof argVal != 'undefined') {
-              args[0] = argVal;
+            for (var k = 0; k < args.length; k++) {
+              argVal = parser.eval(args[k]);
+              if (typeof argVal != 'undefined') {
+                args[k] = argVal;
+              }
+              if (math.typeof(args[k]) === 'Matrix') {
+                args[k] = JSON.parse(args[k]);
+              }
             }
             try {
               // Check if this is a sample plot which uses both column and scatter to make the stem.
               if (chart.series.length > 1 && chart.series[1].options.linkedTo === ':previous') {
                 for (var i = 0; i < chart.series.length; i += 2) {
                   chart.series[i].update({
-                    name: args[0][~~(i / 2)]
+                    name: args[~~(i / 2)]
                   }, false);
                 }
               } else {
                 for (var j = 0; j < chart.series.length; j++) {
                   chart.series[j].update({
-                    name: args[0][j]
+                    name: args[j]
                   }, false);
                 }
               }
@@ -1799,8 +1813,6 @@ var awesomplete = true;
           fileElem.click();
         }
 
-        console.log(args[0]);
-
         fileElem.addEventListener('change', function(evt) {
           var file = evt.target.files[0];
           console.log(typeof parser.get('nonexistent') === "undefined");
@@ -1819,15 +1831,14 @@ var awesomplete = true;
             dynamicTyping: true,
             header: true,
             skipEmptyLines: true,
-            complete: function(results) {
+            complete: function complete(results) {
               var output = {},
                   removeSpaces = /[\s-]/g,
                   keys = [],
                   vars = [],
                   varName,
-                  categories = file.name.slice(0, 5).replace(removeSpaces, "") + '_header';
-              
-              console.log(results);
+                  categories = "im_" + file.name.slice(0, 5).replace(removeSpaces, "") + '_header';
+
               logInfo["Parse complete"] = moment().format('MMM Do YYYY, h:mm:ss a');
               logInfo["Rows of data"] = results.data.length;
               logInfo["Delimiter detected"] = results.meta.delimiter;
@@ -1838,27 +1849,35 @@ var awesomplete = true;
                 }
               } else {
                 logInfo["Error message"] = "File parsed with no errors.";
+                for (var key in results.data[0]) {
+                  if (results.data[0].hasOwnProperty(key) && key.length !== 0) {
+                    keys.push(key);
+                    varName = "im_" + key.replace(removeSpaces, "_");
+                    vars.push(varName);
+                    output[key] = results.data[0][key] === "" ? [null] : [results.data[0][key]];
+                    for (var j = 1; j < results.data.length; j++) {
+                      if (results.data[j][key] === "") {
+                        output[key].push(null);
+                      } else {
+                        output[key].push(results.data[j][key]);
+                      }
+                    }
+                  }
+                  parser.set(varName, output[key]);
+                }
+                parser.set(categories, keys);
+                logInfo["Generated vars"] = categories + ", " + vars.join(", ");
               }
 
-              for (var key in results.data[0]) {
-                if (results.data[0].hasOwnProperty(key) && key.length !== 0) {
-                  keys.push(key);
-                  varName = key.replace(removeSpaces, "");
-                  vars.push(varName);
-                  output[key] = [results.data[0][key]];
-                  for (var j = 1; j < results.data.length; j++) {
-                    output[key].push(results.data[j][key]);
-                  }
-                }
-                parser.set(varName, output[key]);
-              }
-              parser.set(categories, keys);
-              logInfo["Generated vars"] = categories + ", " + vars.join(", ");
               end = Date.now();
               logInfo["Elapsed time"] = (end - start) + " ms";
               terminal.setImportLog(logInfo);
-
-              console.log(output);
+            },
+            error: function error(err, file) {
+              logInfo["Error message "] = err.message;
+              logInfo["Generated vars"] = "There were errors reading the file.  No variables were imported.";
+              logInfo["Elapsed time"] = (end - start) + " ms";
+              terminal.setImportLog(logInfo);
             }
           });
         }, false);
