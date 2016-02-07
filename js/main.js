@@ -1668,15 +1668,15 @@ var awesomplete = true;
         } else {
           var chart = terminal.getChart();
           if (chart) {
-            try {
-              for (var i = 0; i < args.length; i++) {
-                try {
-                  args[i] = parser.eval(args[i]);
-                } catch (error) {
-                  // Not a variable in the console.
-                  // No need to catch this, just proceed.
-                }
+            for (var i = 0; i < args.length; i++) {
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
+            }
+            try {
               chart.setTitle({
                 text: args[0]
               });
@@ -1702,6 +1702,14 @@ var awesomplete = true;
         } else {
           var chart = terminal.getChart();
           if (chart) {
+            for (var i = 0; i < args.length; i++) {
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
+              }
+            }
             try {
               chart.setTitle(null, {
                 text: args[0]
@@ -1729,16 +1737,14 @@ var awesomplete = true;
           //console.log(args);
           //return preerr + 'The series command accepts an array of strings as its single argument.  Please see <em>help series</em> for more information.' + sufans;
         } else {
-          var chart = terminal.getChart(),
-              argVal;
+          var chart = terminal.getChart();
           if (chart) {
             for (var k = 0; k < args.length; k++) {
-              argVal = parser.eval(args[k]);
-              if (typeof argVal != 'undefined') {
-                args[k] = argVal;
-              }
-              if (math.typeof(args[k]) === 'Matrix') {
-                args[k] = JSON.parse(args[k]);
+              try {
+                args[k] = parser.eval(args[k]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, leave args[k] as is.
               }
             }
             try {

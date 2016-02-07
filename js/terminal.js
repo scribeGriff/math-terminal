@@ -191,44 +191,56 @@
       // TODO: Need to make sure this works in all scenarios.  What about for multiple terminals?
       try {
         input.value = cleanUpInput(input.value);
-        if (input.value.match(matchAllBuiltIns) || input.value.match(matchSupportCmds) || input.value.match(matchChartTextCmds) || math.typeof(_parser.eval(input.value)) != 'number') {
+        try {
+          if (math.typeof(math.eval(input.value)) == 'number') {
+            // try to render the math expression with katex.
+            try {
+              var rendstr = katex.renderToString(math.parse(input.value).toTex());
+              if (awesomplete) {
+                input.parentNode.insertAdjacentHTML('beforebegin', rendstr);
+              } else {
+                input.insertAdjacentHTML('beforebegin', rendstr);
+              }
+              // If Tex expression didn't work, see if katex can parse the string itself.
+              // This part is a kluge since KaTex doesn't have full support of TeX yet.
+            } catch(error) {
+              try {
+                if (awesomplete) {
+                  input.parentNode.insertAdjacentHTML('beforebegin', katex.renderToString(input.value));
+                } else {
+                  input.insertAdjacentHTML('beforebegin', katex.renderToString(input.value));
+                }
+                // This seems to be some math expression that can't be handled by katex and/or mathjs.
+              } catch(error) {
+                if (awesomplete) {
+                  input.parentNode.insertAdjacentHTML('beforebegin', input.value);
+                } else {
+                  input.insertAdjacentHTML('beforebegin', input.value);
+                }
+              }
+            }
+            // _parser was successful but typeof returned something other than number.
+          } else {
+            if (awesomplete) {
+              input.parentNode.insertAdjacentHTML('beforebegin', input.value);
+            } else {
+              input.insertAdjacentHTML('beforebegin', input.value);
+            }
+          }
+          // _parser was not successful so the sting is something the parser doesn't understand.
+        } catch(error) {
           if (awesomplete) {
             input.parentNode.insertAdjacentHTML('beforebegin', input.value);
           } else {
             input.insertAdjacentHTML('beforebegin', input.value);
           }
-        } else {
-          try {
-            var rendstr = katex.renderToString(math.parse(input.value).toTex());
-            if (awesomplete) {
-              input.parentNode.insertAdjacentHTML('beforebegin', rendstr);
-            } else {
-              input.insertAdjacentHTML('beforebegin', rendstr);
-            }
-            // This part is a kluge since KaTex doesn't have full support of TeX yet.
-          } catch(error) {
-            try {
-              if (awesomplete) {
-                input.parentNode.insertAdjacentHTML('beforebegin', katex.renderToString(input.value));
-              } else {
-                input.insertAdjacentHTML('beforebegin', katex.renderToString(input.value));
-              }
-            } catch(error2) {
-              if (awesomplete) {
-                input.parentNode.insertAdjacentHTML('beforebegin', input.value);
-              } else {
-                input.insertAdjacentHTML('beforebegin', input.value);
-              }
-            }
-          }
         }
-      } catch(error3) {
+      } catch(error) {
         if (awesomplete) {
-          input.parentNode.insertAdjacentHTML('beforebegin', input.value + ': ' + error3.code);
+          input.parentNode.insertAdjacentHTML('beforebegin', input.value + ': ' + error.code);
         } else {
-          input.insertAdjacentHTML('beforebegin', input.value + ': ' + error3.code);
+          input.insertAdjacentHTML('beforebegin', input.value + ': ' + error.code);
         }
-
       }
 
       // With awesomplete, need to get rid of the added div that wraps the input tag.
@@ -291,7 +303,7 @@
         _inputLine.scrollIntoView();
       }
     }
-    
+
     // Clean up str by substituting double quotes for single, 
     // replace escaped apostrophes and remove problematic
     // spaces caused by mistyping in the console.
