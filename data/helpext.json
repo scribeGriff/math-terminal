@@ -57,15 +57,15 @@
 
   "loglogpts": "Description: This chart is the same as a linepts chart except with logarithmic x and y axes.  Please see help linepts for more information.  See also: bar, column, line, curve, curvepts, sample, samplen, polar, loglinpts, linlogpts, loglog, title, subtitle, xaxis, yaxis, series",
 
-  "xaxis": "Description: Adds a label to the x axis of the current chart.  The label argument is space delimited.  String name should be single or double quoted.  Apostrophes should be escaped.  Syntax: xaxis 'This is the x axis'  Example: x = 1:10; y = square(x); sample x y  xaxis 'samples (n)' See also: bar, column, line, linepts, curve, curvepts, sample, samplen, title, subtitle, yaxis, series",
+  "xaxis": "Description: Adds a label to the x axis of the current chart.  The label argument is space delimited.  String name can be single or double quoted but apostrophes must be escaped with a backslash.  Syntax: xaxis 'This is the x axis'  Example: x = 1:10; y = square(x); sample x y  xaxis 'samples (n)' See also: bar, column, line, linepts, curve, curvepts, sample, samplen, title, subtitle, yaxis, series",
 
-  "yaxis": "Description: Adds a label to the y axis of the current chart.  The label argument is space delimited.  String name should be single or double quoted.  Apostrophes should be escaped.  Syntax: yaxis 'This is the y axis'  Example: x = 1:10; y = square(x); sample x y  yaxis 'square (n)' See also: bar, column, line, linepts, curve, curvepts, sample, samplen, title, subtitle, xaxis, series",
+  "yaxis": "Description: Adds a label to the y axis of the current chart.  The label argument is space delimited.  String name can be single or double quoted but apostrophes must be escaped.  Syntax: yaxis 'This is the y axis'  Example: x = 1:10; y = square(x); sample x y  yaxis 'square (n)' See also: bar, column, line, linepts, curve, curvepts, sample, samplen, title, subtitle, xaxis, series",
 
-  "title": "Description: Adds a title to the current chart.  Arguments are space delimited.  The title string is required and a color string for styling the title is optional.  String name should be single or double quoted.  Apostrophes should be escaped.  Syntax: title 'This is the title' 'red'  Example: x = 1:10; y = square(x); sample x y  title 'The square of x' '#90ed7d' See also: bar, column, line, linepts, curve, curvepts, sample, samplen, subtitle, xaxis, yaxis, series",
+  "title": "Description: Adds a title to the current chart.  Arguments are space delimited.  The title string is required and a color string for styling the title is optional.  String name can be single or double quoted but apostrophes must be escaped with a backslash.  Syntax: title 'This is the title' 'red'  Example: x = 1:10; y = square(x); sample x y  title 'The square of x' '#90ed7d' See also: bar, column, line, linepts, curve, curvepts, sample, samplen, subtitle, xaxis, yaxis, series",
 
-  "subtitle": "Description: Adds a subtitle to the current chart.  Arguments are space delimited.  The subtitle string is required and a color string for styling the subtitle is optional.  String name should be single or double quoted.  Apostrophes should be escaped.  Syntax: subtitle 'This is the subtitle' 'red'  Example: x = 1:10; y = square(x); sample x y  title 'The square of x' '#90ed7d' subtitle 'for x from 1 to 10'  See also: bar, column, line, linepts, curve, curvepts, sample, samplen, title, xaxis, yaxis, series",
+  "subtitle": "Description: Adds a subtitle to the current chart.  Arguments are space delimited.  The subtitle string is required and a color string for styling the subtitle is optional.  String name can be single or double quoted but postrophes must be escaped with a backslash.  Syntax: subtitle 'This is the subtitle' 'red'  Example: x = 1:10; y = square(x); sample x y  title 'The square of x' '#90ed7d' subtitle 'for x from 1 to 10'  See also: bar, column, line, linepts, curve, curvepts, sample, samplen, title, xaxis, yaxis, series",
 
-  "series": "Description: Changes the default series title that appears in the legend.  Accepts an array of names as its only argument. String names should be single or double quoted. Syntax: series ['Series name 1', 'Series name 2']  Example: sample gauss() gauss()  series ['random series 1', 'random series 2']  See also: bar, column, line, linepts, curve, curvepts, sample, samplen, title, subtitle, xaxis, yaxis",
+  "series": "Description: Changes the default series title that appears in the legend.  Accepts space delimited strings for each series whose name should be changed in the order they appear in the legend. String names can be single or double quoted but apostrophes must be escaped with a backslash. Syntax: series 'Series name 1' 'Series name 2'  Example: sample gauss() gauss()  series 'random series 1' 'random series 2'  See also: bar, column, line, linepts, curve, curvepts, sample, samplen, title, subtitle, xaxis, yaxis",
 
   "getdata": "Description: Functions that return multiple parameters return them as objects (for example, conv, deconv, corr, filter1d).  This function allows you to retrieve a specific parameter.  Parameter name should be double quoted.  Syntax: getdata(\"y\", myConv);  Example: xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = getdata(\"y\", yc); n = getdata(\"n\", yc); sample n y See also: gety, getn, getq, getqn, getr, getrn, getz, conv, deconv, corr, filter1d",
 
@@ -87,9 +87,15 @@
 
   "addseqs": "Description: Adds two sequences (as arrays) including timing information.  Sequences do not have to be the same length.  Syntax: seqsum = addseqs(x, w, nx, nw);  Example: x = [3, 11, 7, 0, -1, 4, 2]; n = -3:3; nm2 = -1:5; w = gauss(length(x)); seqsum = addseqs(x, w, nm2, nm2); xcorr = corr(x, gety(seqsum), n, getn(seqsum));  See also: corr, add, gety, getn",
 
-  "vars": "Description: Displays the terminal variables that have been defined to the scope using the equal sign.  Syntax: vars  Example: x = 3; y = [1,2,3,4]; vars  Displays x, y  See also: loadvars, savevars",
+  "vars": "Description: Displays the terminal variables that have been defined to the scope using the equal sign.  Syntax: vars  Example: x = 3; y = [1,2,3,4]; vars  Displays x, y  See also: loadvars, savevars, importfile, importurl, importlog",
 
-  "loadvars": "Description: Loads the terminal variables that have been saved to local storage using the savevars command.  To permanently remove stored variables, use the console command clear storage.  Syntax: loadvars  See also: vars, savevars",
+  "loadvars": "Description: Loads the terminal variables that have been saved to local storage using the savevars command.  To permanently remove stored variables, use the console command clear storage.  Syntax: loadvars  See also: vars, savevars, importfile, importurl, importlog",
 
-  "savevars": "Description: Saves the terminal variables to local storage.  To permanently remove stored variables, use the console command clear storage.Syntax: savevars  See also: vars, loadvars"
+  "savevars": "Description: Saves the terminal variables to local storage.  To permanently remove stored variables, use the console command clear storage. Syntax: savevars  See also: vars, loadvars, importfile, importurl, importlog",
+  
+  "importfile": "Description: Imports a csv file from the local computer to workspace variables.  The csv file is assumed to have the first row as a header.   Syntax: importfile  Example: importfile  See also: importurl, importlog, vars, loadvars, savevars",
+
+  "importurl": "Description: Imports JSON formatted data from a url.  Syntax: importurl 'path/to/url'  See also: importfile, importlog, vars, loadvars, savevars",
+
+  "importlog": "Description: Provides information on the most recent import, either from a local file or a url. Syntax: importlog  See also: importfile, importurl, vars, loadvars, savevars"
 }

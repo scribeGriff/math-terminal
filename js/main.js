@@ -21,13 +21,13 @@ var awesomplete = true;
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
       hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348'];
 
-  var terminal1, bgcolor, lineShape, points, cmdinput, autocompleter, helpExt, parseData, awesompleteDivUl,
+  var terminal1, bgcolor, lineShape, points, cmdinput, autocompleter, helpExt, parseData, isValidColor, awesompleteDivUl,
       parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart, consoleCommands;
 
   var chartDiv1 = document.getElementById('chart-div1');
 
   var matchThemes = /^monokai|^github|^xcode|^obsidian|^vs|^arta|^railcasts|^chalkboard|^dark/,
-      matchChartCmds = /^line$|^linepts$|^bar$|^column$|^curve$|^curvepts$|^sample$|^samplen$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$|^series$/,
+      matchChartCmds = /^line$|^linepts$|^area$|^bar$|^column$|^curve$|^curvepts$|^sample$|^samplen$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$|^series$/,
       matchWaveGenCmds = /^sinewave$|^squarewave$|^sawtoothwave$|^trianglewave$|^impulse$|^step$|^gauss$/,
       matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^getdata$|^gety$|^getn$|^getq$|^getqn$|^getr$|^getrn$|^getz$|^vars$|^loadvars$|^savevars$|^importfile$|^importurl$|^importlog$|^settoken$|^gettoken$/;
 
@@ -423,6 +423,9 @@ var awesomplete = true;
 
     var defaults = {
       type: 'line',
+      posFillColor: undefined,
+      negFillColor: null,
+      opacityFill: 0.75,
       zoomDir: 'xy',
       scatterOps: {},
       enableMarkers: false,
@@ -443,6 +446,9 @@ var awesomplete = true;
 
     var options = uoptions || defaults;
     options.type = typeof options.type === "undefined" ? defaults.type : options.type;
+    options.posFillColor = typeof options.posFillColor === "undefined" ? defaults.posFillColor : options.posFillColor;
+    options.negFillColor = typeof options.negFillColor === "undefined" ? defaults.negFillColor : options.negFillColor;
+    options.opacityFill = typeof options.opacityFill === "undefined" ? defaults.opacityFill : options.opacityFill;
     options.enableMarkers = typeof options.enableMarkers === "undefined" ? defaults.enableMarkers : options.enableMarkers;
     options.zoomDir = typeof options.zoomDir === "undefined" ? defaults.zoomDir : options.zoomDir;
     options.scatterOps = typeof options.scatterOps === "undefined" ? defaults.scatterOps : options.scatterOps;
@@ -472,7 +478,10 @@ var awesomplete = true;
           marker: {
             enabled: options.enableMarkers,
             connectNulls: true
-          }
+          },
+          color: options.posFillColor,
+          negativeColor: options.negFillColor,
+          fillOpacity: options.opacityFill
         },
         scatter: options.scatterOps
       },
@@ -604,6 +613,18 @@ var awesomplete = true;
     });
   };
 
+  isValidColor = function isValidColor(colorString) {
+    var image = document.createElement("img");
+    image.style.color = "rgb(0, 0, 0)";
+    image.style.color = colorString;
+    if (image.style.color !== "rgb(0, 0, 0)") { 
+      return true; 
+    }
+    image.style.color = "rgb(255, 255, 255)";
+    image.style.color = colorString;
+    return image.style.color !== "rgb(255, 255, 255)";
+  };
+
   consoleCommands = function consoleCommands(cmd, args, terminal, chartDiv, parser, termName) {
     return {
       clear: function clear() {
@@ -696,6 +717,63 @@ var awesomplete = true;
         return math.version;
       },
 
+      area: function area() {
+        var dataSeries,
+            argVal,
+            chart = terminal.getChart(),
+            options = {
+              type: 'area',
+              enableMarkers: false,
+              opacityFill: 0.5
+            };
+        if (args.length === 0) {
+          return preerr + 'The area chart needs to know what data to plot.  Please see <em>help area</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for plotting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < args.length; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The area chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help area</em> for more information.');
+            }
+            // If the xaxis values are strings, then pass the array as the x category option.  
+            // This is only valid for an x axis with a single array of category definitions.
+            if (args[0].every(elem => typeof elem === "string")) {
+              options.xCategory = args[0];
+            }
+            // Format the data for plotting.
+            dataSeries = parseData.apply(null, args);
+            // Catch any errors.
+          } catch(error) {
+            // This usually means the data was passed without using pairs of arrays for x and y values.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': The area chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help area</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+          }
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div and with the required options.
+        chart = createBaseChart(chartDiv, dataSeries, options);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+
       bar: function bar() {
         var dataSeries,
             argVal,
@@ -744,7 +822,7 @@ var awesomplete = true;
               return preerr + error.name + ': The bar chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help bar</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -807,7 +885,7 @@ var awesomplete = true;
               return preerr + error.name + ': The column chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help column</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -864,7 +942,7 @@ var awesomplete = true;
               return preerr + error.name + ': The curve chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help curve</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -919,7 +997,7 @@ var awesomplete = true;
               return preerr + error.name + ': The line chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help line</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -975,7 +1053,7 @@ var awesomplete = true;
               return preerr + error.name + ': The curvepts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help curvepts</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -1030,7 +1108,7 @@ var awesomplete = true;
               return preerr + error.name + ': The linepts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linepts</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -1107,7 +1185,7 @@ var awesomplete = true;
               return preerr + error.name + ': The scatter chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help scatter</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -1164,7 +1242,7 @@ var awesomplete = true;
               return preerr + error.name + ': The linlog chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linlog</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -1221,7 +1299,7 @@ var awesomplete = true;
               return preerr + error.name + ': The loglin chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglin</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -1280,7 +1358,7 @@ var awesomplete = true;
               return preerr + error.name + ': The loglog chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglog</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -1337,7 +1415,7 @@ var awesomplete = true;
               return preerr + error.name + ': The linlogpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linlogpts</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -1394,7 +1472,7 @@ var awesomplete = true;
               return preerr + error.name + ': The loglinpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglinpts</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -1453,7 +1531,7 @@ var awesomplete = true;
               return preerr + error.name + ': The loglogpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglogpts</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -1504,7 +1582,7 @@ var awesomplete = true;
               return preerr + error.name + ': The polar chart requires data to be submitted as [x1] [x1] [x3] etc.  Please see <em>help polar</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -1557,7 +1635,7 @@ var awesomplete = true;
               return preerr + error.name + ': The sample chart requires data to be submitted as [x1] [x2] [x3] etc.  Please see <em>help sample</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -1608,7 +1686,7 @@ var awesomplete = true;
               return preerr + error.name + ': The samplen chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help samplen</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors).' + error + sufans; 
+            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
           }
         }
 
@@ -1631,6 +1709,12 @@ var awesomplete = true;
           var chart = terminal.getChart();
           if (chart) {
             try {
+              args[0] = parser.eval(args[0]);
+            } catch (error) {
+              // Not a variable in the console.
+              // No need to catch this, just proceed.
+            }
+            try {
               chart.xAxis[0].setTitle({
                 text: args[0],
               });
@@ -1649,6 +1733,12 @@ var awesomplete = true;
         } else {
           var chart = terminal.getChart();
           if (chart) {
+            try {
+              args[0] = parser.eval(args[0]);
+            } catch (error) {
+              // Not a variable in the console.
+              // No need to catch this, just proceed.
+            }
             try {
               chart.yAxis[0].setTitle({
                 text: args[0]
@@ -1680,7 +1770,7 @@ var awesomplete = true;
               chart.setTitle({
                 text: args[0]
               });
-              if (args[1] !== null) {
+              if (args[1] !== null && isValidColor(args[1])) {
                 chart.setTitle({
                   style: { 
                     color: args[1] 
@@ -1714,7 +1804,7 @@ var awesomplete = true;
               chart.setTitle(null, {
                 text: args[0]
               });
-              if (args[1] !== null) {
+              if (args[1] !== null && isValidColor(args[1])) {
                 chart.setTitle(null, {
                   style: { 
                     color: args[1] 
