@@ -1982,32 +1982,21 @@ var awesomplete = true;
       },
 
       // Import a file from a URL.  Supports passing a token to the URL
-      // through the header.  TODO: Not sure why I need to use parse the 
-      // parameters if the arguments are not from the scope.
+      // through the header.
       // Imported data is assumed to be JSON.  TODO: Import data to scope, add try/catch.
       importurl: function importurl() {
-        var token = "",
-            argVal,
-            url;
 
-        argVal = parser.eval(args[0]);
-        if (typeof argVal != 'undefined') {
-          url = argVal;
-        } else {
-          url = JSON.parse(args[0]);
-        }
-
-        if (typeof args[1] !== "undefined") {
-          argVal = parser.eval(args[1]);
-          if (typeof argVal != 'undefined') {
-            token = argVal;
-          } else {
-            token = JSON.parse(args[1]);
+        for (var k = 0; k < args.length; k++) {
+          try {
+            args[k] = parser.eval(args[k]);
+          } catch (error) {
+            // Not a variable in the console.
+            // No need to catch this, leave args[k] as is.
           }
         }
 
-        webix.ajax().headers({"token": token})
-          .get(url).then(function(data) {
+        webix.ajax().headers({"token": args[1]})
+          .get(args[0]).then(function(data) {
           console.log(data.json().results);
         });
 

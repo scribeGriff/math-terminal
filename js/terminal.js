@@ -265,7 +265,7 @@
         cmdline = cleanUpInput(cmdline);
         if (cmdline.match(matchChartTextCmds) || cmdline.match(matchAllBuiltIns)) {
           // Split command line on spaces not within double quotes.
-          args = cmdline.match(/(")((.)+?)\1|([^\s"]+)/g);
+          args = cmdline.match(/(?:[^\s"]+|"[^"]*")+/g);
           cmd = args[0];
           // Remove cmd from arg list, parse if necessary to remove quoted strings that are
           // already quoted from the command line.
@@ -311,9 +311,11 @@
       return str
         .replace(/(')((?:\\\1|.)+?)\1/g, '"$2"')
         .replace(/\\'/g, "'")
-        .replace(/(,[\s,]+)(?=(?:[^"]|"[^"]*")*$)/g, ',')
+        .replace(/([\s,]+,[\s,]+)(?=(?:[^"]|"[^"]*")*$)/g, ',')
         .replace(/(\[[\s,]+)(?=(?:[^"]|"[^"]*")*$)/g, '[')
-        .replace(/([\s,]+\])(?=(?:[^"]|"[^"]*")*$)/g, ']');
+        .replace(/([\s,]+\])(?=(?:[^"]|"[^"]*")*$)/g, ']')
+        .replace(/(\([\s,]+)(?=(?:[^"]|"[^"]*")*$)/g, '(')
+        .replace(/([\s,]+\))(?=(?:[^"]|"[^"]*")*$)/g, ')');
     }
 
     function clear() {
