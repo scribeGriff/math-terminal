@@ -1985,7 +1985,11 @@ var awesomplete = true;
       // through the header.
       // Imported data is assumed to be JSON.  TODO: Import data to scope, add try/catch.
       importurl: function importurl() {
-
+        var tokenObj = {},
+            raw,
+            keys = [],
+            csv,
+            parsedData;
         for (var k = 0; k < args.length; k++) {
           try {
             args[k] = parser.eval(args[k]);
@@ -1995,9 +1999,44 @@ var awesomplete = true;
           }
         }
 
-        webix.ajax().headers({"token": args[1]})
-          .get(args[0]).then(function(data) {
-          console.log(data.json().results);
+        if (typeof args[1] !== "undefined") {
+          tokenObj.token = args[1];
+        }
+
+        webix.ajax().headers(tokenObj)
+          .get(args[0]).then(function(result) {
+          raw = result.json();
+          console.log(raw);
+          if (raw !== null && Array.isArray(raw)) {
+            csv = Papa.unparse(raw);
+            console.log(csv);
+            parsedData = Papa.parse(csv);
+            console.log(parsedData.data);
+          } else if (raw !== null && typeof raw === 'object') {
+            for(var key in raw) {
+              if (raw.hasOwnProperty(key) && Array.isArray(raw[key])) {
+                console.log(key);
+                keys.push(key);
+              }
+            }
+            if (keys.length === 1) {
+              // If there is only one value that is an array, 
+              // assume this is the data.
+              csv = Papa.unparse(raw[keys[0]]);
+              console.log(csv);
+              parsedData = Papa.parse(csv);
+              console.log(parsedData.data);
+            } else if (keys.length === 2) {
+              // Assume we have explicit fields and data arrays.
+              // Papa unparse can handle this directly.
+              csv = Papa.unparse(raw);
+              console.log(csv);
+              parsedData = Papa.parse(csv);
+              console.log(parsedData.data);
+            } else {
+              // Log an error with the data.  Not sure what to do with it.
+            }
+          }
         });
 
         return '';

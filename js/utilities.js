@@ -43,7 +43,7 @@
     // Stores a header token for use with importurl.
     settoken: function settoken(key, token) {
       localStorage.setItem(key, token);
-      return 'Stored token for ' + key;
+      return token;
     },
     // Retrieves token for use with importurl. 
     gettoken: function gettoken(key) {
