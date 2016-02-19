@@ -1911,7 +1911,6 @@ var awesomplete = true;
 
         fileElem.addEventListener('change', function(evt) {
           var file = evt.target.files[0];
-          console.log(typeof parser.get('nonexistent') === "undefined");
           var logInfo = {
             "File name": file.name,
             "File size": file.size + ' bytes',
@@ -1929,7 +1928,7 @@ var awesomplete = true;
             skipEmptyLines: true,
             complete: function complete(results) {
               var output = {},
-                  removeSpaces = /[\s-]/g,
+                  removeSpaces = /[\s-.]/g,
                   keys = [],
                   vars = [],
                   varName,
@@ -1983,13 +1982,26 @@ var awesomplete = true;
 
       // Import a file from a URL.  Supports passing a token to the URL
       // through the header.
-      // Imported data is assumed to be JSON.  TODO: Import data to scope, add try/catch.
+      // Imported data is assumed to be JSON.
       importurl: function importurl() {
         var tokenObj = {},
             raw,
             keys = [],
+            keyNumber = [],
+            output = {},
+            removeSpaces = /[\s-.]/g,
+            vars = [],
+            varName,
+            errorOnParse = false,
+            categories,
             csv,
-            parsedData;
+            results,
+            parseConfig = {
+              dynamicTyping: true,
+              header: true,
+              skipEmptyLines: true
+            };
+
         for (var k = 0; k < args.length; k++) {
           try {
             args[k] = parser.eval(args[k]);
@@ -1999,44 +2011,104 @@ var awesomplete = true;
           }
         }
 
+        // If user provided a token, define it in the token object.
         if (typeof args[1] !== "undefined") {
           tokenObj.token = args[1];
         }
 
-        webix.ajax().headers(tokenObj)
-          .get(args[0]).then(function(result) {
+        // Create the categories variable name from the file name portion of the path.
+        categories = "im_" + args[0].match(/([\w\d_-]*)\.?[^\\\/]*$/i)[1] + '_header';
+
+        // Start the log file.
+        var logInfo = {
+          "File path": args[0],
+          "Parse Began": moment().format('MMM Do YYYY, h:mm:ss a')
+        };
+        terminal.setImportLog(logInfo);
+        var start = Date.now(), 
+            end;
+
+        webix.ajax().headers(tokenObj).get(args[0]).then(function success(result) {
           raw = result.json();
           console.log(raw);
           if (raw !== null && Array.isArray(raw)) {
             csv = Papa.unparse(raw);
             console.log(csv);
-            parsedData = Papa.parse(csv);
-            console.log(parsedData.data);
+            results = Papa.parse(csv, parseConfig);
+            console.log(results.data);
           } else if (raw !== null && typeof raw === 'object') {
-            for(var key in raw) {
-              if (raw.hasOwnProperty(key) && Array.isArray(raw[key])) {
-                console.log(key);
-                keys.push(key);
+            for(var _key in raw) {
+              if (raw.hasOwnProperty(_key) && Array.isArray(raw[_key])) {
+                keyNumber.push(_key);
               }
             }
-            if (keys.length === 1) {
+            if (keyNumber.length === 1) {
               // If there is only one value that is an array, 
               // assume this is the data.
-              csv = Papa.unparse(raw[keys[0]]);
+              csv = Papa.unparse(raw[keyNumber[0]]);
               console.log(csv);
-              parsedData = Papa.parse(csv);
-              console.log(parsedData.data);
-            } else if (keys.length === 2) {
+              results = Papa.parse(csv, parseConfig);
+              console.log(results.data);
+            } else if (keyNumber.length === 2) {
               // Assume we have explicit fields and data arrays.
               // Papa unparse can handle this directly.
               csv = Papa.unparse(raw);
               console.log(csv);
-              parsedData = Papa.parse(csv);
-              console.log(parsedData.data);
+              results = Papa.parse(csv, parseConfig);
+              console.log(results.data);
             } else {
               // Log an error with the data.  Not sure what to do with it.
+              errorOnParse = true;
             }
           }
+
+          if (!errorOnParse) {
+            logInfo["Parse complete"] = moment().format('MMM Do YYYY, h:mm:ss a');
+            logInfo["Rows of data"] = results.data.length;
+            logInfo["Delimiter detected"] = results.meta.delimiter;
+            if (results.errors.length) {
+              for (var i = 0; i < results.errors.length; i++) {
+                logInfo["Error code " + Number(i + 1)] = results.errors[i].code;
+                logInfo["Error message " + Number(i + 1)] = results.errors[i].message;
+              }
+            } else {
+              logInfo["Error message"] = "File parsed with no errors.";
+              for (var key in results.data[0]) {
+                if (results.data[0].hasOwnProperty(key) && key.length !== 0) {
+                  keys.push(key);
+                  varName = "im_" + key.replace(removeSpaces, "_");
+                  vars.push(varName);
+                  output[key] = results.data[0][key] === "" ? [null] : [results.data[0][key]];
+                  for (var j = 1; j < results.data.length; j++) {
+                    if (results.data[j][key] === "") {
+                      output[key].push(null);
+                    } else {
+                      output[key].push(results.data[j][key]);
+                    }
+                  }
+                }
+                parser.set(varName, output[key]);
+              }
+              parser.set(categories, keys);
+              logInfo["Generated vars"] = categories + ", " + vars.join(", ");
+            }
+
+            end = Date.now();
+            logInfo["Elapsed time"] = (end - start) + " ms";
+            terminal.setImportLog(logInfo);
+          } else {
+            logInfo["Error message"] = "Parsing was not successful.  Parser could not read file format.";
+            end = Date.now();
+            logInfo["Elapsed time"] = (end - start) + " ms";
+            terminal.setImportLog(logInfo);
+          }
+        }, function error(err) {
+          // This is not working.  err is not an error, it's just an XMLHttpRequest Object????
+          console.log(err);
+          logInfo["Error message"] = err;
+          end = Date.now();
+          logInfo["Elapsed time"] = (end - start) + " ms";
+          terminal.setImportLog(logInfo);
         });
 
         return '';
