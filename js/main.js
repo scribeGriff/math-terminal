@@ -1,8 +1,9 @@
-/* global math: false, katex: false, Terminal: false, document: false, webix: false, Awesomplete: false, Highcharts: false, Papa: false, moment: false */
+/* global math: false, katex: false, Terminal: false, document: false, Awesomplete: false, Highcharts: false, Papa: false, moment: false, fetch: false */
 /* jshint node: true, browser: true, loopfunc: true, esnext: true */
 
 /* globals */
 /* For debugging autocomplete and later perhaps as an option to disable. */
+// TODO: Can this be set by the terminal?
 var awesomplete = true;
 
 (function () {
@@ -172,13 +173,29 @@ var awesomplete = true;
       // Awesomplete was clobbering the autofocus attribute in FF so fix was to focus in JS.
       cmdinput.focus();
 
-      /* Reference : http://docs.webix.com/helpers__ajax_operations.html */
-      webix.ajax("data/aclist.json").then(function(aclist) {
-        autocompleter.list = aclist.json();
+      // Fetch the external help files.
+      fetch("data/helpext.json")
+        .then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        helpExt = json;
+      }, function(error) {
+        // Continue without help files.
+      }).catch(function(ex) {
+        // Continue without help files.
       });
 
-      webix.ajax("data/helpext.json").then(function(helpext) {
-        helpExt = helpext.json();
+      // Fetch the command list for awesomplete.
+      fetch("data/aclist.json")
+        .then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        autocompleter.list = json;
+      }, function(error) {
+        // Continue without autocompleter.
+      }).catch(function(ex) {
+        // Continue without autocompleter.
+        // TODO: Should set awesomplete = false?
       });
 
       // For terminal to detect if command completion should be above or below input
@@ -1823,9 +1840,6 @@ var awesomplete = true;
       series: function series() {
         if (args.length === 0) {
           return preerr + 'The series command adds a custom name to each series of a chart if one exists.  Please see <em>help series</em> for more information.' + sufans;
-          //} else if (args.length > 1) {
-          //console.log(args);
-          //return preerr + 'The series command accepts an array of strings as its single argument.  Please see <em>help series</em> for more information.' + sufans;
         } else {
           var chart = terminal.getChart();
           if (chart) {
@@ -1994,6 +2008,7 @@ var awesomplete = true;
             varName,
             errorOnParse = false,
             categories,
+            prefix,
             csv,
             results,
             parseConfig = {
@@ -2016,8 +2031,10 @@ var awesomplete = true;
           tokenObj.token = args[1];
         }
 
+        // Create a prefix for the variable names based on the file name portion of the path.
+        prefix = "i" + args[0].match(/([\w\d_-]*)\.?[^\\\/]*$/i)[1] + "_";
         // Create the categories variable name from the file name portion of the path.
-        categories = "im_" + args[0].match(/([\w\d_-]*)\.?[^\\\/]*$/i)[1] + '_header';
+        categories = prefix + 'header';
 
         // Start the log file.
         var logInfo = {
@@ -2028,17 +2045,16 @@ var awesomplete = true;
         var start = Date.now(), 
             end;
 
-        webix.ajax().headers(tokenObj).get(args[0]).then(function success(result) {
-          raw = result.json();
-          console.log(raw);
-          if (raw !== null && Array.isArray(raw)) {
-            csv = Papa.unparse(raw);
-            console.log(csv);
+        fetch(args[0], { headers: tokenObj })
+          .then(function(response) {
+          return response.json();
+        }).then(function(json) {
+          if (json !== null && Array.isArray(json)) {
+            csv = Papa.unparse(json);
             results = Papa.parse(csv, parseConfig);
-            console.log(results.data);
-          } else if (raw !== null && typeof raw === 'object') {
-            for(var _key in raw) {
-              if (raw.hasOwnProperty(_key) && Array.isArray(raw[_key])) {
+          } else if (json !== null && typeof json === 'object') {
+            for(var _key in json) {
+              if (json.hasOwnProperty(_key) && Array.isArray(json[_key])) {
                 keyNumber.push(_key);
               }
             }
@@ -2046,16 +2062,12 @@ var awesomplete = true;
               // If there is only one value that is an array, 
               // assume this is the data.
               csv = Papa.unparse(raw[keyNumber[0]]);
-              console.log(csv);
               results = Papa.parse(csv, parseConfig);
-              console.log(results.data);
             } else if (keyNumber.length === 2) {
               // Assume we have explicit fields and data arrays.
               // Papa unparse can handle this directly.
               csv = Papa.unparse(raw);
-              console.log(csv);
               results = Papa.parse(csv, parseConfig);
-              console.log(results.data);
             } else {
               // Log an error with the data.  Not sure what to do with it.
               errorOnParse = true;
@@ -2076,7 +2088,7 @@ var awesomplete = true;
               for (var key in results.data[0]) {
                 if (results.data[0].hasOwnProperty(key) && key.length !== 0) {
                   keys.push(key);
-                  varName = "im_" + key.replace(removeSpaces, "_");
+                  varName = prefix + key.replace(removeSpaces, "_");
                   vars.push(varName);
                   output[key] = results.data[0][key] === "" ? [null] : [results.data[0][key]];
                   for (var j = 1; j < results.data.length; j++) {
@@ -2102,13 +2114,13 @@ var awesomplete = true;
             logInfo["Elapsed time"] = (end - start) + " ms";
             terminal.setImportLog(logInfo);
           }
-        }, function error(err) {
-          // This is not working.  err is not an error, it's just an XMLHttpRequest Object????
-          console.log(err);
-          logInfo["Error message"] = err;
-          end = Date.now();
-          logInfo["Elapsed time"] = (end - start) + " ms";
-          terminal.setImportLog(logInfo);
+        }, function(error) {
+          // Still working on what to do with this.
+          console.log(error.message);
+          
+        }).catch(function(ex) {
+          // Still working on what to do with this.
+          console.log(ex);
         });
 
         return '';
