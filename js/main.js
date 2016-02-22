@@ -1914,7 +1914,7 @@ var awesomplete = true;
         return preans + 'Terminal variables have been saved.' + sufans;
       },
 
-      // Import a local file and (TODO) load variables into the scope.
+      // Import a local file and load variables into the scope.
       // File is assumed to be CSV formatted.  Also generates an import log.
       importfile: function loadfile() {
         var fileElem = document.getElementById("fileElem");
@@ -2114,10 +2114,18 @@ var awesomplete = true;
             logInfo["Elapsed time"] = (end - start) + " ms";
             terminal.setImportLog(logInfo);
           }
+          // Permanently put the json in local storage.  Need prefix key to retrieve.
+          localStorage.setItem(prefix, JSON.stringify(json));
+          // Temporarily put the json in local storage.  Retrieve with terminal name.
+          // Each time a new file is imported, this value will be overriden.
+          localStorage.setItem(termName + "_table", JSON.stringify(json));
         }, function(error) {
-          // Still working on what to do with this.
-          console.log(error.message);
-          
+          logInfo["Parse terminated"] = moment().format('MMM Do YYYY, h:mm:ss a');
+          logInfo["Error message"] = "Parsing was not successful.  Could not read file.";
+          end = Date.now();
+          logInfo["Elapsed time"] = (end - start) + " ms";
+          terminal.setImportLog(logInfo);
+
         }).catch(function(ex) {
           // Still working on what to do with this.
           console.log(ex);
@@ -2129,6 +2137,13 @@ var awesomplete = true;
       // Returns the import log in table form to the console.
       importlog: function importlog() {
         return terminal.getImportLog();
+      },
+      
+      datatable: function datatable() {
+        var dataWindow = window.open("table.html");
+        dataWindow.dataKey = termName + "_table";
+        
+        return '';
       }
     };
   };

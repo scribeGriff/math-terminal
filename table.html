@@ -1,0 +1,28 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Convolv - Table of Imported Data</title>
+
+    <link rel="stylesheet" href="css/datatable.min.css">
+    <script src="js/datatable.min.js"></script>
+
+  </head>
+  <body>
+
+    <div id="datatable"></div>
+
+  </body>
+
+  <script>
+    /* jshint node: true, browser: true, esnext: true */
+    (function () {
+      "use: strict";
+      window.onload = function() {
+        var dataKey = window.dataKey;
+        var importedData = JSON.parse(localStorage.getItem(dataKey));
+        document.getElementById("datatable").innerHTML = dataKey;
+      };
+    }());
+  </script>
+</html>
