@@ -4,15 +4,32 @@
     <meta charset="UTF-8">
     <title>Convolv - Table of Imported Data</title>
 
-    <link rel="stylesheet" href="css/datatable.min.css">
+    <link rel="stylesheet" href="fonts/Hack/css/hack-extended.css">
     <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/bulma/0.0.15/css/bulma.min.css">
-    <script src="js/datatable.min.js"></script>
-    
+    <link rel="stylesheet" href="css/datatable.css">
+
+    <script src="js/datatable.js"></script>
+
   </head>
   <body>
-    <div id="tablediv"></div>
+    <section class="section">
+      <div class="container is-fluid">
+          <nav class="navbar">
+            <div class="navbar-left">
+              <div class="navbar-item">
+                <p id="title" class="subtitle is-5"></p>
+              </div>
+            </div>
+            <div class="navbar-right">
+              <p id="pagenumber" class="navbar-item"></p>
+            </div>
+          </nav>
+        <div id="tablediv"></div>
+        <div class="paging tabs is-centered"></div>
+      </div>
+    </section>
   </body>
 
   <script src="js/createtable.js"></script>
-  
+
 </html>

@@ -3,26 +3,35 @@
 (function () {
   "use: strict";
 
-  window.onload = function() {
-    var tableDiv = document.getElementById("tablediv");
-    var dataKey = window.dataKey;
-    var importedData = JSON.parse(localStorage.getItem(dataKey));
-    tableDiv.appendChild(buildHtmlTable(importedData));
-    var dataTable = document.getElementById("datatable");
-    if (importedData !== null) {
-      var datatable = new DataTable(dataTable, {
-        pageSize: 15,
-        sort: '*'
-      });
-    }
-  };
-
+  var tableDiv, dataKey, importedData, tableID, datatable, pageNum;
 
   var _table_ = document.createElement('table'),
       _tr_ = document.createElement('tr'),
       _th_ = document.createElement('th'),
       _td_ = document.createElement('td'),
       _tbody_ = document.createElement('tbody');
+
+  window.onload = function() {
+    tableDiv = document.getElementById("tablediv");
+    pageNum = document.getElementById("pagenumber");
+    dataKey = window.dataKey;
+    importedData = JSON.parse(localStorage.getItem(dataKey));
+    if (importedData !== null) {
+      tableDiv.appendChild(buildHtmlTable(importedData));
+      tableID = document.getElementById("datatable");
+      datatable = new DataTable(tableID, {
+        pageSize: 20,
+        sort: '*'
+      });
+      document.getElementById("title").innerHTML = dataKey;
+      window.addEventListener('click', updatePageNumber, false);
+    }
+    pageNum.innerHTML = datatable.getCurrentPage();
+  };
+
+  function updatePageNumber() {
+    pageNum.innerHTML = datatable.getCurrentPage();
+  }
 
   // Builds the HTML Table out of myList json data from Ivy restful service.
   function buildHtmlTable(arr) {
@@ -42,7 +51,7 @@
     }
     table.appendChild(tbody);
     table.id = "datatable";
-    table.classList.add("table");
+    table.classList.add("table", "is-bordered", "is-striped", "is-narrow");
     return table;
   }
 

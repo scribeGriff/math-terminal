@@ -1,0 +1,59 @@
+/* PAGING */
+
+body {
+  font-family: Hack, monospace;
+}
+
+.pagination {
+  text-align: center;
+}
+
+.pagination li {
+  float: left ;
+  list-style-type: none;
+}
+
+.pagination li a {
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+.pagination li.active a {
+  border-bottom: 0;
+  color: gray;
+  cursor: default;
+}
+
+/* SORT HEADER */
+
+.sorting {
+  background-image: url("../img/sort_both.png") ;
+  background-position: right center;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.sorting-desc {
+  background-image: url("../img/sort_desc.png");
+}
+
+.sorting-asc {
+  background-image: url("../img/sort_asc.png");
+}
+
+/* AJAX LOAD BAR */
+
+.datatable-load-bar {
+  margin: 8px 0;
+  width: 100%;
+}
+
+.datatable-load-bar {
+  border: 1px solid gray;
+  height: 10px;
+}
+
+.datatable-load-bar  .bar {
+  background-color: #AEF;
+  height: 10px;
+}
