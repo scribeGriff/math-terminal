@@ -2105,6 +2105,8 @@ var awesomplete = true;
               logInfo["Generated vars"] = categories + ", " + vars.join(", ");
             }
 
+
+            logInfo["Raw Data Storage Key"] = prefix;
             end = Date.now();
             logInfo["Elapsed time"] = (end - start) + " ms";
             terminal.setImportLog(logInfo);
@@ -2116,9 +2118,9 @@ var awesomplete = true;
           }
           // Permanently put the json in local storage.  Need prefix key to retrieve.
           localStorage.setItem(prefix, JSON.stringify(json));
-          // Temporarily put the json in local storage.  Retrieve with terminal name.
-          // Each time a new file is imported, this value will be overriden.
-          localStorage.setItem(termName + "_table", JSON.stringify(json));
+          // Store the key of the most recent import to be used by datatable 
+          // if no key is provided as an argument to that function.
+          localStorage.setItem(termName + "_table", prefix);
         }, function(error) {
           logInfo["Parse terminated"] = moment().format('MMM Do YYYY, h:mm:ss a');
           logInfo["Error message"] = "Parsing was not successful.  Could not read file.";
@@ -2138,11 +2140,16 @@ var awesomplete = true;
       importlog: function importlog() {
         return terminal.getImportLog();
       },
-      
+
       datatable: function datatable() {
         var dataWindow = window.open("table.html");
-        dataWindow.dataKey = termName + "_table";
-        
+        dataWindow.terminalName = termName;
+        if (args.length === 0) {
+          dataWindow.dataKey = localStorage.getItem(termName + "_table");
+        } else {
+          dataWindow.dataKey = args[0];
+        }
+
         return '';
       }
     };

@@ -22,6 +22,7 @@ body {
   border-bottom: 0;
   color: gray;
   cursor: default;
+  opacity: 0.3;
 }
 
 /* SORT HEADER */
@@ -56,4 +57,11 @@ body {
 .datatable-load-bar  .bar {
   background-color: #AEF;
   height: 10px;
+}
+
+/* Modifications to Bulma Defaults */
+
+.tabs a:hover {
+  border-bottom-color: darkred;
+  border-bottom-width: 2px;
 }

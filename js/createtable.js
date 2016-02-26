@@ -3,7 +3,8 @@
 (function () {
   "use: strict";
 
-  var tableDiv, dataKey, importedData, tableID, datatable, pageNum;
+  var tableDiv, dataKey, importedData, tableID, datatable, 
+      pageNum, lastPageNum, keyString, termString, termName;
 
   var _table_ = document.createElement('table'),
       _tr_ = document.createElement('tr'),
@@ -15,6 +16,7 @@
     tableDiv = document.getElementById("tablediv");
     pageNum = document.getElementById("pagenumber");
     dataKey = window.dataKey;
+    termName = window.terminalName;
     importedData = JSON.parse(localStorage.getItem(dataKey));
     if (importedData !== null) {
       tableDiv.appendChild(buildHtmlTable(importedData));
@@ -23,14 +25,18 @@
         pageSize: 20,
         sort: '*'
       });
-      document.getElementById("title").innerHTML = dataKey;
+      keyString = dataKey.charAt(1).toUpperCase() + dataKey.slice(2,-1);
+      termString = termName.charAt(0).toUpperCase() + termName.slice(1,-1) + ' ' + termName.charAt(termName.length - 1);
+      document.title = "Raw Data for " + keyString + " at " + termString;
+      document.getElementById("title").innerHTML = keyString + " (" + termString + ")";
       window.addEventListener('click', updatePageNumber, false);
+      lastPageNum = datatable.getLastPageNumber();
     }
-    pageNum.innerHTML = datatable.getCurrentPage();
+    pageNum.innerHTML = "page " + datatable.getCurrentPage() + " of " + lastPageNum;
   };
 
   function updatePageNumber() {
-    pageNum.innerHTML = datatable.getCurrentPage();
+    pageNum.innerHTML = "page " + datatable.getCurrentPage() + " of " + lastPageNum;
   }
 
   // Builds the HTML Table out of myList json data from Ivy restful service.
