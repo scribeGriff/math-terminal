@@ -4,6 +4,18 @@ body {
   font-family: Hack, monospace;
 }
 
+.title, .subtitle, th {
+  font-family: 'ralewayregular';
+}
+
+.table thead th {
+  color: darkslategrey;
+  font-size: 1.5em;
+  font-style: normal;
+  font-weight: normal;
+  text-align: center;
+}
+
 .pagination {
   text-align: center;
 }
@@ -25,21 +37,31 @@ body {
   opacity: 0.3;
 }
 
+.paging {
+  min-height: 20px;
+}
+
 /* SORT HEADER */
 
 .sorting {
-  background-image: url("../img/sort_both.png") ;
-  background-position: right center;
-  background-repeat: no-repeat;
   cursor: pointer;
 }
 
-.sorting-desc {
-  background-image: url("../img/sort_desc.png");
+.sorting:after {
+  content: "\f0dc";
+  font-family: FontAwesome;
+  opacity: 0.3;
+  padding-left: 10px;
 }
 
-.sorting-asc {
-  background-image: url("../img/sort_asc.png");
+.sorting-desc:after {
+  content: "\f0dd";
+  opacity: 1;
+}
+
+.sorting-asc:after {
+  content: "\f0de";
+  opacity: 1;
 }
 
 /* AJAX LOAD BAR */
@@ -64,4 +86,20 @@ body {
 .tabs a:hover {
   border-bottom-color: darkred;
   border-bottom-width: 2px;
+}
+
+.table.is-striped tbody tr:nth-child(2n):hover {
+  background: #b4cbef;
+}
+
+.table tbody tr:hover {
+  background: #b4cbef;
+}
+
+a {
+  color: firebrick;
+}
+
+a:hover {
+  color: black
 }

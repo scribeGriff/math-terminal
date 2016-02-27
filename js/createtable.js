@@ -15,9 +15,9 @@
   window.onload = function() {
     tableDiv = document.getElementById("tablediv");
     pageNum = document.getElementById("pagenumber");
-    dataKey = window.dataKey;
-    termName = window.terminalName;
-    importedData = JSON.parse(localStorage.getItem(dataKey));
+    dataKey = window.dataKey.split("_")[0];
+    termName = window.dataKey.split("_")[1];
+    importedData = JSON.parse(localStorage.getItem(window.dataKey));
     if (importedData !== null) {
       tableDiv.appendChild(buildHtmlTable(importedData));
       tableID = document.getElementById("datatable");
@@ -25,7 +25,7 @@
         pageSize: 20,
         sort: '*'
       });
-      keyString = dataKey.charAt(1).toUpperCase() + dataKey.slice(2,-1);
+      keyString = dataKey.charAt(1).toUpperCase() + dataKey.slice(2);
       termString = termName.charAt(0).toUpperCase() + termName.slice(1,-1) + ' ' + termName.charAt(termName.length - 1);
       document.title = "Raw Data for " + keyString + " at " + termString;
       document.getElementById("title").innerHTML = keyString + " (" + termString + ")";

@@ -2104,9 +2104,12 @@ var awesomplete = true;
               parser.set(categories, keys);
               logInfo["Generated vars"] = categories + ", " + vars.join(", ");
             }
-
-
-            logInfo["Raw Data Storage Key"] = prefix;
+            // Permanently put the json in local storage.  Need prefix key to retrieve.
+            localStorage.setItem(prefix + termName, JSON.stringify(json));
+            // Store the key of the most recent import to be used by datatable 
+            // if no key is provided as an argument to that function.
+            localStorage.setItem(termName + "_table", prefix + termName);
+            logInfo["Raw Data Storage Key"] = prefix + termName;
             end = Date.now();
             logInfo["Elapsed time"] = (end - start) + " ms";
             terminal.setImportLog(logInfo);
@@ -2116,11 +2119,6 @@ var awesomplete = true;
             logInfo["Elapsed time"] = (end - start) + " ms";
             terminal.setImportLog(logInfo);
           }
-          // Permanently put the json in local storage.  Need prefix key to retrieve.
-          localStorage.setItem(prefix, JSON.stringify(json));
-          // Store the key of the most recent import to be used by datatable 
-          // if no key is provided as an argument to that function.
-          localStorage.setItem(termName + "_table", prefix);
         }, function(error) {
           logInfo["Parse terminated"] = moment().format('MMM Do YYYY, h:mm:ss a');
           logInfo["Error message"] = "Parsing was not successful.  Could not read file.";
@@ -2142,15 +2140,21 @@ var awesomplete = true;
       },
 
       datatable: function datatable() {
-        var dataWindow = window.open("table.html");
-        dataWindow.terminalName = termName;
+        var dataWindow;
         if (args.length === 0) {
+          dataWindow = window.open("pages/datatable/index.html");
           dataWindow.dataKey = localStorage.getItem(termName + "_table");
+          return '';
         } else {
-          dataWindow.dataKey = args[0];
+          if (localStorage.getItem(args[0]) !== null) {
+            dataWindow = window.open("pages/datatable/index.html");
+            dataWindow.dataKey = args[0];
+            return '';
+          } else {
+            return 'There is nothing stored locally using key ' + args[0] + '.';
+          }
         }
 
-        return '';
       }
     };
   };
