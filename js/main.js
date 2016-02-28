@@ -681,9 +681,11 @@ var awesomplete = true;
 
       help: function help() {
         if (args && args[0]) {
+          args[0] = args[0].replace("(", "").replace(")", "");
           if (args.length > 1) {
             return preerr + 'Too many arguments' + sufans;
           } else if (args[0].match(matchChartCmds) || args[0].match(matchWaveGenCmds) || args[0].match(matchMathExtensions)) {
+            
             return preans + helpExt[args[0]] + sufans;
           } else {
             try {
@@ -691,7 +693,7 @@ var awesomplete = true;
               return preans + helpStr + sufans + '<br>' + preans + '<a href="http://mathjs.org/docs/reference/functions/' + args[0] + '.html" target="_blank">' + args[0] + ' docs at mathjs.org</a>' + sufans;
             } catch(error) {
               // Unknown command.
-              return preerr + 'Unknown command: ' + args[0] + sufans;
+              return preerr + 'Unknown command or function: ' + args[0] + sufans;
             }
           }
         }
@@ -1999,7 +2001,6 @@ var awesomplete = true;
       // Imported data is assumed to be JSON.
       importurl: function importurl() {
         var tokenObj = {},
-            raw,
             keys = [],
             keyNumber = [],
             output = {},
@@ -2061,12 +2062,12 @@ var awesomplete = true;
             if (keyNumber.length === 1) {
               // If there is only one value that is an array, 
               // assume this is the data.
-              csv = Papa.unparse(raw[keyNumber[0]]);
+              csv = Papa.unparse(json[keyNumber[0]]);
               results = Papa.parse(csv, parseConfig);
             } else if (keyNumber.length === 2) {
               // Assume we have explicit fields and data arrays.
               // Papa unparse can handle this directly.
-              csv = Papa.unparse(raw);
+              csv = Papa.unparse(json);
               results = Papa.parse(csv, parseConfig);
             } else {
               // Log an error with the data.  Not sure what to do with it.
@@ -2105,7 +2106,7 @@ var awesomplete = true;
               logInfo["Generated vars"] = categories + ", " + vars.join(", ");
             }
             // Permanently put the json in local storage.  Need prefix key to retrieve.
-            localStorage.setItem(prefix + termName, JSON.stringify(json));
+            localStorage.setItem(prefix + termName, JSON.stringify(results.data));
             // Store the key of the most recent import to be used by datatable 
             // if no key is provided as an argument to that function.
             localStorage.setItem(termName + "_table", prefix + termName);
@@ -2121,14 +2122,17 @@ var awesomplete = true;
           }
         }, function(error) {
           logInfo["Parse terminated"] = moment().format('MMM Do YYYY, h:mm:ss a');
-          logInfo["Error message"] = "Parsing was not successful.  Could not read file.";
+          logInfo["Error message"] = "Parsing was not successful.  Could not read file. " + error;
           end = Date.now();
           logInfo["Elapsed time"] = (end - start) + " ms";
           terminal.setImportLog(logInfo);
 
         }).catch(function(ex) {
-          // Still working on what to do with this.
-          console.log(ex);
+          logInfo["Parse terminated"] = moment().format('MMM Do YYYY, h:mm:ss a');
+          logInfo["Error message"] = "Parsing was not successful.  Could not read file. " + ex;
+          end = Date.now();
+          logInfo["Elapsed time"] = (end - start) + " ms";
+          terminal.setImportLog(logInfo);
         });
 
         return '';
@@ -2140,14 +2144,15 @@ var awesomplete = true;
       },
 
       datatable: function datatable() {
-        var dataWindow;
+        var dataWindow,
+            tableUrl = "pages/datatable/index.html";
         if (args.length === 0) {
-          dataWindow = window.open("pages/datatable/index.html");
+          dataWindow = window.open(tableUrl);
           dataWindow.dataKey = localStorage.getItem(termName + "_table");
           return '';
         } else {
           if (localStorage.getItem(args[0]) !== null) {
-            dataWindow = window.open("pages/datatable/index.html");
+            dataWindow = window.open(tableUrl);
             dataWindow.dataKey = args[0];
             return '';
           } else {
