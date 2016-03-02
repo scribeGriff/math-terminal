@@ -22,7 +22,7 @@ var awesomplete = true;
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
       hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348'];
 
-  var terminal1, bgcolor, lineShape, points, cmdinput, autocompleter, helpExt, parseData, isValidColor, awesompleteDivUl,
+  var terminal1, bgcolor, lineShape, points, cmdinput, autocompleter, helpExt, parseData, isValidColor, awesompleteDivUl, allCommands,
       parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart, consoleCommands;
 
   var chartDiv1 = document.getElementById('chart-div1');
@@ -191,6 +191,7 @@ var awesomplete = true;
         return response.json();
       }).then(function(json) {
         autocompleter.list = json;
+        allCommands = json;
       }, function(error) {
         // Continue without autocompleter.
       }).catch(function(ex) {
@@ -222,16 +223,29 @@ var awesomplete = true;
         try {
           // This should allow the user to use either single or double quotes. Mathjs only allows strings in double quotes.
           // TODO: Not at all sure if this will work for all Mathjs situations.  TODO: Figure out a way to test for this.
+          // Check also if a user is trying to use a variable name that is already a function.  Mathjs does not prevent this
+          // but the ramifications are really ugly.
           cmd = cmd.replace(/(\w)'(\w)/g, "$1@%$2").replace(/'([^']*)'/g, '"$1"').replace(/(\w)@%(\w)/g, "$1'$2");
+          if (cmd.includes("=")) {
+            var testcommand = cmd.split("=")[0].trim().replace("(", "").replace(")", "");
+            if (allCommands.includes(testcommand)) {
+              return preans + testcommand + ': Function names cannot be used as variable names. ' + cmd.replace(";", "") + ' is not valid.' + sufans;
+            }
+          }
           result = parser.eval(cmd);
         } catch(error) {
-          // Unknown command.
-          return false;
+          return preerr + error + sufans;
         }
         if (cmd.match(/[;]$/)) {
           // Suppress the empty array symbol if line ends in a ;
           return '';
         } else {
+          if (math.typeof(result) === 'Function') {
+            return preans + math.typeof(result) + sufans;
+          }
+          if (math.typeof(result) === 'Object') {
+            return preans + JSON.stringify(result) + sufans;
+          }
           // Check for Katex format of solution if a number.
           if (math.typeof(result) != 'number') {
             return preans + result + sufans;
@@ -685,7 +699,6 @@ var awesomplete = true;
           if (args.length > 1) {
             return preerr + 'Too many arguments' + sufans;
           } else if (args[0].match(matchChartCmds) || args[0].match(matchWaveGenCmds) || args[0].match(matchMathExtensions)) {
-            
             return preans + helpExt[args[0]] + sufans;
           } else {
             try {

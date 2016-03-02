@@ -5,6 +5,8 @@
 
   var tableDiv, dataKey, importedData, tableID, datatable, 
       pageNum, lastPageNum, keyString, termString, termName;
+  
+  var updatePageNumber, buildHtmlTable, addAllColumnHeaders;
 
   var _table_ = document.createElement('table'),
       _tr_ = document.createElement('tr'),
@@ -35,12 +37,12 @@
     pageNum.innerHTML = "page " + datatable.getCurrentPage() + " of " + lastPageNum;
   };
 
-  function updatePageNumber() {
+  updatePageNumber = function updatePageNumber() {
     pageNum.innerHTML = "page " + datatable.getCurrentPage() + " of " + lastPageNum;
-  }
+  };
 
   // Builds the HTML Table out of myList json data from Ivy restful service.
-  function buildHtmlTable(arr) {
+  buildHtmlTable = function buildHtmlTable(arr) {
     var cellValue, tr, td;
     var table = _table_.cloneNode(false),
         tbody = _tbody_.cloneNode(false),
@@ -59,12 +61,12 @@
     table.id = "datatable";
     table.classList.add("table", "is-bordered", "is-striped", "is-narrow");
     return table;
-  }
+  };
 
   // Adds a header row to the table and returns the set of columns.
   // Need to do union of keys from all records as some records may not contain
   // all records
-  function addAllColumnHeaders(arr, table) {
+  addAllColumnHeaders = function addAllColumnHeaders(arr, table) {
     var columnSet = [], th,
         tr = _tr_.cloneNode(false),
         header = table.createTHead();
@@ -80,5 +82,5 @@
     }
     header.appendChild(tr);
     return columnSet;
-  }
+  };
 }());
