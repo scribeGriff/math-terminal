@@ -94,8 +94,8 @@
       yifft = math.round(math.ifft(yfft), CSMALL);
 
       return {
-        y: yifft,
-        n: ytime
+        outy: yifft,
+        outn: ytime
       };
     },
 
@@ -195,10 +195,10 @@
         qtime = new Array(q.length).fill(0).map(function(x, i) { return i - qindex; });
       }
       return {
-        q: q,
-        r: r, 
-        qn: qtime, 
-        rn: rtime
+        outq: q,
+        outr: r, 
+        outqn: qtime, 
+        outrn: rtime
       };
     },
 
@@ -227,8 +227,8 @@
      *     seqsum = addseqs(x, w, nm2, nm2);
      *     // Compute cross correlation between x(n) and y(n)
      *     // with added noise.
-     *     xcorr = corr(x, gety(seqsum), n, getn(seqsum));
-     *     y = gety(xcorr);
+     *     xcorr = corr(x, outy(seqsum), n, outn(seqsum));
+     *     y = outy(xcorr);
      *     
      *     [5.020124415984023, 31.74811229652198, 54.337851908313304,
      *      13.297725982440669, -2.2771026999749457, 97.84500977600702,
@@ -236,7 +236,7 @@
      *      -17.35850051195083, 47.737359690914296, 33.80525231377048,
      *      5.819059373561337]
      *      
-     *     n = getn(xcorr);
+     *     n = outn(xcorr);
      *     
      *     [-4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8]
      *
@@ -275,8 +275,8 @@
       s1xs2 = math.conv(_seq2, _seq1, _pos2, _pos1);
 
       return {
-        y: s1xs2.y,
-        n: s1xs2.n
+        outy: s1xs2.y,
+        outn: s1xs2.n
       };
     },
 
@@ -297,8 +297,8 @@
       y2f = y2.join(',').split(',').map(Number);
       y = new Array(n.length).fill(0).map(function(x, i) { return y1f[i] + y2f[i]; });
       return {
-        y: y, 
-        n: n
+        outy: y, 
+        outn: n
       };
     }
   }, {

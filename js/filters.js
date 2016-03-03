@@ -18,8 +18,8 @@
  *     b = [1];
  *     a = [1, -1, 0.9];
  *     h = filter1d(b, a, x);
- *     y = getData("y", h);  // The filter response.
- *     z = getData("z", h);  // The final conditions of the filter.
+ *     y = outy(h);  // The filter response.
+ *     z = outz(h);  // The final conditions of the filter.
  *     s = math.sum(math.abs(y)); // The magnitude of the response.
  *
  * TODO: Normalize all coefficients if a[0] not equal to 1.
@@ -68,8 +68,8 @@
         }
       }
       return {
-        y: y,
-        z: z
+        outy: y,
+        outz: z
       };
     }
   }, {

@@ -7,38 +7,38 @@
 (function () {
 
   math.import({
-    // For functions that return multiple values, getData
+    // For functions that return multiple values, getdata
     // retrieves and returns each value.
     getdata: function getdata(key, object) {
       return math.eval(key, object);
     },
-    // A shortcut to retrieve the y data.
-    gety: function gety(object) {
-      return math.eval("y", object);
+    // A shortcut to retrieve the y output.
+    outy: function outy(object) {
+      return math.eval("outy", object);
     },
-    // A shortcut to retrieve the n data.
-    getn: function getn(object) {
-      return math.eval("n", object);
+    // A shortcut to retrieve the n output.
+    outn: function outn(object) {
+      return math.eval("outn", object);
     },
-    // A shortcut to retrieve the q data.
-    getq: function getq(object) {
-      return math.eval("q", object);
+    // A shortcut to retrieve the q output.
+    outq: function outq(object) {
+      return math.eval("outq", object);
     },
-    // A shortcut to retrieve the r data.
-    getr: function getr(object) {
-      return math.eval("r", object);
+    // A shortcut to retrieve the r output.
+    outr: function outr(object) {
+      return math.eval("outr", object);
     },
-    // A shortcut to retrieve the qn data.
-    getqn: function getqn(object) {
-      return math.eval("qn", object);
+    // A shortcut to retrieve the qn output.
+    outqn: function outqn(object) {
+      return math.eval("outqn", object);
     },
-    // A shortcut to retrieve the rn data.
-    getrn: function getrn(object) {
-      return math.eval("rn", object);
+    // A shortcut to retrieve the rn output.
+    outrn: function outrn(object) {
+      return math.eval("outrn", object);
     },
-    // A shortcut to retrieve the z data.
-    getz: function getz(object) {
-      return math.eval("z", object);
+    // A shortcut to retrieve the z output.
+    outz: function outz(object) {
+      return math.eval("outz", object);
     },
     // Stores a header token for use with importurl.
     settoken: function settoken(key, token) {

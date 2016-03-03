@@ -227,9 +227,10 @@ var awesomplete = true;
           // but the ramifications are really ugly.
           cmd = cmd.replace(/(\w)'(\w)/g, "$1@%$2").replace(/'([^']*)'/g, '"$1"').replace(/(\w)@%(\w)/g, "$1'$2");
           if (cmd.includes("=")) {
-            var testcommand = cmd.split("=")[0].trim().replace("(", "").replace(")", "");
+            // Commands have the parentheses added to them in the allCommands list.
+            var testcommand = cmd.split("=")[0].trim() + "()";
             if (allCommands.includes(testcommand)) {
-              return preans + testcommand + ': Function names cannot be used as variable names. ' + cmd.replace(";", "") + ' is not valid.' + sufans;
+              return preans + testcommand.replace("(", "").replace(")", "") + ': Function names cannot be used as variable names. ' + cmd.replace(";", "") + ' is not valid.' + sufans;
             }
           }
           result = parser.eval(cmd);
@@ -244,7 +245,8 @@ var awesomplete = true;
             return preans + math.typeof(result) + sufans;
           }
           if (math.typeof(result) === 'Object') {
-            return preans + JSON.stringify(result) + sufans;
+            // TODO: This needs to be more clear and more succinct.
+            return preans + "The results for " + cmd + " can be retrieved using the functions " + Object.keys(result) + " with the variable name as the argument." + sufans;
           }
           // Check for Katex format of solution if a number.
           if (math.typeof(result) != 'number') {
