@@ -245,8 +245,14 @@ var awesomplete = true;
             return preans + math.typeof(result) + sufans;
           }
           if (math.typeof(result) === 'Object') {
-            // TODO: This needs to be more clear and more succinct.
-            return preans + "The results for " + cmd + " can be retrieved using the functions " + Object.keys(result) + " with the variable name as the argument." + sufans;
+            var _buffer = ['<table class="ink-table">'];
+            for(var key in result) {
+              if (result.hasOwnProperty(key)) {
+                _buffer.push('<tr><td>' + key + '</td><td class="answer">' + math.eval(key, result) + '</td></tr>');
+              }
+            }
+            _buffer.push('</table>');
+            return _buffer.join('');
           }
           // Check for Katex format of solution if a number.
           if (math.typeof(result) != 'number') {
@@ -698,18 +704,36 @@ var awesomplete = true;
       help: function help() {
         if (args && args[0]) {
           args[0] = args[0].replace("(", "").replace(")", "");
+          // Too many arguments
           if (args.length > 1) {
             return preerr + 'Too many arguments' + sufans;
-          } else if (args[0].match(matchChartCmds) || args[0].match(matchWaveGenCmds) || args[0].match(matchMathExtensions)) {
+          }
+          var _label = {
+            "name": "Name",
+            "category": "Category",
+            "syntax": "Syntax",
+            "description": "Description",
+            "examples": "Examples",
+            "seealso": "See also"
+          };
+          // Convolv custom commands and functions
+          if (args[0].match(matchChartCmds) || args[0].match(matchWaveGenCmds) || args[0].match(matchMathExtensions)) {
             return preans + helpExt[args[0]] + sufans;
-          } else {
-            try {
-              var helpStr = math.help(args[0]).toString();
-              return preans + helpStr + sufans + '<br>' + preans + '<a href="http://mathjs.org/docs/reference/functions/' + args[0] + '.html" target="_blank">' + args[0] + ' docs at mathjs.org</a>' + sufans;
-            } catch(error) {
-              // Unknown command.
-              return preerr + 'Unknown command or function: ' + args[0] + sufans;
+          }
+          // Maybe it's a Mathjs function.
+          try {
+            var _buffer = ['<table class="ink-table">'];
+            for(var key in math.help(args[0]).doc) {
+              if (math.help(args[0]).doc.hasOwnProperty(key)) {
+                _buffer.push('<tr><td>' + _label[key] + '</td><td class="answer">' + math.help(args[0]).doc[key] + '</td></tr>');
+              }
             }
+            _buffer.push('<tr><td>' + 'Link' + '</td><td class="answer">' + '<a href="http://mathjs.org/docs/reference/functions/' + args[0] + '.html" target="_blank">' + args[0] + ' docs at mathjs.org</a>' + '</td></tr>');
+            _buffer.push('</table>');
+            return _buffer.join('');
+          } catch(error) {
+            // Unknown command.
+            return preerr + 'Unknown command or function: ' + args[0] + sufans;
           }
         }
         return helpinfo;
