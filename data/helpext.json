@@ -69,19 +69,19 @@
 
   "getdata": "Description: Functions that return multiple parameters return them as objects (for example, conv, deconv, corr, filter1d).  This function allows you to retrieve a specific parameter.  Parameter name should be double quoted.  Syntax: getdata(\"y\", myConv);  Example: xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = getdata(\"y\", yc); n = getdata(\"n\", yc); sample n y See also: gety, getn, getq, getqn, getr, getrn, getz, conv, deconv, corr, filter1d",
 
-  "gety": "Description: A shortcut for y = getdata(\"y\", myVar);  Syntax: y = gety(myVar); Example: xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = gety(yc); n = getn(yc); samples(n,y)  See also: getdata, getn, getq, getqn, getr, getrn, getz, conv, corr",
+  "outy": "Description: A shortcut for y = getdata(\"y\", myVar);  Syntax: y = gety(myVar); Example: xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = gety(yc); n = getn(yc); samples(n,y)  See also: getdata, getn, getq, getqn, getr, getrn, getz, conv, corr",
 
-  "getn": "Description: A shortcut for n = getdata(\"n\", myVar);  Syntax: n = getn(myVar); Example: xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = gety(yc); n = getn(yc); samples(n,y)  See also: getdata, gety, getq, getqn, getr, getrn, getz, conv, corr",
+  "outn": "Description: A shortcut for n = getdata(\"n\", myVar);  Syntax: n = getn(myVar); Example: xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = gety(yc); n = getn(yc); samples(n,y)  See also: getdata, gety, getq, getqn, getr, getrn, getz, conv, corr",
 
-  "getq": "Description: A shortcut for q = getdata(\"q\", myVar);  Syntax: q = getq(myVar); Example:  num = [1, 1, 1, 1, 1, 1]; nn = range(-2, 3); den = [1, 2, 1]; dn = range(-1, 1); qrem = deconv(num, den, nn, dn); q = getq(qrem); r = getr(qrem); qn = getqn(qrem); rn = getrn(qrem);  See also: getdata, gety, getn, getqn, getr, getrn, getz, deconv",
+  "outq": "Description: A shortcut for q = getdata(\"q\", myVar);  Syntax: q = getq(myVar); Example:  num = [1, 1, 1, 1, 1, 1]; nn = range(-2, 3); den = [1, 2, 1]; dn = range(-1, 1); qrem = deconv(num, den, nn, dn); q = getq(qrem); r = getr(qrem); qn = getqn(qrem); rn = getrn(qrem);  See also: getdata, gety, getn, getqn, getr, getrn, getz, deconv",
 
-  "getqn": "Description: A shortcut for qn = getdata(\"qn\", myVar);  Syntax: qn = getq(myVar); Example:  num = [1, 1, 1, 1, 1, 1]; nn = range(-2, 3); den = [1, 2, 1]; dn = range(-1, 1); qrem = deconv(num, den, nn, dn); q = getq(qrem); r = getr(qrem); qn = getqn(qrem); rn = getrn(qrem);  See also: getdata, gety, getn, getq, getr, getrn, getz, deconv",
+  "outqn": "Description: A shortcut for qn = getdata(\"qn\", myVar);  Syntax: qn = getq(myVar); Example:  num = [1, 1, 1, 1, 1, 1]; nn = range(-2, 3); den = [1, 2, 1]; dn = range(-1, 1); qrem = deconv(num, den, nn, dn); q = getq(qrem); r = getr(qrem); qn = getqn(qrem); rn = getrn(qrem);  See also: getdata, gety, getn, getq, getr, getrn, getz, deconv",
 
-  "getr": "Description: A shortcut for r = getdata(\"r\", myVar);  Syntax: r = getr(myVar); Example:  num = [1, 1, 1, 1, 1, 1]; nn = range(-2, 3); den = [1, 2, 1]; dn = range(-1, 1); qrem = deconv(num, den, nn, dn); q = getq(qrem); r = getr(qrem); qn = getqn(qrem); rn = getrn(qrem);  See also: getdata, gety, getn, getq, getqn, getrn, getz, deconv",
+  "outr": "Description: A shortcut for r = getdata(\"r\", myVar);  Syntax: r = getr(myVar); Example:  num = [1, 1, 1, 1, 1, 1]; nn = range(-2, 3); den = [1, 2, 1]; dn = range(-1, 1); qrem = deconv(num, den, nn, dn); q = getq(qrem); r = getr(qrem); qn = getqn(qrem); rn = getrn(qrem);  See also: getdata, gety, getn, getq, getqn, getrn, getz, deconv",
 
-  "getrn": "Description: A shortcut for rn = getdata(\"rn\", myVar);  Syntax: rn = getrn(myVar); Example:  num = [1, 1, 1, 1, 1, 1]; nn = range(-2, 3); den = [1, 2, 1]; dn = range(-1, 1); qrem = deconv(num, den, nn, dn); q = getq(qrem); r = getr(qrem); qn = getqn(qrem); rn = getrn(qrem);  See also: getdata, gety, getn, getq, getqn, getr, getz, deconv",
+  "outrn": "Description: A shortcut for rn = getdata(\"rn\", myVar);  Syntax: rn = getrn(myVar); Example:  num = [1, 1, 1, 1, 1, 1]; nn = range(-2, 3); den = [1, 2, 1]; dn = range(-1, 1); qrem = deconv(num, den, nn, dn); q = getq(qrem); r = getr(qrem); qn = getqn(qrem); rn = getrn(qrem);  See also: getdata, gety, getn, getq, getqn, getr, getz, deconv",
 
-  "getz": "Description: A shortcut for z = getdata(\"z\", myVar);  Syntax: z = getz(myVar); Example:  x = impulse(141, 20); b = [1]; a = [1, -1, 0.9]; h = filter1d(b, a, x); y = gety(h); z = getz(h);   See also: getdata, gety, getn, getq, getqn, getr, getrn, filter1d",
+  "outz": "Description: A shortcut for z = getdata(\"z\", myVar);  Syntax: z = getz(myVar); Example:  x = impulse(141, 20); b = [1]; a = [1, -1, 0.9]; h = filter1d(b, a, x); y = gety(h); z = getz(h);   See also: getdata, gety, getn, getq, getqn, getr, getrn, filter1d",
 
   "length": "Description: Returns the length of a one dimensional array.  Syntax: len = length(x);  Example: x = squarewave(); len = length(x);  See also: size",
 
@@ -97,5 +97,9 @@
 
   "importurl": "Description: Imports JSON formatted data from a url.  Syntax: importurl 'path/to/url'  See also: importfile, importlog, vars, loadvars, savevars",
 
-  "importlog": "Description: Provides information on the most recent import, either from a local file or a url. Syntax: importlog  See also: importfile, importurl, vars, loadvars, savevars"
+  "importlog": "Description: Provides information on the most recent import, either from a local file or a url. Syntax: importlog  See also: importfile, importurl, vars, loadvars, savevars",
+  
+  "exportfile": "",
+  
+  "subseqs": ""
 }

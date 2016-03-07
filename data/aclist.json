@@ -186,6 +186,7 @@
   "std()",
   "stirlingS2()",
   "string()",
+  "subseqs()",
   "subset()",
   "subtitle",
   "subtract()",

@@ -1,7 +1,6 @@
 /* global math: false, katex: false, Terminal: false, document: false, Awesomplete: false, Highcharts: false, Papa: false, moment: false, fetch: false */
 /* jshint node: true, browser: true, loopfunc: true, esnext: true */
 
-/* globals */
 /* For debugging autocomplete and later perhaps as an option to disable. */
 // TODO: Can this be set by the terminal?
 var awesomplete = true;
@@ -30,7 +29,7 @@ var awesomplete = true;
   var matchThemes = /^monokai|^github|^xcode|^obsidian|^vs|^arta|^railcasts|^chalkboard|^dark/,
       matchChartCmds = /^line$|^linepts$|^area$|^bar$|^column$|^curve$|^curvepts$|^sample$|^samplen$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$|^series$/,
       matchWaveGenCmds = /^sinewave$|^squarewave$|^sawtoothwave$|^trianglewave$|^impulse$|^step$|^gauss$/,
-      matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^getdata$|^gety$|^getn$|^getq$|^getqn$|^getr$|^getrn$|^getz$|^vars$|^loadvars$|^savevars$|^importfile$|^importurl$|^importlog$|^settoken$|^gettoken$/;
+      matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^subseqs$|^getdata$|^outy$|^outn$|^outq$|^outqn$|^outr$|^outrn$|^outz$|^vars$|^loadvars$|^savevars$|^importfile$|^importurl$|^importlog$|^settoken$|^gettoken$/;
 
   var bgcolors = {
     monokai: "#272822",
