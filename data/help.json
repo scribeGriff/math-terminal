@@ -1,0 +1,864 @@
+[
+  {
+    "Category": "Arithmetic",
+    "Description": "Adds two sequences (as arrays) including optional timing information.  Sequences do not have to be the same length.",
+    "Example": "x = [3, 11, 7, 0, -1, 4, 2]; n = -3:3; nm2 = -1:5; w = gauss(length(x)); seqsum = addseqs(x, w, nm2, nm2);",
+    "Name": "addseqs",
+    "See also": [
+      "add",
+      "subtract",
+      "subseqs",
+      "outy",
+      "outn"
+    ],
+    "Syntax": [
+      "seqsum = addseqs(x1, x2);",
+      "seqsum = addseqs(x1, x2, posx1, posx2);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Creates a bar chart with space delimited arguments. If only a single argument is provided, it is assumed to be y axis data and is plotted against a linear x axis starting from point 0. If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.  If x axis values are provided and are strings, they are used as categories.",
+    "Example": "cat = [\"New York\", \"Los Angeles\", \"Seattle\", \"Boston\", \"Portland\"]; s1 = [47, 25, 102, 16, 33]; s2 = [191, 97, 29, 77, 112]; s3 = [35, 19, 209, 80, 67]; bar cat s1 cat s2 cat s3",
+    "Name": "bar",
+    "See also": [
+      "column",
+      "curve",
+      "curvepts",
+      "line",
+      "linepts",
+      "sample",
+      "samplen",
+      "polar",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "bar [1,12,56,102.4,-1]",
+      "bar x1 y1 ... xn yn"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Creates a column chart with space delimited arguments. If only a single argument is provided, it is assumed to be y axis data and is plotted against a linear x axis starting from point 0. If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.  If x axis values are provided and are strings, they are used as categories.",
+    "Example": "cat = [\"New York\", \"Los Angeles\", \"Seattle\", \"Boston\", \"Portland\"]; s1 = [47, 25, 102, 16, 33]; s2 = [191, 97, 29, 77, 112]; s3 = [35, 19, 209, 80, 67]; column cat s1 cat s2 cat s3",
+    "Name": "column",
+    "See also": [
+      "bar",
+      "curve",
+      "curvepts",
+      "line",
+      "linepts",
+      "sample",
+      "samplen",
+      "polar",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "column [1,12,56,102.4,-1]",
+      "column x1 y1 ... xn yn"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Signal Processing",
+    "Description": "Performs a linear convolution of two signals using an N point circular convolution algorithm. Accepts optional position information. Returns the convolved array y, and its position array n.",
+    "Example": "x = [3, 11, 7, 0, -1, 4, 2]; h = [2, 3, 0, -5, 2, 1]; y = conv(x, h);",
+    "Name": "conv",
+    "See also": [
+      "outy",
+      "outn",
+      "deconv",
+      "fsps",
+      "fft",
+      "corr"
+    ],
+    "Syntax": [
+      "y = conv(x, h);",
+      "y = conv(x, h, xpos, hpos);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Signal Processing",
+    "Description": "Performs a crosscorrelation of two sequences, seq1 and seq2, or, if seq2 is undefined, performs the autocorrelation of seq1.  Accepts position information. Returns the correlation sequence y, and its position information n.",
+    "Example": "x = [3, 11, 7, 0, -1, 4, 2]; n = -3:3; nm2 = -1:5; w = gauss(length(x)); seqsum = addseqs(x, w, nm2, nm2); xcorr = corr(x, outy(seqsum), n, outn(seqsum));",
+    "Name": "corr",
+    "See also": [
+      "outy",
+      "outn",
+      "conv",
+      "fsps",
+      "fft",
+      "gauss"
+    ],
+    "Syntax": [
+      "y = corr(x1, x2);",
+      "y = corr(x);",
+      "y = corr(x1, x2, x1pos, x2pos);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Creates a curve (spline) chart with space delimited arguments. Individual points are not displayed except on mouse over.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a linear x axis starting from point 0.  If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
+    "Example": "x1 = -3:16; y1 = square(x1); y2 = cube(x1); curve x1 y1 x1 y2",
+    "Name": "curve",
+    "See also": [
+      "bar",
+      "column",
+      "curvepts",
+      "line",
+      "linepts",
+      "sample",
+      "samplen",
+      "polar",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "curve [1,12,56,102.4,-1]",
+      "curve x1 y1 ... xn yn"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Creates a curve (spline) chart with space delimited arguments. Individual data points are displayed in addition to a spline connecting each point.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a linear x axis starting from point 0. If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
+    "Example": "x1 = -3:16; y1 = square(x1); y2 = cube(x1); curvepts x1 y1 x1 y2",
+    "Name": "curvepts",
+    "See also": [
+      "bar",
+      "column",
+      "curve",
+      "line",
+      "linepts",
+      "sample",
+      "samplen",
+      "polar",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "curvepts [1,12,56,102.4,-1]",
+      "curvepts x1 y1 ... xn yn"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Signal Processing",
+    "Description": "Performs a deconvolution (polynomial long division) of a numerator and denominator polynomial.  Accepts optional position information.  Returns quotient, q, remainder, r, and position information, qn and rn. First coefficient is assumed to be associated with highest order of the polynomial. If the numerator was given as 1 + 2z^-1 + 2z^-2, then the numerator can be written as num = [1, 2, 2];",
+    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; //num = z^2 + z + 1 + z^-1 + z^-2 +z^-3 den = [1, 2, 1]; dn = -1: 1; //den = z + 2 + z^-1 qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem);",
+    "Name": "deconv",
+    "See also": [
+      "outq",
+      "outr",
+      "outqn",
+      "outrn",
+      "conv",
+      "fsps",
+      "fft",
+      "corr"
+    ],
+    "Syntax": [
+      "qrem = deconv(num, den);",
+      "qrem = deconv(num, den, numpos, denpos);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Signal Processing",
+    "Description": "Computes a fourier transform of an array of arbitrary length.  Uses a radix-2 FFT algorithm if the length is a power of 2 and a DFT otherwise. The input is an array of real or complex values. Accepts an optional integer value for the power of the FFT.",
+    "Example": "y = fft([0,1,2,3]);",
+    "Name": "fft",
+    "See also": [
+      "re",
+      "im",
+      "ifft",
+      "fsps",
+      "conv",
+      "corr"
+    ],
+    "Syntax": [
+      "y = fft(x);",
+      "y = fft(x, 16);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Signal Processing",
+    "Description": "Implements a 1D transposed direct form II digital filter structure. Supports FIR and IIR filters and inital and final conditions.  Requires b (numerator) coefficients, a (denominator) coefficients and input (for example, step or impulse).  Optionally accepts intial conditions.  Returns the filtered response y, and the final conditions z.",
+    "Example": "x = impulse(141, 20); b = [1]; a = [1, -1, 0.9]; h = filter1d(b, a, x); y = outy(h);  z = outz(h);",
+    "Name": "filter1d",
+    "See also": [
+      "impulse",
+      "fft",
+      "ifft",
+      "fsps",
+      "conv",
+      "corr"
+    ],
+    "Syntax": [
+      "h = filter1d(b, a, x);",
+      "h = filter1d(b, a, x, z);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Signal Processing",
+    "Description": "Computes the partial sums of the Fourier series of an input waveform. Accepts optional values for number of sums (default is 3), number of cycles that are represented in the waveform (default is 1) and the fraction of the data to treat as a cycle (default is 1).",
+    "Example": "x = squarewave(); y = fsps(x); curve re(y)",
+    "Name": "fsps",
+    "See also": [
+      "squarewave",
+      "fft",
+      "ifft",
+      "re",
+      "im",
+      "curve"
+    ],
+    "Syntax": [
+      "y = fsps(x);",
+      "y = fsps(x, 6, 1, 0.5);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Waveform Generation",
+    "Description": "Generates a random (normal) waveform.  The length of the waveform is optional and by default is set to 512 points.",
+    "Example": "len = 300; gs = gauss(len);",
+    "Name": "gauss",
+    "See also": [
+      "squarewave",
+      "sinewave",
+      "impulse",
+      "step",
+      "trianglewave",
+      "sawtoothwave"
+    ],
+    "Syntax": [
+      "gs = gauss();",
+      "gs = gauss(len);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "Functions that return multiple parameters return them as objects (for example, conv, deconv, corr, filter1d). This function allows you to retrieve a specific parameter from the object if the object was stored in a workspace variable.",
+    "Example": "xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = getdata(\"outy\", yc); n = getdata(\"outn\", yc); sample n y",
+    "Name": "getdata",
+    "See also": [
+      "outy",
+      "outn",
+      "outq",
+      "outqn",
+      "outr",
+      "outrn",
+      "outz"
+    ],
+    "Syntax": [
+      "getdata(\"outy\", \"myVarName\");"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "Imports a csv file from the local computer to workspace variables.  The csv file is assumed to have the first row as a header.",
+    "Example": "importfile",
+    "Name": "importfile",
+    "See also": [
+      "importurl",
+      "importlog",
+      "vars",
+      "loadvars",
+      "savevars",
+      "exportfile"
+    ],
+    "Syntax": [
+      "importfile"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "Provides information on the most recent import, either from a local file or a url.",
+    "Example": "importlog",
+    "Name": "importlog",
+    "See also": [
+      "importurl",
+      "importfile",
+      "vars",
+      "loadvars",
+      "savevars",
+      "exportfile"
+    ],
+    "Syntax": [
+      "importlog"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "Imports JSON formatted data from a url.  Accepts a token as an optional argument for retrieving data from urls that require tokens.",
+    "Example": "importurl 'path/to/url' gettoken('tokenkey')",
+    "Name": "importurl",
+    "See also": [
+      "importlog",
+      "importfile",
+      "vars",
+      "loadvars",
+      "savevars",
+      "exportfile",
+      "gettoken",
+      "settoken"
+    ],
+    "Syntax": [
+      "importurl 'path/to/url'",
+      "importurl 'path/to/url' token"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Waveform Generation",
+    "Description": "Generates an impulse waveform.  All parameters are optional.  By default, data length = 512 and impulse position is length / 4.",
+    "Example": "len = 300; position = 50; im = impulse(len, position);",
+    "Name": "impulse",
+    "See also": [
+      "squarewave",
+      "sinewave",
+      "gauss",
+      "step",
+      "trianglewave",
+      "sawtoothwave"
+    ],
+    "Syntax": [
+      "im = impulse();",
+      "im = impulse(len, position);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "Returns the length of a one dimensional array.",
+    "Example": "x = squarewave(); len = length(x);",
+    "Name": "length",
+    "See also": [
+      "size"
+    ],
+    "Syntax": [
+      "len = length(x);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Creates a line chart with space delimited arguments. Individual points are not displayed except on mouse over.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a linear x axis starting from point 0.  If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
+    "Example": "x1 = -3:16; y1 = square(x1); y2 = cube(x1); line x1 y1 x1 y2",
+    "Name": "line",
+    "See also": [
+      "bar",
+      "column",
+      "curvepts",
+      "curve",
+      "linepts",
+      "sample",
+      "samplen",
+      "polar",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "line [1,12,56,102.4,-1]",
+      "line x1 y1 ... xn yn"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Creates a line chart with space delimited arguments. Individual data points are displayed in addition to a spline connecting each point.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a linear x axis starting from point 0. If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
+    "Example": "x1 = -3:16; y1 = square(x1); y2 = cube(x1); linepts x1 y1 x1 y2",
+    "Name": "linepts",
+    "See also": [
+      "bar",
+      "column",
+      "curve",
+      "line",
+      "curvepts",
+      "sample",
+      "samplen",
+      "polar",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "linepts [1,12,56,102.4,-1]",
+      "linepts x1 y1 ... xn yn"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Creates a line chart with a logarithmic y axis with space delimited arguments. Individual points are not displayed except on mouse over.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a linear x axis starting from point 0.  If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
+    "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; linlog x1",
+    "Name": "linlog",
+    "See also": [
+      "linlogpts",
+      "loglin",
+      "loglinpts",
+      "loglog",
+      "loglogpts",
+      "line",
+      "linepts",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "linlog x",
+      "linlog x1 y1 ... xn yn"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Creates a line chart with a logarithmic y axis with space delimited arguments. Individual data points are displayed in addition to a spline connecting each point.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a linear x axis starting from point 0. If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
+    "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; linlogpts x1",
+    "Name": "linlogpts",
+    "See also": [
+      "linlog",
+      "loglin",
+      "loglinpts",
+      "loglog",
+      "loglogpts",
+      "line",
+      "linepts",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "linlogpts x",
+      "linlogpts x1 y1 ... xn yn"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "Loads the terminal variables that have been saved to local storage using the savevars command.  To permanently remove stored variables, use the console command clear storage.",
+    "Example": "loadvars",
+    "Name": "loadvars",
+    "See also": [
+      "importlog",
+      "importfile",
+      "importurl",
+      "vars",
+      "savevars",
+      "exportfile",
+      "gettoken",
+      "settoken"
+    ],
+    "Syntax": [
+      "loadvars"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Creates a line chart with a logarithmic x axis with space delimited arguments. Individual points are not displayed except on mouse over.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a logarithmic x axis starting from point 0.  If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
+    "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; loglin x1",
+    "Name": "loglin",
+    "See also": [
+      "linlogpts",
+      "linlog",
+      "loglinpts",
+      "loglog",
+      "loglogpts",
+      "line",
+      "linepts",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "loglin x",
+      "loglin x1 y1 ... xn yn"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Creates a line chart with a logarithmic x axis with space delimited arguments. Individual data points are displayed in addition to a spline connecting each point.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a logarithmic x axis starting from point 0. If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
+    "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; loglinpts x1",
+    "Name": "loglinpts",
+    "See also": [
+      "linlog",
+      "loglin",
+      "linlogpts",
+      "loglog",
+      "loglogpts",
+      "line",
+      "linepts",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "loglinpts x",
+      "loglinpts x1 y1 ... xn yn"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Creates a line chart with logarithmic x and y axes with space delimited arguments. Individual points are not displayed except on mouse over.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a logarithmic x axis starting from point 0.  If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
+    "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; loglog x1",
+    "Name": "loglog",
+    "See also": [
+      "linlogpts",
+      "linlog",
+      "loglinpts",
+      "loglin",
+      "loglogpts",
+      "line",
+      "linepts",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "loglog x",
+      "loglog x1 y1 ... xn yn"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Creates a line chart with logarithmic x and y axes with space delimited arguments. Individual data points are displayed in addition to a spline connecting each point.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a logarithmic x axis starting from point 0. If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
+    "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; loglogpts x1",
+    "Name": "loglogpts",
+    "See also": [
+      "linlog",
+      "loglin",
+      "linlogpts",
+      "loglog",
+      "loglinpts",
+      "line",
+      "linepts",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "loglogpts x",
+      "loglogpts x1 y1 ... xn yn"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "For functions that return multiple values, this function retrieves the value whose key is outn. It is a shortcut for n = getdata(\"outn\", myVar);",
+    "Example": "xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = outy(yc); n = outn(yc); samples n y",
+    "Name": "outn",
+    "See also": [
+      "outy",
+      "getdata",
+      "outq",
+      "outqn",
+      "outr",
+      "outrn",
+      "outz"
+    ],
+    "Syntax": [
+      "n = outn(myVar);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "For functions that return multiple values, this function retrieves the value whose key is outq. It is a shortcut for q = getdata(\"outq\", myVar);",
+    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1:1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem);",
+    "Name": "outq",
+    "See also": [
+      "outy",
+      "getdata",
+      "outr",
+      "outqn",
+      "outn",
+      "outrn",
+      "outz"
+    ],
+    "Syntax": [
+      "q = outq(myVar);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "For functions that return multiple values, this function retrieves the value whose key is outqn. It is a shortcut for qn = getdata(\"outqn\", myVar);",
+    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1:1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem);",
+    "Name": "outqn",
+    "See also": [
+      "outy",
+      "getdata",
+      "outq",
+      "outrn",
+      "outn",
+      "outr",
+      "outz"
+    ],
+    "Syntax": [
+      "qn = outqn(myVar);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "For functions that return multiple values, this function retrieves the value whose key is outr. It is a shortcut for r = getdata(\"outr\", myVar);",
+    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1:1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem);",
+    "Name": "outr",
+    "See also": [
+      "outy",
+      "getdata",
+      "outq",
+      "outqn",
+      "outn",
+      "outrn",
+      "outz"
+    ],
+    "Syntax": [
+      "r = outr(myVar);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "For functions that return multiple values, this function retrieves the value whose key is outrn. It is a shortcut for rn = getdata(\"outrn\", myVar);",
+    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1:1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem);",
+    "Name": "outrn",
+    "See also": [
+      "outy",
+      "getdata",
+      "outq",
+      "outqn",
+      "outn",
+      "outr",
+      "outz"
+    ],
+    "Syntax": [
+      "rn = outrn(myVar);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "For functions that return multiple values, this function retrieves the value whose key is outy. It is a shortcut for y = getdata(\"outy\", myVar);",
+    "Example": "xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = outy(yc); n = outn(yc); samples n y",
+    "Name": "outy",
+    "See also": [
+      "outn",
+      "getdata",
+      "outq",
+      "outqn",
+      "outr",
+      "outrn",
+      "outz"
+    ],
+    "Syntax": [
+      "y = outy(myVar);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "For functions that return multiple values, this function retrieves the value whose key is outz. It is a shortcut for z = getdata(\"outz\", myVar);",
+    "Example": "x = impulse(141, 20); b = [1]; a = [1, -1, 0.9]; h = filter1d(b, a, x); y = outy(h); z = outz(h);",
+    "Name": "outz",
+    "See also": [
+      "outy",
+      "getdata",
+      "outq",
+      "outqn",
+      "outr",
+      "outrn",
+      "outn"
+    ],
+    "Syntax": [
+      "z = outz(myVar);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Creates a polar chart with space delimited arguments.  Accepts only the radian data as the angular steps are computed internally based on the length of the first argument.",
+    "Example": "x = 0:01:2*pi; polar sin(x) cos(x)",
+    "Name": "polar",
+    "See also": [
+      "column",
+      "curve",
+      "curvepts",
+      "line",
+      "linepts",
+      "sample",
+      "samplen",
+      "bar",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "polar rho",
+      "polar rho1 ... rhon"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Displays sample data at discrete sample points with a stem plot.  Arguments are space delimited.  The x axis is automatically generated as uniform steps from 0 to length of data.  Accepts a single array of sample values or multiple arrays. Does not accept timing information (see samplen).",
+    "Example": "sample gauss() gauss()",
+    "Name": "sample",
+    "See also": [
+      "column",
+      "curve",
+      "curvepts",
+      "line",
+      "linepts",
+      "polar",
+      "samplen",
+      "bar",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "sample y",
+      "sample y1 ... yn"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Displays sample data at discrete sample points with a stem plot.  Arguments are space delimited.  Accepts timing information. Accepts a single array of sample values or multiple arrays of data and timing.",
+    "Example": "samplen -3:4  [3,6,-9,2.4,0,0,1,-4,-1,0,12]",
+    "Name": "samplen",
+    "See also": [
+      "column",
+      "curve",
+      "curvepts",
+      "line",
+      "linepts",
+      "polar",
+      "sample",
+      "bar",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "samplen y",
+      "samplen n1 y1 ... nn yn"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "Saves the terminal variables to local storage.  To permanently remove stored variables, use the console command clear storage.",
+    "Example": "savevars",
+    "Name": "savevars",
+    "See also": [
+      "vars",
+      "loadvars",
+      "importfile",
+      "importurl",
+      "importlog",
+      "datatable",
+      "exportfile"
+    ],
+    "Syntax": [
+      "savevars"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Waveform Generation",
+    "Description": "Generates a sawtooth waveform.  All parameters are optional.  By default, amplitude = 1, cycles = 1, and data length = 512.",
+    "Example": "amp = 12; cycles = 4; len = 300; saw = sawtoothwave(amp, cycles, len);",
+    "Name": "sawtoothwave",
+    "See also": [
+      "squarewave",
+      "sinewave",
+      "impulse",
+      "step",
+      "trianglewave",
+      "gauss"
+    ],
+    "Syntax": [
+      "saw = sawtoothwave();",
+      "saw = sawtoothwave(amp, cycles, length);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Changes the default series title (or titles) that appears in the legend.  Accepts space delimited strings for each series whose name should be changed in the order they appear in the legend. String names can be single or double quoted but apostrophes must be escaped with a backslash.",
+    "Example": "sample gauss() gauss() <CR> series 'random series 1' 'random series 2'",
+    "Name": "series",
+    "See also": [
+      "column",
+      "curve",
+      "curvepts",
+      "line",
+      "linepts",
+      "polar",
+      "sample",
+      "bar",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "samplen"
+    ],
+    "Syntax": [
+      "series 'Series name 1' 'Series name 2'"
+    ],
+    "Type": "command"
+  }
+]
