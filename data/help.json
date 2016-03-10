@@ -860,5 +860,106 @@
       "series 'Series name 1' 'Series name 2'"
     ],
     "Type": "command"
+  },
+  {
+    "Category": "Waveform Generation",
+    "Description": "Generates a sinewave waveform.  All parameters are optional.  By default, amplitude = 1, cycles = 1, and data length = 512.",
+    "Example": "amp = 12; cycles = 4; len = 300; sw = sinewave(amp, cycles, len);",
+    "Name": "sinewave",
+    "See also": [
+      "squarewave",
+      "sawtoothwave",
+      "impulse",
+      "step",
+      "trianglewave",
+      "gauss"
+    ],
+    "Syntax": [
+      "sw = sinewave();",
+      "sw = sinewave(amp, cycles, len);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Waveform Generation",
+    "Description": "Generates a squarewave waveform.  All parameters are optional.  By default, amplitude = 1, cycles = 1, data length = 512 and scale = 20 (scale can change edge rate where scale = 1 is a sinewave).",
+    "Example": "amp = 12; cycles = 4; len = 300; scale = 40; sqw = squarewave(amp, cycles, len, scale);",
+    "Name": "squarewave",
+    "See also": [
+      "sinewave",
+      "sawtoothwave",
+      "impulse",
+      "step",
+      "trianglewave",
+      "gauss"
+    ],
+    "Syntax": [
+      "sqw = squarewave();",
+      "sqw = squarewave(amp, cycles, len, scale);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Waveform Generation",
+    "Description": "Generates a step waveform.  All parameters are optional.  By default, data length = 512 and step position is length / 4.",
+    "Example": "len = 300; position = 50; st = step(len, position);",
+    "Name": "step",
+    "See also": [
+      "sinewave",
+      "sawtoothwave",
+      "impulse",
+      "squarewave",
+      "trianglewave",
+      "gauss"
+    ],
+    "Syntax": [
+      "st = step();",
+      "st = step(len, position);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Arithmetic",
+    "Description": "Subtracts two sequences (as arrays) including optional timing information.  Sequences do not have to be the same length.",
+    "Example": "x = [3, 11, 7, 0, -1, 4, 2]; n = -3:3; nm2 = -1:5; w = gauss(length(x)); seqsum = subseqs(x, w, nm2, nm2);",
+    "Name": "subseqs",
+    "See also": [
+      "add",
+      "addseqs",
+      "subtract",
+      "outy",
+      "outn"
+    ],
+    "Syntax": [
+      "seqsum = subseqs(x1, x2);",
+      "seqsum = subseqs(x1, x2, posx1, posx2);"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Adds a subtitle to the current chart.  Arguments are space delimited.  The subtitle string is required and a color string for styling the subtitle is optional.  String name can be single or double quoted but postrophes must be escaped with a backslash.",
+    "Example": "x = 1:10; y = square(x); sample x y  title 'The square of x' '#90ed7d' subtitle 'for x from 1 to 10'",
+    "Name": "subtitle",
+    "See also": [
+      "column",
+      "curve",
+      "curvepts",
+      "line",
+      "linepts",
+      "polar",
+      "sample",
+      "bar",
+      "title",
+      "series",
+      "xaxis",
+      "yaxis",
+      "samplen"
+    ],
+    "Syntax": [
+      "subtitle 'This is the subtitle'",
+      "subtitle 'This is the subtitle' 'red'"
+    ],
+    "Type": "command"
   }
 ]
