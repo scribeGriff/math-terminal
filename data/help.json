@@ -12,8 +12,8 @@
       "outn"
     ],
     "Syntax": [
-      "seqsum = addseqs(x1, x2);",
-      "seqsum = addseqs(x1, x2, posx1, posx2);"
+      "addseqs(x1, x2)",
+      "addseqs(x1, x2, posx1, posx2)"
     ],
     "Type": "function"
   },
@@ -83,8 +83,8 @@
       "corr"
     ],
     "Syntax": [
-      "y = conv(x, h);",
-      "y = conv(x, h, xpos, hpos);"
+      "conv(x, h)",
+      "conv(x, h, xpos, hpos)"
     ],
     "Type": "function"
   },
@@ -102,9 +102,9 @@
       "gauss"
     ],
     "Syntax": [
-      "y = corr(x1, x2);",
-      "y = corr(x);",
-      "y = corr(x1, x2, x1pos, x2pos);"
+      "corr(x1, x2)",
+      "corr(x)",
+      "corr(x1, x2, x1pos, x2pos)"
     ],
     "Type": "function"
   },
@@ -176,8 +176,8 @@
       "corr"
     ],
     "Syntax": [
-      "qrem = deconv(num, den);",
-      "qrem = deconv(num, den, numpos, denpos);"
+      "deconv(num, den)",
+      "deconv(num, den, numpos, denpos)"
     ],
     "Type": "function"
   },
@@ -195,8 +195,8 @@
       "corr"
     ],
     "Syntax": [
-      "y = fft(x);",
-      "y = fft(x, 16);"
+      "fft(x)",
+      "fft(x, 16)"
     ],
     "Type": "function"
   },
@@ -214,8 +214,8 @@
       "corr"
     ],
     "Syntax": [
-      "h = filter1d(b, a, x);",
-      "h = filter1d(b, a, x, z);"
+      "filter1d(b, a, x)",
+      "filter1d(b, a, x, z)"
     ],
     "Type": "function"
   },
@@ -233,8 +233,8 @@
       "curve"
     ],
     "Syntax": [
-      "y = fsps(x);",
-      "y = fsps(x, 6, 1, 0.5);"
+      "fsps(x)",
+      "fsps(x, 6, 1, 0.5)"
     ],
     "Type": "function"
   },
@@ -252,8 +252,8 @@
       "sawtoothwave"
     ],
     "Syntax": [
-      "gs = gauss();",
-      "gs = gauss(len);"
+      "gauss()",
+      "gauss(len)"
     ],
     "Type": "function"
   },
@@ -272,7 +272,7 @@
       "outz"
     ],
     "Syntax": [
-      "getdata(\"outy\", \"myVarName\");"
+      "getdata(\"outy\", \"myVarName\")"
     ],
     "Type": "function"
   },
@@ -347,8 +347,8 @@
       "sawtoothwave"
     ],
     "Syntax": [
-      "im = impulse();",
-      "im = impulse(len, position);"
+      "impulse()",
+      "impulse(len, position)"
     ],
     "Type": "function"
   },
@@ -361,7 +361,7 @@
       "size"
     ],
     "Syntax": [
-      "len = length(x);"
+      "length(x)"
     ],
     "Type": "function"
   },
@@ -602,7 +602,7 @@
       "outz"
     ],
     "Syntax": [
-      "n = outn(myVar);"
+      "outn(myVar)"
     ],
     "Type": "function"
   },
@@ -621,7 +621,7 @@
       "outz"
     ],
     "Syntax": [
-      "q = outq(myVar);"
+      "outq(myVar)"
     ],
     "Type": "function"
   },
@@ -640,7 +640,7 @@
       "outz"
     ],
     "Syntax": [
-      "qn = outqn(myVar);"
+      "outqn(myVar)"
     ],
     "Type": "function"
   },
@@ -659,7 +659,7 @@
       "outz"
     ],
     "Syntax": [
-      "r = outr(myVar);"
+      "outr(myVar)"
     ],
     "Type": "function"
   },
@@ -678,7 +678,7 @@
       "outz"
     ],
     "Syntax": [
-      "rn = outrn(myVar);"
+      "outrn(myVar)"
     ],
     "Type": "function"
   },
@@ -697,7 +697,7 @@
       "outz"
     ],
     "Syntax": [
-      "y = outy(myVar);"
+      "outy(myVar)"
     ],
     "Type": "function"
   },
@@ -716,7 +716,7 @@
       "outn"
     ],
     "Syntax": [
-      "z = outz(myVar);"
+      "outz(myVar)"
     ],
     "Type": "function"
   },
@@ -831,8 +831,8 @@
       "gauss"
     ],
     "Syntax": [
-      "saw = sawtoothwave();",
-      "saw = sawtoothwave(amp, cycles, length);"
+      "sawtoothwave()",
+      "sawtoothwave(amp, cycles, length)"
     ],
     "Type": "function"
   },
@@ -875,8 +875,8 @@
       "gauss"
     ],
     "Syntax": [
-      "sw = sinewave();",
-      "sw = sinewave(amp, cycles, len);"
+      "sinewave()",
+      "sinewave(amp, cycles, len)"
     ],
     "Type": "function"
   },
@@ -894,8 +894,8 @@
       "gauss"
     ],
     "Syntax": [
-      "sqw = squarewave();",
-      "sqw = squarewave(amp, cycles, len, scale);"
+      "squarewave()",
+      "squarewave(amp, cycles, len, scale)"
     ],
     "Type": "function"
   },
@@ -913,8 +913,8 @@
       "gauss"
     ],
     "Syntax": [
-      "st = step();",
-      "st = step(len, position);"
+      "step()",
+      "step(len, position)"
     ],
     "Type": "function"
   },
@@ -931,8 +931,8 @@
       "outn"
     ],
     "Syntax": [
-      "seqsum = subseqs(x1, x2);",
-      "seqsum = subseqs(x1, x2, posx1, posx2);"
+      "subseqs(x1, x2)",
+      "subseqs(x1, x2, posx1, posx2)"
     ],
     "Type": "function"
   },
@@ -961,5 +961,119 @@
       "subtitle 'This is the subtitle' 'red'"
     ],
     "Type": "command"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Adds a subtitle to the current chart.  Arguments are space delimited.  The subtitle string is required and a color string for styling the subtitle is optional.  String name can be single or double quoted but postrophes must be escaped with a backslash.",
+    "Example": "x = 1:10; y = square(x); sample x y  title 'The square of x' '#90ed7d'",
+    "Name": "title",
+    "See also": [
+      "column",
+      "curve",
+      "curvepts",
+      "line",
+      "linepts",
+      "polar",
+      "sample",
+      "bar",
+      "subtitle",
+      "series",
+      "xaxis",
+      "yaxis",
+      "samplen"
+    ],
+    "Syntax": [
+      "title 'This is the title'",
+      "title 'This is the title' 'red'"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Waveform Generation",
+    "Description": "Generates a trianglewave waveform.  All parameters are optional.  By default, amplitude = 1, cycles = 1, and data length = 512.",
+    "Example": "amp = 12; cycles = 4; len = 300; tw = trianglewave(amp, cycles, length);",
+    "Name": "trianglewave",
+    "See also": [
+      "sinewave",
+      "sawtoothwave",
+      "impulse",
+      "squarewave",
+      "step",
+      "gauss"
+    ],
+    "Syntax": [
+      "trianglewave()",
+      "trianglewave(amp, cycles, len)"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Adds a label to the x axis of the current chart.  The label argument is space delimited.  String name can be single or double quoted but apostrophes must be escaped with a backslash.",
+    "Example": "x = 1:10; y = square(x); sample x y  xaxis 'samples (n)'",
+    "Name": "xaxis",
+    "See also": [
+      "column",
+      "curve",
+      "curvepts",
+      "line",
+      "linepts",
+      "polar",
+      "sample",
+      "bar",
+      "subtitle",
+      "series",
+      "title",
+      "yaxis",
+      "samplen"
+    ],
+    "Syntax": [
+      "xaxis 'This is the x axis'"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Chart",
+    "Description": "Adds a label to the y axis of the current chart.  The label argument is space delimited.  String name can be single or double quoted but apostrophes must be escaped with a backslash.",
+    "Example": "x = 1:10; y = square(x); sample x y  yaxis 'square (n)'",
+    "Name": "yaxis",
+    "See also": [
+      "column",
+      "curve",
+      "curvepts",
+      "line",
+      "linepts",
+      "polar",
+      "sample",
+      "bar",
+      "subtitle",
+      "series",
+      "title",
+      "xaxis",
+      "samplen"
+    ],
+    "Syntax": [
+      "yaxis 'This is the y axis'"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "Displays the terminal variables that have been defined and saved to the scope using the equal sign.  Provides information on the variable's type and its size.",
+    "Example": "vars",
+    "Name": "vars",
+    "See also": [
+      "savevars",
+      "loadvars",
+      "importfile",
+      "importurl",
+      "importlog",
+      "datatable",
+      "exportfile"
+    ],
+    "Syntax": [
+      "vars"
+    ],
+    "Type": "function"
   }
 ]

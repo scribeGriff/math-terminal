@@ -173,7 +173,7 @@ var awesomplete = true;
       cmdinput.focus();
 
       // Fetch the external help files.
-      fetch("data/helpext.json")
+      fetch("data/help.json")
         .then(function(response) {
         return response.json();
       }).then(function(json) {
@@ -205,9 +205,9 @@ var awesomplete = true;
     }
   };
 
-  // Set default data type for mathjs to 'array' to be compatible with vanilla js.
+  // Set default data type for mathjs to 'Array' to be compatible with vanilla js.
   math.config({
-    matrix: 'array'
+    matrix: 'Array'
   });
 
   // Convert the termName1 DOM element into an interactive terminal.
@@ -707,21 +707,27 @@ var awesomplete = true;
           if (args.length > 1) {
             return preerr + 'Too many arguments' + sufans;
           }
-          var _label = {
-            "name": "Name",
-            "category": "Category",
-            "syntax": "Syntax",
-            "description": "Description",
-            "examples": "Examples",
-            "seealso": "See also"
-          };
+          var _helpOrder = ["Name", "Category", "Description", "Syntax", "Example", "See also", "Type"],
+              _buffer = ['<table class="ink-table">'],
+              _label = {
+                "name": "Name",
+                "category": "Category",
+                "syntax": "Syntax",
+                "description": "Description",
+                "examples": "Examples",
+                "seealso": "See also"
+              };
+          var _helpEntry = helpExt.find(x => x.Name === args[0]);
           // Convolv custom commands and functions
-          if (args[0].match(matchChartCmds) || args[0].match(matchWaveGenCmds) || args[0].match(matchMathExtensions)) {
-            return preans + helpExt[args[0]] + sufans;
+          if (typeof _helpEntry !== 'undefined') {
+            for (var i = 0; i < _helpOrder.length; i++) {
+              _buffer.push('<tr><td>' + _helpOrder[i] + '</td><td class="answer">' + _helpEntry[_helpOrder[i]] + '</td></tr>');
+            }
+            _buffer.push('</table>');
+            return _buffer.join('');
           }
           // Maybe it's a Mathjs function.
           try {
-            var _buffer = ['<table class="ink-table">'];
             for(var key in math.help(args[0]).doc) {
               if (math.help(args[0]).doc.hasOwnProperty(key)) {
                 _buffer.push('<tr><td>' + _label[key] + '</td><td class="answer">' + math.help(args[0]).doc[key] + '</td></tr>');
@@ -1920,15 +1926,15 @@ var awesomplete = true;
         if (!Object.keys(parser.scope).length) {
           return preans + 'There are currently no variables defined.' + sufans;
         }
-        var varstr = '';
+        var _buffer = ['<table class="ink-table">'];
+        _buffer.push('<tr><td>Variable</td><td>Size</td><td>Type</td></tr>');
         for(var key in parser.scope) {
           if (parser.scope.hasOwnProperty(key)) {
-            varstr = varstr + key + ', ';
+            _buffer.push('<tr><td class="answer">' + key + '</td><td class="answer">' + math.size(parser.eval(key)) + '</td><td class="answer">' + math.typeof(parser.eval(key)) + '</td></tr>');
           }
         }
-        // If we are done, remove the last comma and space.
-        varstr = varstr.trim().slice(0, -1);
-        return preans + varstr + sufans;
+        _buffer.push('</table>');
+        return _buffer.join('');
       },
 
       // Load terminal variables from localStorage.
