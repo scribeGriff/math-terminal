@@ -721,7 +721,11 @@ var awesomplete = true;
           // Convolv custom commands and functions
           if (typeof _helpEntry !== 'undefined') {
             for (var i = 0; i < _helpOrder.length; i++) {
-              _buffer.push('<tr><td>' + _helpOrder[i] + '</td><td class="answer">' + _helpEntry[_helpOrder[i]] + '</td></tr>');
+              if (Array.isArray(_helpEntry[_helpOrder[i]])) {
+                _buffer.push('<tr><td>' + _helpOrder[i] + '</td><td class="answer">' + _helpEntry[_helpOrder[i]].join(', ') + '</td></tr>');
+              } else {
+                _buffer.push('<tr><td>' + _helpOrder[i] + '</td><td class="answer">' + _helpEntry[_helpOrder[i]] + '</td></tr>');
+              }
             }
             _buffer.push('</table>');
             return _buffer.join('');
@@ -1060,7 +1064,7 @@ var awesomplete = true;
               return preerr + error.name + ': The line chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help line</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The line chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help line</em> for more information. ' + error + sufans; 
           }
         }
 

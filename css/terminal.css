@@ -134,6 +134,7 @@ body {
 
 .terminal table.ink-table tr th, table.ink-table tr td {
   border-bottom: none;
+  vertical-align: top;
 }
 
 .terminal table.ink-table {
