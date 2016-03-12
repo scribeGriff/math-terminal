@@ -734,7 +734,11 @@ var awesomplete = true;
           try {
             for(var key in math.help(args[0]).doc) {
               if (math.help(args[0]).doc.hasOwnProperty(key)) {
-                _buffer.push('<tr><td>' + _label[key] + '</td><td class="answer">' + math.help(args[0]).doc[key] + '</td></tr>');
+                if (Array.isArray(math.help(args[0]).doc[key])) {
+                  _buffer.push('<tr><td>' + _label[key] + '</td><td class="answer">' + math.help(args[0]).doc[key].join(', ') + '</td></tr>');
+                } else {
+                  _buffer.push('<tr><td>' + _label[key] + '</td><td class="answer">' + math.help(args[0]).doc[key] + '</td></tr>');
+                }
               }
             }
             _buffer.push('<tr><td>' + 'Link' + '</td><td class="answer">' + '<a href="http://mathjs.org/docs/reference/functions/' + args[0] + '.html" target="_blank">' + args[0] + ' docs at mathjs.org</a>' + '</td></tr>');
@@ -2191,6 +2195,9 @@ var awesomplete = true;
         return terminal.getImportLog();
       },
 
+      // Opens a new tab or window with the most recent imported data from a url.
+      // Also accepts one optional argument of a data storage key if a previously
+      // imported data is desired.
       datatable: function datatable() {
         var dataWindow,
             tableUrl = "pages/datatable/index.html";
@@ -2208,6 +2215,14 @@ var awesomplete = true;
           }
         }
 
+      },
+
+      // Opens a new tab or window with a full set of documentation.
+      docs: function docs() {
+        var dataWindow,
+            tableUrl = "pages/documentation/index.html";
+        dataWindow = window.open(tableUrl);
+        return '';
       }
     };
   };
