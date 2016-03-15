@@ -4,9 +4,9 @@
   "use: strict";
 
   var tableDiv, dataKey, importedData, tableID, datatable, 
-      pageNum, lastPageNum, keyString, termString, termName;
+      helpNameDiv;
 
-  var updatePageNumber, buildHtmlTable, addAllColumnHeaders;
+  var buildHtmlTable, addAllColumnHeaders, entrySelect;
 
   var _table_ = document.createElement('table'),
       _tr_ = document.createElement('tr'),
@@ -16,7 +16,7 @@
 
   window.onload = function() {
     tableDiv = document.getElementById("documentdiv");
-    pageNum = document.getElementById("pagenumber");
+    helpNameDiv = document.getElementById("Name");
     // Fetch the external help files.
     fetch("../../data/help.json")
       .then(function(response) {
@@ -27,16 +27,21 @@
         tableDiv.appendChild(buildHtmlTable(importedData));
         tableID = document.getElementById("datatable");
         datatable = new DataTable(tableID, {
-          pageSize: 20,
-          sort: '*'
+          pageSize: 10000,
+          sort:  [true, true],
+          filters: [true, 'select'],
+          filterEmptySelect: 'All',
+          filterSelectOptions: true,
+          filterInputClass: 'input',
+          filterSelectClass: 'select'
         });
         document.title = "Documentation for the Math Console at Convo.lv";
         document.getElementById("title").innerHTML = "Console Docs";
-        window.addEventListener('click', updatePageNumber, false);
-        lastPageNum = datatable.getLastPageNumber();
-        pageNum.innerHTML = "page " + datatable.getCurrentPage() + " of " + lastPageNum;
+        tableDiv.addEventListener('click', entrySelect, false);
+        helpNameDiv.innerHTML = importedData[0].Name;
       }
       else {
+        // Need to deal with this.
         console.log(json);
       }
     }, function(error) {
@@ -46,14 +51,18 @@
     });
   };
 
-  updatePageNumber = function updatePageNumber() {
-    pageNum.innerHTML = "page " + datatable.getCurrentPage() + " of " + lastPageNum;
+  entrySelect = function entrySelect(element) {
+    element.preventDefault();
+    if (element.target.tagName.toUpperCase() === "A") {
+      console.log(element.target.innerHTML);
+      var indexSelected = importedData.findIndex(x => x.Name == element.target.innerHTML);
+      console.log(importedData[indexSelected].Description);
+    }
   };
 
-  // Builds the HTML Table out of myList json data from Ivy restful service.
   buildHtmlTable = function buildHtmlTable(arr) {
-    var _helpOrder = ["Name", "Type", "Category", "Description", "Syntax", "Example", "See also"];
-    var cellValue, tr, td;
+    var _helpOrder = ["Name", "Category"];
+    var cellValue, tr, td, anchor, link;
     var table = _table_.cloneNode(false),
         tbody = _tbody_.cloneNode(false),
         columns = addAllColumnHeaders(_helpOrder, table);
@@ -62,18 +71,22 @@
       for (var j = 0, maxj = columns.length; j < maxj ; ++j) {
         td = _td_.cloneNode(false);
         cellValue = arr[i][columns[j]];
-        if (Array.isArray(cellValue)) {
-          cellValue = cellValue.join(', ');
+        if (j === 0) {
+          anchor = document.createElement("A");
+          link = document.createTextNode(cellValue);
+          anchor.setAttribute("href", "#");
+          anchor.appendChild(link);
+          td.appendChild(anchor);
+        } else {
+          td.appendChild(document.createTextNode(cellValue || ''));
         }
-        td.appendChild(document.createTextNode(cellValue || ''));
         tr.appendChild(td);
       }
       tbody.appendChild(tr);
     }
     table.appendChild(tbody);
     table.id = "datatable";
-    //table.classList.add("table", "is-bordered", "is-striped", "is-narrow");
-    table.classList.add("table");
+    table.classList.add("table", "is-bordered", "is-striped", "is-narrow");
     return table;
   };
 

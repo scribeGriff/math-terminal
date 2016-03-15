@@ -1,0 +1,100 @@
+/* PAGING */
+
+body {
+  font-family: Hack, monospace;
+}
+
+.title, .subtitle, th {
+  font-family: 'ralewayregular';
+}
+
+.table thead th {
+  color: darkslategrey;
+  font-size: 1.5em;
+  font-style: normal;
+  font-weight: normal;
+  text-align: center;
+}
+
+.pagination {
+  text-align: center;
+}
+
+.pagination li {
+  float: left ;
+  list-style-type: none;
+}
+
+.pagination li a {
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+.pagination li.active a {
+  border-bottom: 0;
+  color: gray;
+  cursor: default;
+  opacity: 0.3;
+}
+
+.paging {
+  min-height: 20px;
+}
+
+/* SORT HEADER */
+
+.sorting {
+  cursor: pointer;
+}
+
+.sorting:after {
+  content: "\f0dc";
+  font-family: FontAwesome;
+  opacity: 0.3;
+  padding-left: 10px;
+}
+
+.sorting-desc:after {
+  content: "\f0dd";
+  opacity: 1;
+}
+
+.sorting-asc:after {
+  content: "\f0de";
+  opacity: 1;
+}
+
+/* AJAX LOAD BAR */
+
+.datatable-load-bar {
+  margin: 8px 0;
+  width: 100%;
+}
+
+.datatable-load-bar {
+  border: 1px solid gray;
+  height: 10px;
+}
+
+.datatable-load-bar  .bar {
+  background-color: #AEF;
+  height: 10px;
+}
+
+/* Modifications to Bulma Defaults */
+
+html, body, section {
+  height: 100%;
+}
+
+.columns, .container {
+  height: 100%;
+}
+
+.column {
+  overflow: auto;
+}
+
+.is-third {
+  padding-right: 20px;
+}

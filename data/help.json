@@ -815,7 +815,7 @@
     "Syntax": [
       "savevars"
     ],
-    "Type": "function"
+    "Type": "command"
   },
   {
     "Category": "Waveform Generation",
@@ -1074,6 +1074,6 @@
     "Syntax": [
       "vars"
     ],
-    "Type": "function"
+    "Type": "command"
   }
 ]

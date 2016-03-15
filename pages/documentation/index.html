@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../fonts/Hack/css/hack-extended.css">
     <link rel="stylesheet" href="../../fonts/Raleway/Raleway.css">
-    <link rel="stylesheet" href="../../css/datatable.css">
+    <link rel="stylesheet" href="../../css/document.css">
 
-    
+
     <script src="//cdnjs.cloudflare.com/ajax/libs/fetch/0.11.0/fetch.min.js"></script>
     <script src="../../js/datatable.js"></script>
 
@@ -18,21 +18,31 @@
   <body>
     <section class="section">
       <div class="container is-fluid">
-          <nav class="navbar">
-            <div class="navbar-left">
-              <div class="navbar-item">
-                <p id="title" class="title"></p>
-              </div>
-            </div>
-            <div class="navbar-right">
-              <div class="navbar-item">
-                <div class="subtitle paging"></div>
-              </div>
-            </div>
-          </nav>
-        <div id="documentdiv"></div>
-        <div>
-          <p id="pagenumber" class="subtitle is-text-centered"></p>
+        <h1 id="title" class="title">Title</h1>
+        <div class="columns">
+          <div class="column is-third">
+            <div id="documentdiv"></div>
+          </div>
+          <div class="column">
+            <h1 id="Name" class="title"></h1>
+            <div class="box">
+              <article class="media">
+                <div class="media-left">
+                  <figure class="image is-64x64">
+                    <img src="http://placehold.it/128x128" alt="Image">
+                  </figure>
+                </div>
+                <div class="media-content">
+                  <div class="content">
+                    <p>
+                      <strong>John Smith</strong> <small>@johnsmith</small> <small>31m</small>
+                      <br>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean efficitur sit amet massa fringilla egestas. Nullam condimentum luctus turpis.
+                    </p>
+                  </div>
+                </div>
+              </article>
+            </div></div>
         </div>
       </div>
     </section>
