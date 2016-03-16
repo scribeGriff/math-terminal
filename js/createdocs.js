@@ -4,7 +4,7 @@
   "use: strict";
 
   var tableDiv, dataKey, importedData, tableID, datatable, 
-      helpNameDiv;
+      helpNameDiv, helpDescDiv, helpSyntDiv, helpExamDiv, helpSeeaDiv, helpTypeDiv;
 
   var buildHtmlTable, addAllColumnHeaders, entrySelect;
 
@@ -17,6 +17,11 @@
   window.onload = function() {
     tableDiv = document.getElementById("documentdiv");
     helpNameDiv = document.getElementById("Name");
+    helpDescDiv = document.getElementById("Description");
+    helpSyntDiv = document.getElementById("Syntax");
+    helpExamDiv = document.getElementById("Example");
+    helpSeeaDiv = document.getElementById("Seealso");
+    helpTypeDiv = document.getElementById("Type");
     // Fetch the external help files.
     fetch("../../data/help.json")
       .then(function(response) {
@@ -33,12 +38,27 @@
           filterEmptySelect: 'All',
           filterSelectOptions: true,
           filterInputClass: 'input',
-          filterSelectClass: 'select'
+          filterSelectClass: 'select',
+          lineFormat: function (id, data) {
+            var res = document.createElement('tr');
+            res.dataset.id = id;
+            for (var key in data) {
+              if (data.hasOwnProperty(key)) {
+                res.innerHTML += '<td class="table-link">' + data[key] + '</td>';
+              }
+            }
+            return res;
+          }
         });
         document.title = "Documentation for the Math Console at Convo.lv";
         document.getElementById("title").innerHTML = "Console Docs";
         tableDiv.addEventListener('click', entrySelect, false);
         helpNameDiv.innerHTML = importedData[0].Name;
+        helpDescDiv.innerHTML = importedData[0].Description;
+        helpSyntDiv.innerHTML = importedData[0].Syntax.join('<br>');
+        helpExamDiv.innerHTML = importedData[0].Example.split(';').join(';<br>');
+        helpSeeaDiv.innerHTML = importedData[0]["See also"].join(', ');
+        helpTypeDiv.innerHTML = importedData[0].Type;
       }
       else {
         // Need to deal with this.
@@ -86,7 +106,7 @@
     }
     table.appendChild(tbody);
     table.id = "datatable";
-    table.classList.add("table", "is-bordered", "is-striped", "is-narrow");
+    table.classList.add("table", "is-bordered", "is-striped");
     return table;
   };
 

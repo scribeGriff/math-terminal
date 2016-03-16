@@ -977,7 +977,9 @@ DataTable.prototype = {
         for (var fk in this.filters) {
             var currentData = fk[0] === '_' ? data : data[fk];
             if (this.isHtml(currentData)) {
-                currentData = currentData.textContent;
+              var tempDiv = document.createElement('div');
+              tempDiv.innerHTML = currentData;
+              currentData = tempDiv.textContent;
             }
             if (!this.filters[fk](currentData, this.filterVals[fk])) {
                 ok = false;
