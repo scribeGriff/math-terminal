@@ -1,17 +1,29 @@
-body, input, select {
+body {
   font-family: ralewayregular;
+}
+
+code {
+  background: transparent;
+  font-family: Hack;
+  font-size: 1rem;
 }
 
 .table a, .hack {
   font-family: Hack, monospace;
 }
 
-p.hack {
-  color: #ed6c63;
+.table td, select, input {
+  font-family: open_sansregular;
 }
 
-.plus20p {
-  font-size: 1.2em;
+p.hack {
+  color: #ed6c63;
+  font-size: 1rem;
+}
+
+p {
+  font-family: open_sansregular;
+  font-size: 1.1rem;
 }
 
 strong {

@@ -38,13 +38,16 @@
           filterEmptySelect: 'All',
           filterSelectOptions: true,
           filterInputClass: 'input',
-          filterSelectClass: 'select',
           lineFormat: function (id, data) {
             var res = document.createElement('tr');
             res.dataset.id = id;
             for (var key in data) {
               if (data.hasOwnProperty(key)) {
-                res.innerHTML += '<td class="table-link">' + data[key] + '</td>';
+                if (key === "0") {
+                  res.innerHTML += '<td class="table-link">' + data[key] + '</td>';
+                } else {
+                  res.innerHTML += '<td>' + data[key] + '</td>';
+                }
               }
             }
             return res;
@@ -74,9 +77,13 @@
   entrySelect = function entrySelect(element) {
     element.preventDefault();
     if (element.target.tagName.toUpperCase() === "A") {
-      console.log(element.target.innerHTML);
       var indexSelected = importedData.findIndex(x => x.Name == element.target.innerHTML);
-      console.log(importedData[indexSelected].Description);
+      helpNameDiv.innerHTML = importedData[indexSelected].Name;
+      helpDescDiv.innerHTML = importedData[indexSelected].Description;
+      helpSyntDiv.innerHTML = importedData[indexSelected].Syntax.join('<br>');
+      helpExamDiv.innerHTML = importedData[indexSelected].Example.split(';').join(';<br>');
+      helpSeeaDiv.innerHTML = importedData[indexSelected]["See also"].join(', ');
+      helpTypeDiv.innerHTML = importedData[indexSelected].Type;
     }
   };
 

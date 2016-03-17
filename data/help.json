@@ -469,7 +469,7 @@
   },
   {
     "Category": "Utilities",
-    "Description": "Loads the terminal variables that have been saved to local storage using the savevars command.  To permanently remove stored variables, use the console command clear storage.",
+    "Description": "Loads the terminal variables that have been saved to local storage using the savevars command.  To permanently remove stored variables, use the console command <code>clear storage</code>.",
     "Example": "loadvars",
     "Name": "loadvars",
     "See also": [
@@ -839,7 +839,7 @@
   {
     "Category": "Chart",
     "Description": "Changes the default series title (or titles) that appears in the legend.  Accepts space delimited strings for each series whose name should be changed in the order they appear in the legend. String names can be single or double quoted but apostrophes must be escaped with a backslash.",
-    "Example": "sample gauss() gauss() <CR> series 'random series 1' 'random series 2'",
+    "Example": "sample gauss() gauss() <br> series 'random series 1' 'random series 2'",
     "Name": "series",
     "See also": [
       "column",
@@ -938,7 +938,7 @@
   },
   {
     "Category": "Chart",
-    "Description": "Adds a subtitle to the current chart.  Arguments are space delimited.  The subtitle string is required and a color string for styling the subtitle is optional.  String name can be single or double quoted but postrophes must be escaped with a backslash.",
+    "Description": "Adds a subtitle to the current chart.  Arguments are space delimited.  The subtitle string is required and a color string for styling the subtitle is optional.  String name can be single or double quoted but apostrophes must be escaped with a backslash.",
     "Example": "x = 1:10; y = square(x); sample x y  title 'The square of x' '#90ed7d' subtitle 'for x from 1 to 10'",
     "Name": "subtitle",
     "See also": [
@@ -964,7 +964,7 @@
   },
   {
     "Category": "Chart",
-    "Description": "Adds a subtitle to the current chart.  Arguments are space delimited.  The subtitle string is required and a color string for styling the subtitle is optional.  String name can be single or double quoted but postrophes must be escaped with a backslash.",
+    "Description": "Adds a subtitle to the current chart.  Arguments are space delimited.  The subtitle string is required and a color string for styling the subtitle is optional.  String name can be single or double quoted but apostrophes must be escaped with a backslash.",
     "Example": "x = 1:10; y = square(x); sample x y  title 'The square of x' '#90ed7d'",
     "Name": "title",
     "See also": [
