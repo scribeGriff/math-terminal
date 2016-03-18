@@ -1,4 +1,4 @@
-/* jshint  node: true, browser: true, esnext: true, loopfunc: true  */
+/* jshint node: true, browser: true, esnext: true, loopfunc: true */
 
 "use strict";
 
@@ -821,7 +821,7 @@ DataTable.prototype = {
             if (!document.contains(filter)) {
               // This is needed for the bulma css framework.  It applies the
               // class to the span tag around the select element rather than the element itself.
-              if (filter.type.contains('select')) {
+              if (filter.type.includes('select')) {
                 td.classList.add('datatable-filter-cell');
                 td.appendChild(sp);
                 sp.classList.add('select');

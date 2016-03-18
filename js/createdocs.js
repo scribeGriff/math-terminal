@@ -31,28 +31,33 @@
       if (importedData !== null) {
         tableDiv.appendChild(buildHtmlTable(importedData));
         tableID = document.getElementById("datatable");
-        datatable = new DataTable(tableID, {
-          pageSize: 10000,
-          sort:  [true, true],
-          filters: [true, 'select'],
-          filterEmptySelect: 'All',
-          filterSelectOptions: true,
-          filterInputClass: 'input',
-          lineFormat: function (id, data) {
-            var res = document.createElement('tr');
-            res.dataset.id = id;
-            for (var key in data) {
-              if (data.hasOwnProperty(key)) {
-                if (key === "0") {
-                  res.innerHTML += '<td class="table-link">' + data[key] + '</td>';
-                } else {
-                  res.innerHTML += '<td>' + data[key] + '</td>';
+        try {
+          datatable = new DataTable(tableID, {
+            pageSize: 10000,
+            sort:  [true, true],
+            filters: [true, 'select'],
+            filterEmptySelect: 'All',
+            filterSelectOptions: true,
+            filterInputClass: 'input',
+            lineFormat: function (id, data) {
+              var res = document.createElement('tr');
+              res.dataset.id = id;
+              for (var key in data) {
+                if (data.hasOwnProperty(key)) {
+                  if (key === "0") {
+                    res.innerHTML += '<td class="table-link">' + data[key] + '</td>';
+                  } else {
+                    res.innerHTML += '<td>' + data[key] + '</td>';
+                  }
                 }
               }
+              return res;
             }
-            return res;
-          }
-        });
+          });
+        } catch (error) {
+          // Continue without using extras from datatable.js.  Will 
+          // still function as a standard html table.
+        }
         document.title = "Documentation for the Math Console at Convo.lv";
         document.getElementById("title").innerHTML = "Console Docs";
         tableDiv.addEventListener('click', entrySelect, false);

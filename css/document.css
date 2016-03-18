@@ -86,3 +86,26 @@ html, body, section {
 .pad-left-15 {
   padding-left: 15px;
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-button {
+  height:5px;
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background:#999;
+  border: thin solid gray;
+  border-radius:10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background:#7d7d7d;
+}
