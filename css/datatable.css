@@ -119,7 +119,7 @@ a:hover {
 
 ::-webkit-scrollbar-thumb {
   background:#999;
-  border: thin solid gray;
+  border: thin solid #999;
   border-radius:10px;
 }
 

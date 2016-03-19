@@ -118,7 +118,7 @@
     }
     table.appendChild(tbody);
     table.id = "datatable";
-    table.classList.add("table", "is-bordered", "is-striped");
+    table.classList.add("table", "is-bordered");
     return table;
   };
 
