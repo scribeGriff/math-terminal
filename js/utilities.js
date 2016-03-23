@@ -48,6 +48,10 @@
     // Retrieves token for use with importurl. 
     gettoken: function gettoken(key) {
       return localStorage.getItem(key);
+    },
+    // Returns the length of an array as a number.
+    length: function length(array) {
+      return array.length;
     }
   }, {
     wrap: true

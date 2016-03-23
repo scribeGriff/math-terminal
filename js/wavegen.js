@@ -110,10 +110,6 @@
         return math.cos(2 * math.PI * math.random()) * math.sqrt(-2 * math.log(math.random())); 
       });
       return _samples;
-    },
-    
-    length: function length(array) {
-      return array.length;
     }
     
   }, {
