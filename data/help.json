@@ -371,7 +371,7 @@
   },
   {
     "Category": "Utilities",
-    "Description": "Functions that return multiple parameters return them as objects (for example, conv, deconv, corr, filter1d). This function allows you to retrieve a specific parameter from the object if the object was stored in a workspace variable.",
+    "Description": "Functions that return multiple parameters return them as objects (for example, <code>conv</code>, <code>deconv</code>, <code>corr</code>, <code>filter1d</code>). This function allows you to retrieve a specific parameter from the object if the object was stored in a workspace variable.",
     "Example": "xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = getdata(\"outy\", yc); n = getdata(\"outn\", yc); sample n y",
     "Name": "getdata",
     "See also": [
@@ -991,7 +991,7 @@
   },
   {
     "Category": "Chart",
-    "Description": "Displays sample data at discrete sample points with a stem plot.  Arguments are space delimited.  The x axis is automatically generated as uniform steps from 0 to length of data.  Accepts a single array of sample values or multiple arrays. Does not accept timing information (see samplen).",
+    "Description": "Displays sample data at discrete sample points with a stem plot.  Arguments are space delimited.  The x axis is automatically generated as uniform steps from 0 to length of data.  Accepts a single array of sample values or multiple arrays. Does not accept timing information (see <code>samplen</code>).",
     "Example": "sample gauss() gauss()",
     "Name": "sample",
     "See also": [

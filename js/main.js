@@ -227,7 +227,11 @@ var awesomplete = true;
           cmd = cmd.replace(/(\w)'(\w)/g, "$1@%$2").replace(/'([^']*)'/g, '"$1"').replace(/(\w)@%(\w)/g, "$1'$2");
           if (cmd.includes("=")) {
             // Commands have the parentheses added to them in the allCommands list.
-            var testcommand = cmd.split("=")[0].trim() + "()";
+            var testcommand = cmd.split("=")[0].trim();
+            if (allCommands.includes(testcommand)) {
+              return preans + testcommand + ': Command names cannot be used as variable names. ' + cmd.replace(";", "") + ' is not valid.' + sufans;
+            }
+            testcommand = testcommand + "()";
             if (allCommands.includes(testcommand)) {
               return preans + testcommand.replace("(", "").replace(")", "") + ': Function names cannot be used as variable names. ' + cmd.replace(";", "") + ' is not valid.' + sufans;
             }
