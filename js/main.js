@@ -1,4 +1,4 @@
-/* global math: false, katex: false, Terminal: false, document: false, Awesomplete: false, Highcharts: false, Papa: false, moment: false, fetch: false */
+/* global math: false, katex: false, Terminal: false, document: false, Awesomplete: false, Highcharts: false, Papa: false, moment: false, fetch: false, saveAs: false */
 /* jshint node: true, browser: true, loopfunc: true, esnext: true */
 
 /* For debugging autocomplete and later perhaps as an option to disable. */
@@ -834,7 +834,7 @@ var awesomplete = true;
               return preerr + error.name + ': The area chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help area</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The area chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help area</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -897,7 +897,7 @@ var awesomplete = true;
               return preerr + error.name + ': The bar chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help bar</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The bar chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help bar</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -960,7 +960,7 @@ var awesomplete = true;
               return preerr + error.name + ': The column chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help column</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The column chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help column</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -1017,7 +1017,7 @@ var awesomplete = true;
               return preerr + error.name + ': The curve chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help curve</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The curve chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help curve</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -1128,7 +1128,7 @@ var awesomplete = true;
               return preerr + error.name + ': The curvepts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help curvepts</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The curvepts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help curvepts</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -1183,7 +1183,7 @@ var awesomplete = true;
               return preerr + error.name + ': The linepts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linepts</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The linepts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linepts</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -1260,7 +1260,7 @@ var awesomplete = true;
               return preerr + error.name + ': The scatter chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help scatter</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The scatter chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help scatter</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -1317,7 +1317,7 @@ var awesomplete = true;
               return preerr + error.name + ': The linlog chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linlog</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The linlog chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linlog</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -1374,7 +1374,7 @@ var awesomplete = true;
               return preerr + error.name + ': The loglin chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglin</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The loglin chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglin</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -1433,7 +1433,7 @@ var awesomplete = true;
               return preerr + error.name + ': The loglog chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglog</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The loglog chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglog</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -1490,7 +1490,7 @@ var awesomplete = true;
               return preerr + error.name + ': The linlogpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linlogpts</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The linlogpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help linlogpts</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -1547,7 +1547,7 @@ var awesomplete = true;
               return preerr + error.name + ': The loglinpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglinpts</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The loglinpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglinpts</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -1606,7 +1606,7 @@ var awesomplete = true;
               return preerr + error.name + ': The loglogpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglogpts</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The loglogpts chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help loglogpts</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -1657,7 +1657,7 @@ var awesomplete = true;
               return preerr + error.name + ': The polar chart requires data to be submitted as [x1] [x1] [x3] etc.  Please see <em>help polar</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The polar chart requires data to be submitted as [x1] [x1] [x3] etc.  Please see <em>help polar</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -1710,7 +1710,7 @@ var awesomplete = true;
               return preerr + error.name + ': The sample chart requires data to be submitted as [x1] [x2] [x3] etc.  Please see <em>help sample</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The sample chart requires data to be submitted as [x1] [x2] [x3] etc.  Please see <em>help sample</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -1761,7 +1761,7 @@ var awesomplete = true;
               return preerr + error.name + ': The samplen chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help samplen</em> for more information.' + sufans;
             }
             // Some other kind of error has occurred.
-            return preerr + 'There seems to be an issue with the data. A syntax error could be caused by a space within an equation, for example (spaces inside of arrays do not cause syntax errors). ' + error + sufans; 
+            return preerr + 'The samplen chart requires data to be submitted as [x1] [y1] [x2] [y2] etc.  Please see <em>help samplen</em> for more information. ' + error + sufans; 
           }
         }
 
@@ -1970,6 +1970,25 @@ var awesomplete = true;
         }
         localStorage.setItem(termName, JSON.stringify(parser.scope));
         return preans + 'Terminal variables have been saved.' + sufans;
+      },
+
+      // Export data to a local file in csv format.
+      // Args[0] should be the csv header and each args
+      // after that should be the rows of data.
+      exportfile: function exportfile() {
+        var dataArray = [];
+
+        for (var i = 1; i < args.length; i++) {
+          dataArray.push(args[i]);
+        }
+
+        var csv = Papa.unparse({
+          fields: args[0],
+          data: dataArray
+        });
+
+        var blob = new Blob(csv, {type: "text/plain;charset=utf-8"});
+        saveAs(blob, "exportedfile.csv");
       },
 
       // Import a local file and load variables into the scope.
