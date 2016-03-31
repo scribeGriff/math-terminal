@@ -69,6 +69,7 @@
   "equal()",
   "eval()",
   "exp()",
+  "exportfile",
   "eye()",
   "factorial()",
   "fft()",

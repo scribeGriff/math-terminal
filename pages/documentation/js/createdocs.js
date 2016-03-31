@@ -67,15 +67,17 @@
         helpExamDiv.innerHTML = importedData[0].Example.split(';').join(';<br>');
         helpSeeaDiv.innerHTML = importedData[0]["See also"].join(', ');
         helpTypeDiv.innerHTML = importedData[0].Type;
-      }
-      else {
-        // Need to deal with this.
-        console.log(json);
+        
+      } else {
+        // Fetch returned a null object for json.
+        tableDiv.innerHTML = '<h2 class="title is-2">Unable to locate the document file.</h2>';
       }
     }, function(error) {
       // Need to catch this.
+      tableDiv.innerHTML = '<h2 class="title is-2">Unable to locate the documentation file.</h2>';
     }).catch(function(ex) {
       // need to catch this.
+      tableDiv.innerHTML = '<h2 class="title is-2">Unable to locate the documentation file.</h2>';
     });
   };
 

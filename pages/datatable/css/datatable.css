@@ -16,29 +16,14 @@ body {
   text-align: center;
 }
 
-.pagination {
-  text-align: center;
+.pagination a {
+  color: firebrick;
 }
 
-.pagination li {
-  float: left ;
-  list-style-type: none;
-}
-
-.pagination li a {
-  cursor: pointer;
-  padding: 0 5px;
-}
-
-.pagination li.active a {
-  border-bottom: 0;
-  color: gray;
-  cursor: default;
-  opacity: 0.3;
-}
-
-.paging {
-  min-height: 20px;
+.pagination .active a {
+  border: 0;
+	color: gray;
+	cursor: default;
 }
 
 /* SORT HEADER */
@@ -64,23 +49,6 @@ body {
   opacity: 1;
 }
 
-/* AJAX LOAD BAR */
-
-.datatable-load-bar {
-  margin: 8px 0;
-  width: 100%;
-}
-
-.datatable-load-bar {
-  border: 1px solid gray;
-  height: 10px;
-}
-
-.datatable-load-bar  .bar {
-  background-color: #AEF;
-  height: 10px;
-}
-
 /* Modifications to Bulma Defaults */
 
 .tabs a:hover {
@@ -88,16 +56,8 @@ body {
   border-bottom-width: 2px;
 }
 
-.table.is-striped tbody tr:nth-child(2n):hover {
-  background: #b4cbef;
-}
-
 .table tbody tr:hover {
   background: #b4cbef;
-}
-
-a {
-  color: firebrick;
 }
 
 a:hover {

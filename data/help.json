@@ -294,6 +294,25 @@
     "Type": "command"
   },
   {
+    "Category": "Utilities",
+    "Description": "Downloads a csv file to the local computer using space delimited arguments.  Each argument corresponds with each row of the csv file with the first argument treated as the file header.",
+    "Example": "cat = [\"New York\", \"Los Angeles\", \"Seattle\", \"Boston\", \"Portland\"]; s1 = [47, 25, 102, 16, 33]; s2 = [191, 97, 29, 77, 112]; s3 = [35, 19, 209, 80, 67]; exportfile cat s1 s2 s3",
+    "Name": "exportfile",
+    "See also": [
+      "importurl",
+      "importlog",
+      "vars",
+      "loadvars",
+      "savevars",
+      "importfile"
+    ],
+    "Syntax": [
+      "exportfile header row1Data row2Data row3Data",
+      "exportfile 0:10 square(0:10) cube(0:10)"
+    ],
+    "Type": "command"
+  },
+  {
     "Category": "Signal Processing",
     "Description": "Computes a fourier transform of an array of arbitrary length.  Uses a radix-2 FFT algorithm if the length is a power of 2 and a DFT otherwise. The input is an array of real or complex values. Accepts an optional integer value for the power of the FFT.",
     "Example": "y = fft([0,1,2,3]);",

@@ -2021,7 +2021,7 @@ var awesomplete = true;
 
         // This is opening a save as dialog box.  Is that necessary? Desired?
         var blob = new Blob([csv], {type: "text/csv; charset=utf-8"});
-        saveAs(blob, "exportedfile.csv");
+        saveAs(blob, "convolv_export.csv");
 
         return '';
       },
