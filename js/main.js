@@ -1976,10 +1976,42 @@ var awesomplete = true;
       // Args[0] should be the csv header and each args
       // after that should be the rows of data.
       exportfile: function exportfile() {
-        var dataArray = [];
+        var dataArray = [],
+            argVal,
+            argsLen = args.length;
 
-        for (var i = 1; i < args.length; i++) {
-          dataArray.push(args[i]);
+        if (argsLen === 0) {
+          return preerr + 'The exportfile command needs to know what data to export.  Please see <em>help exportfile</em> for more information.' + sufans;
+        } else {
+          // Try to parse the data and format it for exporting.
+          try {
+            // Check if argument is a terminal variable by trying to retrieve the value.
+            for (var i = 0; i < argsLen; i++) {
+              argVal = parser.eval(args[i]);
+              if (typeof argVal != 'undefined') {
+                args[i] = argVal;
+              }
+              if (math.typeof(args[i]) === 'Matrix') {
+                args[i] = JSON.parse(args[i]);
+              }
+            }
+            // Check if all the arguments are arrays.  If not throw an error.
+            if (!args.every(elem => Array.isArray(elem))) {
+              throw new Error('The exportfile command only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help exportfile</em> for more information.');
+            }
+            // Create the fields for Papa.unparse.
+            for (var j = 1; j < argsLen; j++) {
+              dataArray.push(args[j]);
+            }
+            // Catch any errors.
+          } catch(error) {
+            // Type error.
+            if (error.name.toString() == "TypeError") {
+              return preerr + error.name + ': There seems to be something wrong with the data.  Please see <em>help exportfile</em> for more information.' + sufans;
+            }
+            // Some other kind of error has occurred.
+            return preerr + 'There seems to be something wrong with the data.  Please see <em>help exportfile</em> for more information. ' + error + sufans; 
+          }
         }
 
         var csv = Papa.unparse({
@@ -1987,8 +2019,11 @@ var awesomplete = true;
           data: dataArray
         });
 
-        var blob = new Blob(csv, {type: "text/plain;charset=utf-8"});
+        // This is opening a save as dialog box.  Is that necessary? Desired?
+        var blob = new Blob([csv], {type: "text/csv; charset=utf-8"});
         saveAs(blob, "exportedfile.csv");
+
+        return '';
       },
 
       // Import a local file and load variables into the scope.
