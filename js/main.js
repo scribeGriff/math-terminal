@@ -6,7 +6,7 @@
 var awesomplete = true;
 
 (function () {
-  "use: strict";
+  "use strict";
 
   var preans = '<i class="prefix fa fa-angle-double-right"></i> <span class="answer">',
       preerr = '<i class="prefix fa fa-angle-double-right"></i> <span class="cmderror">',
@@ -143,9 +143,9 @@ var awesomplete = true;
     '<tr><td>clear all</td><td class="answer">clears command window, workspace and stored variables, and current chart</td></tr>',
     '<tr><td>clear chart</td><td class="answer">clears current chart</td></tr>',
     '<tr><td>clear storage</td><td class="answer">clears variables from local storage (see <em>help vars</em>, <em>help loadvars</em> and <em>help savevars</em> for more information)</td></tr>',
+    '<tr><td>docs</em></td><td class="answer">Opens a new tab or window with a complete set of documentation for Convolv extensions to the Mathjs library as well as all available console and charting commands.</td></tr>',
     '<tr><td>help</td><td class="answer">displays this help screen</td></tr>',
     '<tr><td>help <em>command</em></td><td class="answer">displays the <em>command</em> documentation</td></tr>',
-    '<tr><td>docs</em></td><td class="answer">Opens a new tab or window with a complete set of documentation for Convolv extensions to the Mathjs library as well as all available console and charting commands.</td></tr>',
     '<tr><td>precision</td><td class="answer">displays number of significant digits in formatted answer written to console</td></tr>',
     '<tr><td>precision  <em>value</em></td><td class="answer">set precision of the displayed answer to <em>[0 - 16]</em> significant digits</td></tr>',
     '<tr><td>theme</td><td class="answer">displays current theme</td></tr>',
@@ -2277,9 +2277,17 @@ var awesomplete = true;
 
       // Opens a new tab or window with a full set of documentation.
       docs: function docs() {
-        var dataWindow,
-            tableUrl = "pages/documentation/index.html";
-        dataWindow = window.open(tableUrl);
+        var docsWindow,
+            docsUrl = "pages/documentation/index.html";
+        docsWindow = window.open(docsUrl);
+        return '';
+      },
+
+      // Opens a new tab or window with a list of credits.
+      credits: function credits() {
+        var creditsWindow,
+            creditsUrl = "pages/credits/index.html";
+        creditsWindow = window.open(creditsUrl);
         return '';
       }
     };

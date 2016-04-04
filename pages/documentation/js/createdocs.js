@@ -1,7 +1,7 @@
 /* global DataTable: false */
 /* jshint node: true, browser: true, esnext: true */
 (function () {
-  "use: strict";
+  "use strict";
 
   var tableDiv, dataKey, importedData, tableID, datatable, 
       helpNameDiv, helpDescDiv, helpSyntDiv, helpExamDiv, helpSeeaDiv, helpTypeDiv;

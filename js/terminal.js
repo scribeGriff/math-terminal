@@ -4,10 +4,10 @@
 */
 
 /* global math:false, katex: false, awesomplete: false */
-/* jshint node: true, browser: true, esnext: true  */
+/* jshint node: true, browser: true, esnext: true, -W040: true */
 
 (function (global, undefined) {
-  "use: strict";
+  "use strict";
 
   var Terminal = Terminal || function(containerID, uoptions) {
     if (!containerID) return;
@@ -25,7 +25,7 @@
     options.separator = options.separator || defaults.separator;
     options.theme = options.theme || defaults.theme;
 
-    var matchAllBuiltIns = /\b^help\b.*|\b^clear\b.*|\b^theme\b.*|\b^precision\b.*|\b^ver\b.*|\b^version\b.*|\b^line\b.*|\b^linepts\b.*|\b^area\b.*|\b^bar\b.*|\b^column\b.*|\b^curve\b.*|\b^curvepts\b.*|\b^sample\b.*|\b^samplen\b.*|\b^polar\b.*|\b^scatter\b.*|\b^linlog\b.*|\b^loglin\b.*|\b^loglog\b.*|\b^linlogpts\b.*|\b^loglinpts\b.*|\b^loglogpts\b.*|\b^vars\b.*|\b^loadvars\b.*|\b^savevars\b.*|\b^exportfile\b.*|\b^importfile\b.*|\b^importurl\b.*|\b^importlog\b.*|\b^datatable\b.*|\b^docs\b.*$/;
+    var matchAllBuiltIns = /\b^help\b.*|\b^clear\b.*|\b^theme\b.*|\b^precision\b.*|\b^ver\b.*|\b^version\b.*|\b^line\b.*|\b^linepts\b.*|\b^area\b.*|\b^bar\b.*|\b^column\b.*|\b^curve\b.*|\b^curvepts\b.*|\b^sample\b.*|\b^samplen\b.*|\b^polar\b.*|\b^scatter\b.*|\b^linlog\b.*|\b^loglin\b.*|\b^loglog\b.*|\b^linlogpts\b.*|\b^loglinpts\b.*|\b^loglogpts\b.*|\b^vars\b.*|\b^loadvars\b.*|\b^savevars\b.*|\b^exportfile\b.*|\b^importfile\b.*|\b^importurl\b.*|\b^importlog\b.*|\b^datatable\b.*|\b^docs\b.*|\b^credits\b.*$/;
     var matchChartTextCmds = /\b^xaxis\b.*|\b^yaxis\b.*|\b^title\b.*|\b^subtitle\b.*|\b^series\b.*$/i;
     var matchSupportCmds = /\b^getdata\b.*|\b^outy\b.*|\b^outn\b.*|\b^outq\b.*|\b^outqn\b.*|\b^outr\b.*|\b^outrn\b.*|\b^outz\b.*|\b^length\b.*|\b^addseqs\b.*|\b^subseqs\b.*$/;
 
