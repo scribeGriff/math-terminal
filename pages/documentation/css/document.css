@@ -26,7 +26,8 @@ code {
   font-size: 1.1rem;
 }
 
-strong {
+strong, .title {
+  color: #434348;
   font-family: ralewaysemibold;
 }
 
@@ -92,6 +93,24 @@ html, body, section {
   padding-right: 20px;
 }
 
+.navbar {
+  align-items: baseline;
+}
+
+.navbar-left {
+  align-items: baseline;
+}
+
+.navbar-right {
+  margin-right: 10px;
+}
+
+.navbar img {
+  margin-bottom: -3px;
+  margin-right: 10px;
+  vertical-align: bottom;
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
@@ -113,4 +132,10 @@ html, body, section {
 
 ::-webkit-scrollbar-thumb:hover {
   background:#7d7d7d;
+}
+
+@media screen and (max-width: 768px) {
+  .navbar {
+    text-align: center;
+  }
 }

@@ -58,7 +58,7 @@
           // Continue without using extras from datatable.js.  Will 
           // still function as a standard html table.
         }
-        document.getElementById("title").innerHTML = "Console Docs";
+        
         tableDiv.addEventListener('click', entrySelect, false);
         helpNameDiv.innerHTML = importedData[0].Name;
         helpDescDiv.innerHTML = importedData[0].Description;
