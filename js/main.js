@@ -27,7 +27,7 @@ var awesomplete = true;
   var chartDiv1 = document.getElementById('chart-div1');
 
   var matchThemes = /^monokai|^github|^xcode|^obsidian|^vs|^arta|^railcasts|^chalkboard|^dark/,
-      matchChartCmds = /^line$|^linepts$|^area$|^bar$|^column$|^curve$|^curvepts$|^sample$|^samplen$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$|^series$/,
+      matchChartCmds = /^line$|^linepts$|^area$|^bar$|^column$|^curve$|^curvepts$|^sample$|^samplen$|^pie$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$|^series$/,
       matchWaveGenCmds = /^sinewave$|^squarewave$|^sawtoothwave$|^trianglewave$|^impulse$|^step$|^gauss$/,
       matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^subseqs$|^getdata$|^outy$|^outn$|^outq$|^outqn$|^outr$|^outrn$|^outz$|^vars$|^loadvars$|^savevars$|^importfile$|^importurl$|^importlog$|^settoken$|^gettoken$/;
 
@@ -48,6 +48,11 @@ var awesomplete = true;
     chart: {
       backgroundColor: 'transparent',
       plotBorderWidth: 0
+    },
+    plotOptions: {
+      series: {
+        allowPointSelect: true
+      }
     },
     title: {
       text: ' ',
@@ -794,7 +799,6 @@ var awesomplete = true;
 
       area: function area() {
         var dataSeries,
-            argVal,
             chart = terminal.getChart(),
             options = {
               type: 'area',
@@ -808,12 +812,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < args.length; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -851,7 +861,6 @@ var awesomplete = true;
 
       bar: function bar() {
         var dataSeries,
-            argVal,
             chart = terminal.getChart(),
             options = {
               type: 'bar',
@@ -871,12 +880,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < args.length; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -914,7 +929,6 @@ var awesomplete = true;
 
       column: function column() {
         var dataSeries,
-            argVal,
             chart = terminal.getChart(),
             options = {
               type: 'column',
@@ -934,12 +948,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < args.length; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -977,7 +997,6 @@ var awesomplete = true;
 
       curve: function curve() {
         var dataSeries,
-            argVal,
             chart = terminal.getChart(),
             options = {
               type: 'spline',
@@ -991,12 +1010,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < args.length; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -1034,7 +1059,6 @@ var awesomplete = true;
 
       line: function line() {
         var dataSeries,
-            argVal,
             chart = terminal.getChart(),
             options = {
               enableMarkers: false
@@ -1044,14 +1068,21 @@ var awesomplete = true;
         } else {
           // Try to parse the data and format it for plotting.
           try {
+            console.log(args);
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < args.length; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -1089,7 +1120,6 @@ var awesomplete = true;
 
       curvepts: function curvepts() {
         var dataSeries,
-            argVal,
             chart = terminal.getChart(),
             options = {
               type: 'spline',
@@ -1102,12 +1132,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < args.length; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -1145,7 +1181,6 @@ var awesomplete = true;
 
       linepts: function linepts() {
         var dataSeries,
-            argVal,
             chart = terminal.getChart(),
             options = {
               enableMarkers: true
@@ -1157,12 +1192,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < args.length; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -1200,7 +1241,6 @@ var awesomplete = true;
 
       scatter: function scatter() {
         var dataSeries,
-            argVal,
             chart = terminal.getChart(),
             options = {
               type: 'line',
@@ -1234,12 +1274,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < args.length; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -1277,7 +1323,6 @@ var awesomplete = true;
 
       linlog: function linlog() {
         var dataSeries,
-            argVal,
             chart = terminal.getChart(),
             options = {
               enableMarkers: false,
@@ -1291,12 +1336,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < args.length; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -1334,7 +1385,6 @@ var awesomplete = true;
 
       loglin: function loglin() {
         var dataSeries,
-            argVal,
             chart = terminal.getChart(),
             options = {
               enableMarkers: false,
@@ -1348,12 +1398,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < args.length; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -1391,7 +1447,6 @@ var awesomplete = true;
 
       loglog: function loglog() {
         var dataSeries,
-            argVal,
             chart = terminal.getChart(),
             options = {
               enableMarkers: false,
@@ -1407,12 +1462,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < args.length; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -1450,7 +1511,6 @@ var awesomplete = true;
 
       linlogpts: function linlogpts() {
         var dataSeries,
-            argVal,
             chart = terminal.getChart(),
             options = {
               enableMarkers: true,
@@ -1464,12 +1524,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < args.length; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -1507,7 +1573,6 @@ var awesomplete = true;
 
       loglinpts: function loglinpts() {
         var dataSeries,
-            argVal,
             chart = terminal.getChart(),
             options = {
               enableMarkers: true,
@@ -1521,12 +1586,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < args.length; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -1564,7 +1635,6 @@ var awesomplete = true;
 
       loglogpts: function loglogpts() {
         var dataSeries,
-            argVal,
             chart = terminal.getChart(),
             options = {
               enableMarkers: true,
@@ -1580,12 +1650,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < args.length; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -1621,10 +1697,91 @@ var awesomplete = true;
         return '';
       },
 
+      pie: function pie() {
+        var dataSeries = [],
+            dataObj,
+            chart = terminal.getChart(),
+            options = {
+              type: 'pie'
+            };
+
+        if (args.length === 0) {
+          return preerr + 'The pie chart needs to know what data to plot.  Please see <em>help pie</em> for more information.' + sufans;
+        }
+        if (args.length > 2) {
+          return preerr + 'The pie chart only accepts either one or two arrays as arguments.  Please see <em>help pie</em> for more information.' + sufans;
+        }
+        // Try to parse the data and format it for plotting.
+        try {
+          // Check if argument is a terminal variable by trying to retrieve the value.
+          for (var i = 0; i < args.length; i++) {
+            try {
+              args[i] = parser.eval(args[i]);
+            } catch (error) {
+              // Not a variable in the console.
+              // No need to catch this, just proceed.
+            }
+            if (math.typeof(args[i]) === 'Matrix') {
+              try {
+                args[i] = JSON.parse(args[i]);
+              } catch (error) {
+                // Need to decide if error should be thrown.
+              }
+            }
+          }
+          // Check if all the arguments are arrays.  If not throw an error.
+          if (!args.every(elem => Array.isArray(elem))) {
+            throw new Error('The pie chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help pie</em> for more information.');
+          }
+          // Format the data for plotting.
+          var dataArray;
+          if (args.length === 1) {
+            var ydata = new Array(args[0].length);
+            for (var k = 0; k < args[0].length; k++) {
+              ydata[k] = args[0][k];
+            }
+            dataObj = {
+              cropThreshold: 600,
+              data: ydata
+            };
+            dataSeries.push(dataObj);
+          } else {
+            for (var j = 0; j < args[0].length; j++) {
+              dataObj = {
+                y: args[1][j],
+                name: args[0][j]
+              };
+              dataArray.push(dataObj);
+            }
+            var finalObj = {
+              dataArray
+            };
+            dataSeries.push(finalObj);
+          }
+          // Catch any errors.
+        } catch(error) {
+          // This usually means the data was passed without using pairs of arrays for x and y values.
+          if (error.name.toString() == "TypeError") {
+            return preerr + error.name + ': The pie chart requires data to be submitted as either a single array of numeric values or an array of strings followed by an array of numeric values.  Please see <em>help pie</em> for more information.' + sufans;
+          }
+          // Some other kind of error has occurred.
+          return preerr + 'The pie chart requires data to be submitted as either a single array of numeric values or an array of strings followed by an array of numeric values.  Please see <em>help pie</em> for more information. ' + error + sufans; 
+        }
+
+        // Recommended by Highcharts for memory management.
+        if (chart) chart.destroy();
+
+        // Chart the data in the correct div and with the required options.
+        chart = createBaseChart(chartDiv, dataSeries, options);
+
+        // If all went well, just return an empty string to the terminal.
+        terminal.setChart(chart);
+        return '';
+      },
+
       // Draws a polar plot.
       polar: function polar() {
-        var dataSeries, 
-            argVal,
+        var dataSeries,
             chart = terminal.getChart(),
             argsLen = args.length;
 
@@ -1635,12 +1792,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < argsLen; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -1677,7 +1840,6 @@ var awesomplete = true;
       // See samplen() for sample plot that takes time information.
       sample: function sample() {
         var dataSeries = [],
-            argVal,
             chart = terminal.getChart(),
             argsLen = args.length;
 
@@ -1688,12 +1850,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < argsLen; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.
@@ -1728,7 +1896,6 @@ var awesomplete = true;
       // Like sample plot, but accepts timing information.
       samplen: function samplen() {
         var dataSeries = [],
-            argVal,
             chart = terminal.getChart(),
             argsLen = args.length;
 
@@ -1739,12 +1906,18 @@ var awesomplete = true;
           try {
             // Check if argument is a terminal variable by trying to retrieve the value.
             for (var i = 0; i < argsLen; i++) {
-              argVal = parser.eval(args[i]);
-              if (typeof argVal != 'undefined') {
-                args[i] = argVal;
+              try {
+                args[i] = parser.eval(args[i]);
+              } catch (error) {
+                // Not a variable in the console.
+                // No need to catch this, just proceed.
               }
               if (math.typeof(args[i]) === 'Matrix') {
-                args[i] = JSON.parse(args[i]);
+                try {
+                  args[i] = JSON.parse(args[i]);
+                } catch (error) {
+                  // Need to decide if error should be thrown.
+                }
               }
             }
             // Check if all the arguments are arrays.  If not throw an error.

@@ -260,6 +260,20 @@
     "Type": "command"
   },
   {
+    "Category": "Utilities",
+    "Description": "Opens a new tab or window with a showcase of the incredible open source libraries that made Convolv possible.",
+    "Example": "credits",
+    "Name": "credits",
+    "See also": [
+      "help",
+      "docs"
+    ],
+    "Syntax": [
+      "credits"
+    ],
+    "Type": "command"
+  },
+  {
     "Category": "Signal Processing",
     "Description": "Performs a deconvolution (polynomial long division) of a numerator and denominator polynomial.  Accepts optional position information.  Returns quotient, q, remainder, r, and position information, qn and rn. First coefficient is assumed to be associated with highest order of the polynomial. If the numerator was given as 1 + 2z^-1 + 2z^-2, then the numerator can be written as <code>num = [1, 2, 2];</code>",
     "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; //num = z^2 + z + 1 + z^-1 + z^-2 +z^-3 den = [1, 2, 1]; dn = -1: 1; //den = z + 2 + z^-1 qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem);",
