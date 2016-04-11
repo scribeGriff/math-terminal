@@ -960,6 +960,33 @@
     "Type": "function"
   },
   {
+    "Category": "Chart",
+    "Description": "Creates a pie chart with space delimited arguments.  The pie chart requires data to be submitted as either a single array of numeric values or an array of identifiers (strings or numeric) followed by an array of numeric values.",
+    "Example": "months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; data = [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]; pie months data",
+    "Name": "pie",
+    "See also": [
+      "column",
+      "curve",
+      "curvepts",
+      "line",
+      "linepts",
+      "sample",
+      "samplen",
+      "bar",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series",
+      "polar"
+    ],
+    "Syntax": [
+      "pie data",
+      "pie name data"
+    ],
+    "Type": "command"
+  },
+  {
     "Category": "Utilities",
     "Description": "With no arguments, displays number of significant digits in formatted answer written to console.  If given a space delimited argument, sets the  precision of the displayed answer to a number between 0 and 16 significant digits.",
     "Example": "precision 12",

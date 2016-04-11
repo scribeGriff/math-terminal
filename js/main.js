@@ -52,6 +52,13 @@ var awesomplete = true;
     plotOptions: {
       series: {
         allowPointSelect: true
+      },
+      pie: {
+        cursor: 'pointer',
+        dataLabels: {
+          enabled: false
+        },
+        showInLegend: true
       }
     },
     title: {
@@ -1699,7 +1706,9 @@ var awesomplete = true;
 
       pie: function pie() {
         var dataSeries = [],
+            dataArray = [],
             dataObj,
+            finalObj,
             chart = terminal.getChart(),
             options = {
               type: 'pie'
@@ -1734,7 +1743,6 @@ var awesomplete = true;
             throw new Error('The pie chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help pie</em> for more information.');
           }
           // Format the data for plotting.
-          var dataArray;
           if (args.length === 1) {
             var ydata = new Array(args[0].length);
             for (var k = 0; k < args[0].length; k++) {
@@ -1753,8 +1761,8 @@ var awesomplete = true;
               };
               dataArray.push(dataObj);
             }
-            var finalObj = {
-              dataArray
+            finalObj = {
+              data: dataArray
             };
             dataSeries.push(finalObj);
           }
