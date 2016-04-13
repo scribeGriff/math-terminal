@@ -2,7 +2,7 @@
   {
     "Category": "Arithmetic",
     "Description": "Adds two sequences (as arrays) including optional timing information.  Sequences do not have to be the same length.",
-    "Example": "x = [3, 11, 7, 0, -1, 4, 2]; n = -3:3; nm2 = -1:5; w = gauss(length(x)); seqsum = addseqs(x, w, nm2, nm2);",
+    "Example": "x = [3, 11, 7, 0, -1, 4, 2]; n = -3:3; nm2 = -1:5; w = gauss(length(x)); seqsum = addseqs(x, w, nm2, nm2); samplen outn(seqsum) outy(seqsum)",
     "Name": "addseqs",
     "See also": [
       "add",

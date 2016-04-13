@@ -19,7 +19,7 @@ var awesomplete = true;
       termName4 = 'terminal4';
 
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
-      hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348'];
+      hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348', "#3E6B48", "#009989"];
 
   var terminal1, bgcolor, lineShape, points, cmdinput, autocompleter, helpExt, parseData, isValidColor, awesompleteDivUl, allCommands,
       parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart, consoleCommands;
@@ -58,11 +58,15 @@ var awesomplete = true;
         dataLabels: {
           enabled: false
         },
-        showInLegend: true
+        showInLegend: true,
+        states: {
+          hover: {
+            halo: false
+          }
+        }
       }
     },
     title: {
-      text: ' ',
       style: {
         color: '#76767A',
         font: '18px "open_sansregular", sans-serif'
@@ -477,6 +481,7 @@ var awesomplete = true;
 
     var defaults = {
       type: 'line',
+      title: ' ',
       posFillColor: undefined,
       negFillColor: null,
       opacityFill: 0.75,
@@ -495,11 +500,15 @@ var awesomplete = true;
       yType: 'linear',
       yLineWidth: 1,
       yTickWidth: 1,
-      yOffset: 10
+      yOffset: 10,
+      legLayout: 'vertical',
+      legAlign: 'right',
+      legVerticalAlign: 'top'
     };
 
     var options = uoptions || defaults;
     options.type = typeof options.type === "undefined" ? defaults.type : options.type;
+    options.title = typeof options.title === "undefined" ? defaults.title : options.title;
     options.posFillColor = typeof options.posFillColor === "undefined" ? defaults.posFillColor : options.posFillColor;
     options.negFillColor = typeof options.negFillColor === "undefined" ? defaults.negFillColor : options.negFillColor;
     options.opacityFill = typeof options.opacityFill === "undefined" ? defaults.opacityFill : options.opacityFill;
@@ -519,6 +528,9 @@ var awesomplete = true;
     options.yLineWidth = typeof options.yLineWidth === "undefined" ? defaults.yLineWidth : options.yLineWidth;
     options.yTickWidth = typeof options.yTickWidth === "undefined" ? defaults.yTickWidth : options.yTickWidth;
     options.yOffset = typeof options.yOffset === "undefined" ? defaults.yOffset : options.yOffset;
+    options.legLayout = typeof options.legLayout === "undefined" ? defaults.legLayout : options.legLayout;
+    options.legAlign = typeof options.legAlign === "undefined" ? defaults.legAlign : options.legAlign;
+    options.legVerticalAlign = typeof options.legVerticalAlign === "undefined" ? defaults.legVerticalAlign : options.legVerticalAlign;
 
     return Highcharts.chart(container, {
       chart: {
@@ -526,6 +538,11 @@ var awesomplete = true;
         zoomType: options.zoomDir,
         panning: true,
         panKey: 'shift'
+      },
+      legend: {
+        layout: options.legLayout,
+        align: options.legAlign,
+        verticalAlign: options.legVerticalAlign
       },
       plotOptions: {
         series: {
@@ -560,6 +577,9 @@ var awesomplete = true;
       },
       tooltip: {
         shared: true,
+      },
+      title: {
+        text: options.title
       },
       series: chartData
     });
@@ -612,6 +632,9 @@ var awesomplete = true;
         valueDecimals: 6,
         shared: true,
       },
+      title: {
+        text: ' '
+      },
       series: chartData
     });
   };
@@ -663,6 +686,9 @@ var awesomplete = true;
           zIndex: 5
         }]
       },
+      title: {
+        text: ' '
+      },
       series: chartData
     });
   };
@@ -697,11 +723,13 @@ var awesomplete = true;
             localStorage.removeItem(termName);
             if (chart) {
               chart.destroy();
+              terminal.setChart(null);
             }
             return '';
           } else if (args[0] === 'chart') {
             if (chart) {
               chart.destroy();
+              terminal.setChart(null);
             }
             return '';
           } else if (args[0] === 'storage') {
@@ -1711,7 +1739,11 @@ var awesomplete = true;
             finalObj,
             chart = terminal.getChart(),
             options = {
-              type: 'pie'
+              type: 'pie',
+              title: 'Pie Chart',
+              legLayout: 'horizontal',
+              legAlign: 'center',
+              legVerticalAlign: 'bottom'
             };
 
         if (args.length === 0) {
@@ -1962,10 +1994,14 @@ var awesomplete = true;
         if (args.length === 0) {
           return preerr + 'The xaxis command adds a label to the x axis of a chart.  Please see <em>help xaxis</em> for more information.' + sufans;
         } else {
-          var chart = terminal.getChart();
+          var chart = terminal.getChart(),
+              tempArg;
           if (chart) {
             try {
-              args[0] = parser.eval(args[0]);
+              tempArg = parser.eval(args[0]);
+              if (typeof tempArg === 'string') {
+                args[0] = tempArg;
+              }
             } catch (error) {
               // Not a variable in the console.
               // No need to catch this, just proceed.
@@ -1987,10 +2023,14 @@ var awesomplete = true;
         if (args.length === 0) {
           return preerr + 'The yaxis command adds a label to the y axis of a chart.  Please see <em>help yaxis</em> for more information.' + sufans;
         } else {
-          var chart = terminal.getChart();
+          var chart = terminal.getChart(),
+              tempArg;
           if (chart) {
             try {
-              args[0] = parser.eval(args[0]);
+              tempArg = parser.eval(args[0]);
+              if (typeof tempArg === 'string') {
+                args[0] = tempArg;
+              }
             } catch (error) {
               // Not a variable in the console.
               // No need to catch this, just proceed.
@@ -2012,11 +2052,15 @@ var awesomplete = true;
         if (args.length === 0) {
           return preerr + 'The title command adds a title to a chart if one exists.  Please see <em>help title</em> for more information.' + sufans;
         } else {
-          var chart = terminal.getChart();
+          var chart = terminal.getChart(),
+              tempArg;
           if (chart) {
             for (var i = 0; i < args.length; i++) {
               try {
-                args[i] = parser.eval(args[i]);
+                tempArg = parser.eval(args[i]);
+                if (typeof tempArg === 'string') {
+                  args[i] = tempArg;
+                }
               } catch (error) {
                 // Not a variable in the console.
                 // No need to catch this, just proceed.
@@ -2046,11 +2090,15 @@ var awesomplete = true;
         if (args.length === 0) {
           return preerr + 'The subtitle command adds a subtitle to a chart if one exists.  Please see <em>help subtitle</em> for more information.' + sufans;
         } else {
-          var chart = terminal.getChart();
+          var chart = terminal.getChart(),
+              tempArg;
           if (chart) {
             for (var i = 0; i < args.length; i++) {
               try {
-                args[i] = parser.eval(args[i]);
+                tempArg = parser.eval(args[i]);
+                if (typeof tempArg === 'string') {
+                  args[i] = tempArg;
+                }
               } catch (error) {
                 // Not a variable in the console.
                 // No need to catch this, just proceed.
@@ -2080,11 +2128,15 @@ var awesomplete = true;
         if (args.length === 0) {
           return preerr + 'The series command adds a custom name to each series of a chart if one exists.  Please see <em>help series</em> for more information.' + sufans;
         } else {
-          var chart = terminal.getChart();
+          var chart = terminal.getChart(),
+              tempArg;
           if (chart) {
             for (var k = 0; k < args.length; k++) {
               try {
-                args[k] = parser.eval(args[k]);
+                tempArg = parser.eval(args[k]);
+                if (typeof tempArg === 'string') {
+                  args[k] = tempArg;
+                }
               } catch (error) {
                 // Not a variable in the console.
                 // No need to catch this, leave args[k] as is.
