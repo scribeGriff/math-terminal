@@ -1,4 +1,4 @@
-/* global DataTable: false */
+/* global DataTable: false, smoothScroll: false */
 /* jshint node: true, browser: true, esnext: true */
 (function () {
   "use strict";
@@ -83,6 +83,9 @@
   entrySelect = function entrySelect(element) {
     element.preventDefault();
     if (element.target.tagName.toUpperCase() === "A") {
+      if (document.body.clientWidth < 768) {
+        smoothScroll.animateScroll('#scrolldown');
+      }
       var indexSelected = importedData.findIndex(x => x.Name == element.target.innerHTML);
       helpNameDiv.innerHTML = importedData[indexSelected].Name;
       helpDescDiv.innerHTML = importedData[indexSelected].Description;

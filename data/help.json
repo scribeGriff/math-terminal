@@ -9,7 +9,9 @@
       "subtract",
       "subseqs",
       "outy",
-      "outn"
+      "outn",
+      "sample",
+      "samplen"
     ],
     "Syntax": [
       "addseqs(x1, x2)",
@@ -133,7 +135,7 @@
   {
     "Category": "Signal Processing",
     "Description": "Performs a linear convolution of two signals using an N point circular convolution algorithm. Accepts optional position information. Returns the convolved array y, and its position array n.",
-    "Example": "x = [3, 11, 7, 0, -1, 4, 2]; h = [2, 3, 0, -5, 2, 1]; y = conv(x, h);",
+    "Example": "x = [3, 11, 7, 0, -1, 4, 2]; xpos = -3:3; h = [2, 3, 0, -5, 2, 1]; hpos = -1:4; y = conv(x, h, xpos, hpos);",
     "Name": "conv",
     "See also": [
       "outy",
@@ -1351,6 +1353,25 @@
   },
   {
     "Category": "Utilities",
+    "Description": "Displays the terminal variables that have been defined and saved to the scope using the equal sign.  Provides information on the variable's type and its size.",
+    "Example": "vars",
+    "Name": "vars",
+    "See also": [
+      "savevars",
+      "loadvars",
+      "importfile",
+      "importurl",
+      "importlog",
+      "datatable",
+      "exportfile"
+    ],
+    "Syntax": [
+      "vars"
+    ],
+    "Type": "command"
+  },
+  {
+    "Category": "Utilities",
     "Description": "An optional light console theme.",
     "Example": "theme vs",
     "Name": "vs",
@@ -1438,25 +1459,6 @@
     ],
     "Syntax": [
       "yaxis 'This is the y axis'"
-    ],
-    "Type": "command"
-  },
-  {
-    "Category": "Utilities",
-    "Description": "Displays the terminal variables that have been defined and saved to the scope using the equal sign.  Provides information on the variable's type and its size.",
-    "Example": "vars",
-    "Name": "vars",
-    "See also": [
-      "savevars",
-      "loadvars",
-      "importfile",
-      "importurl",
-      "importlog",
-      "datatable",
-      "exportfile"
-    ],
-    "Syntax": [
-      "vars"
     ],
     "Type": "command"
   }

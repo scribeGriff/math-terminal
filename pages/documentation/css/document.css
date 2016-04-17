@@ -1,3 +1,5 @@
+/*csslint box-model: false */
+
 body {
   font-family: ralewayregular;
 }
@@ -72,20 +74,29 @@ table {
 
 /* Modifications to Bulma Defaults */
 
-html, body, section {
+html, body {
   height: 100%;
 }
 
-.columns, .container {
+.columns {
   height: 100%;
+  margin: 0;
+  padding-top:110px;
+}
+
+.box {
+  margin-bottom: 20px;
+}
+
+.container {
+  background: white;
+  height: 100%;
+  max-width: none;
 }
 
 .column {
   overflow: auto;
-}
-
-.is-5 {
-  padding-right: 20px;
+  padding: 20px;
 }
 
 .pad-20 {
@@ -93,8 +104,17 @@ html, body, section {
   padding-right: 20px;
 }
 
+.space-bottom {
+  padding-bottom: 20px;
+}
+
 .navbar {
   align-items: baseline;
+  background: whitesmoke;
+  padding: 20px;
+  position: fixed;
+  width: 100%;
+  z-index: 10;
 }
 
 .navbar-left {
@@ -109,6 +129,10 @@ html, body, section {
   margin-bottom: -3px;
   margin-right: 10px;
   vertical-align: bottom;
+}
+
+.scroll-top {
+  visibility: hidden;
 }
 
 ::-webkit-scrollbar {
@@ -136,6 +160,20 @@ html, body, section {
 
 @media screen and (max-width: 768px) {
   .navbar {
+    position: relative;
     text-align: center;
+    width:auto;
+  }
+
+  html, body, .container, .columns {
+    height: auto;
+  }
+
+  .columns {
+    padding-top: 0;
+  }
+  
+  .scroll-top {
+    visibility: visible;
   }
 }
