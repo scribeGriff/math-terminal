@@ -3,7 +3,7 @@
 (function () {
   "use strict";
 
-  var tableDiv, dataKey, importedData, tableID, datatable, 
+  var tableDiv, dataKey, importedData, tableID, datatable,
       helpNameDiv, helpDescDiv, helpSyntDiv, helpExamDiv, helpSeeaDiv, helpTypeDiv;
 
   var buildHtmlTable, addAllColumnHeaders, entrySelect;
@@ -15,6 +15,7 @@
       _tbody_ = document.createElement('tbody');
 
   window.onload = function() {
+    smoothScroll.init();
     tableDiv = document.getElementById("documentdiv");
     helpNameDiv = document.getElementById("Name");
     helpDescDiv = document.getElementById("Description");
