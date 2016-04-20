@@ -275,8 +275,8 @@
       s1xs2 = math.conv(_seq2, _seq1, _pos2, _pos1);
 
       return {
-        outy: s1xs2.y,
-        outn: s1xs2.n
+        outy: math.outy(s1xs2),
+        outn: math.outn(s1xs2)
       };
     }
   }, {

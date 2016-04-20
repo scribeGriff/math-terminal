@@ -134,12 +134,14 @@
   },
   {
     "Category": "Signal Processing",
-    "Description": "Performs a linear convolution of two signals using an N point circular convolution algorithm. Accepts optional position information. Returns the convolved array y, and its position array n.",
-    "Example": "x = [3, 11, 7, 0, -1, 4, 2]; xpos = -3:3; h = [2, 3, 0, -5, 2, 1]; hpos = -1:4; y = conv(x, h, xpos, hpos);",
+    "Description": "Performs a linear convolution of two sequences using an N point circular convolution algorithm. Accepts optional position information. Returns the complex valued, convolved sequence y, and its numeric position sequence n.",
+    "Example": "x = [3, 11, 7, 0, -1, 4, 2]; xpos = -3:3; h = [2, 3, 0, -5, 2, 1]; hpos = -1:4; result = conv(x, h, xpos, hpos); yreal = re(outy(result)); n = outn(result); samplen n yreal",
     "Name": "conv",
     "See also": [
       "outy",
       "outn",
+      "re",
+      "im",
       "deconv",
       "fsps",
       "fft",
@@ -153,7 +155,7 @@
   },
   {
     "Category": "Signal Processing",
-    "Description": "Performs a crosscorrelation of two sequences, seq1 and seq2, or, if seq2 is undefined, performs the autocorrelation of seq1.  Accepts position information. Returns the correlation sequence y, and its position information n.",
+    "Description": "Performs a crosscorrelation of two sequences or, if only one sequence is defined, performs an autocorrelation of that sequence.  Accepts position information. Returns the complex valued correlation sequence y, and its numeric position sequence n.",
     "Example": "x = [3, 11, 7, 0, -1, 4, 2]; n = -3:3; nm2 = -1:5; w = gauss(length(x)); seqsum = addseqs(x, w, nm2, nm2); xcorr = corr(x, outy(seqsum), n, outn(seqsum));",
     "Name": "corr",
     "See also": [
@@ -167,7 +169,8 @@
     "Syntax": [
       "corr(x1, x2)",
       "corr(x)",
-      "corr(x1, x2, x1pos, x2pos)"
+      "corr(x1, x2, x1pos, x2pos)",
+      "corr(x, x, xpos, xpos)"
     ],
     "Type": "function"
   },

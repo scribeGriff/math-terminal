@@ -1908,6 +1908,10 @@ var awesomplete = true;
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The sample chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help sample</em> for more information.');
             }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
+            }
             // Format the data for plotting.
             dataSeries = parseDataSample.apply(null, args);
 
@@ -1963,6 +1967,10 @@ var awesomplete = true;
             // Check if all the arguments are arrays.  If not throw an error.
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The samplen chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help samplen</em> for more information.');
+            }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
             }
             // Format the data for plotting.
             dataSeries = parseDataSamplen.apply(null, args);
