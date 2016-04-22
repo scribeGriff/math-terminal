@@ -208,9 +208,6 @@
      * Performs a crosscorrelation of seq1 and seq2, or, if seq2 is undefined,
      * performs the autocorrelation of seq1.  Accepts position information.
      * Returns the correlation sequence and its position information.
-     *
-     * TODO: This example doesn't work as is.  Need some equivalent
-     * to the addseqs from the convolab library.
      * 
      * Example:
      *

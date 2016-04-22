@@ -865,6 +865,10 @@ var awesomplete = true;
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The area chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help area</em> for more information.');
             }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
+            }
             // If the xaxis values are strings, then pass the array as the x category option.  
             // This is only valid for an x axis with a single array of category definitions.
             if (args[0].every(elem => typeof elem === "string")) {
@@ -933,11 +937,16 @@ var awesomplete = true;
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The bar chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help bar</em> for more information.');
             }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
+            }
             // If the xaxis values are strings, then pass the array as the x category option.  
             // This is only valid for an x axis with a single array of category definitions.
             if (args[0].every(elem => typeof elem === "string")) {
               options.xCategory = args[0];
             }
+            
             // Format the data for plotting.
             dataSeries = parseData.apply(null, args);
             // Catch any errors.
@@ -1001,6 +1010,10 @@ var awesomplete = true;
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The column chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help column</em> for more information.');
             }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
+            }
             // If the xaxis values are strings, then pass the array as the x category option.  
             // This is only valid for an x axis with a single array of category definitions.
             if (args[0].every(elem => typeof elem === "string")) {
@@ -1063,6 +1076,10 @@ var awesomplete = true;
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The curve chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help curve</em> for more information.');
             }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
+            }
             // If the xaxis values are strings, then pass the array as the x category option.  
             // This is only valid for an x axis with a single array of category definitions.
             if (args[0].every(elem => typeof elem === "string")) {
@@ -1123,6 +1140,10 @@ var awesomplete = true;
             // Check if all the arguments are arrays.  If not throw an error.
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The line chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help line</em> for more information.');
+            }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
             }
             // If the xaxis values are strings, then pass the array as the x category option.  
             // This is only valid for an x axis with a single array of category definitions.
@@ -1185,6 +1206,10 @@ var awesomplete = true;
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The curvepts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help curvepts</em> for more information.');
             }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
+            }
             // If the xaxis values are strings, then pass the array as the x category option.  
             // This is only valid for an x axis with a single array of category definitions.
             if (args[0].every(elem => typeof elem === "string")) {
@@ -1244,6 +1269,10 @@ var awesomplete = true;
             // Check if all the arguments are arrays.  If not throw an error.
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The linepts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linepts</em> for more information.');
+            }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
             }
             // If the xaxis values are strings, then pass the array as the x category option.  
             // This is only valid for an x axis with a single array of category definitions.
@@ -1327,6 +1356,10 @@ var awesomplete = true;
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The scatter chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help scatter</em> for more information.');
             }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
+            }
             // If the xaxis values are strings, then pass the array as the x category option.  
             // This is only valid for an x axis with a single array of category definitions.
             if (args[0].every(elem => typeof elem === "string")) {
@@ -1389,6 +1422,10 @@ var awesomplete = true;
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The linlog chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linlog</em> for more information.');
             }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
+            }
             // If the xaxis values are strings, then pass the array as the x category option.  
             // This is only valid for an x axis with a single array of category definitions.
             if (args[0].every(elem => typeof elem === "string")) {
@@ -1450,6 +1487,10 @@ var awesomplete = true;
             // Check if all the arguments are arrays.  If not throw an error.
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The loglin chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglin</em> for more information.');
+            }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
             }
             // If the xaxis values are strings, then pass the array as the x category option.  
             // This is only valid for an x axis with a single array of category definitions.
@@ -1515,6 +1556,10 @@ var awesomplete = true;
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The loglog chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglog</em> for more information.');
             }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
+            }
             // If the xaxis values are strings, then pass the array as the x category option.  
             // This is only valid for an x axis with a single array of category definitions.
             if (args[0].every(elem => typeof elem === "string")) {
@@ -1577,6 +1622,10 @@ var awesomplete = true;
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The linlogpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help linlogpts</em> for more information.');
             }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
+            }
             // If the xaxis values are strings, then pass the array as the x category option.  
             // This is only valid for an x axis with a single array of category definitions.
             if (args[0].every(elem => typeof elem === "string")) {
@@ -1638,6 +1687,10 @@ var awesomplete = true;
             // Check if all the arguments are arrays.  If not throw an error.
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The loglinpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglinpts</em> for more information.');
+            }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
             }
             // If the xaxis values are strings, then pass the array as the x category option.  
             // This is only valid for an x axis with a single array of category definitions.
@@ -1702,6 +1755,10 @@ var awesomplete = true;
             // Check if all the arguments are arrays.  If not throw an error.
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The loglogpts chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help loglogpts</em> for more information.');
+            }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
             }
             // If the xaxis values are strings, then pass the array as the x category option.  
             // This is only valid for an x axis with a single array of category definitions.
@@ -1774,6 +1831,10 @@ var awesomplete = true;
           if (!args.every(elem => Array.isArray(elem))) {
             throw new Error('The pie chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help pie</em> for more information.');
           }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
+            }
           // Format the data for plotting.
           if (args.length === 1) {
             var ydata = new Array(args[0].length);
@@ -1849,6 +1910,10 @@ var awesomplete = true;
             // Check if all the arguments are arrays.  If not throw an error.
             if (!args.every(elem => Array.isArray(elem))) {
               throw new Error('The polar chart only accepts arrays (ie, [1,2,3,4]) as arguments. Please see <em>help polar</em> for more information.');
+            }
+            // Check for presence of any complex numbers.
+            if (args.some(elem => math.typeof(elem[0]) === "Complex")) {
+              throw new Error('If working with complex values, make sure to select either the real or imaginary component of your data using re() or im() prior to plotting.  Please see <em>help conv</em> for an example.');
             }
             // Format the data for plotting.
             dataSeries = parseDataPolar.apply(null, args);

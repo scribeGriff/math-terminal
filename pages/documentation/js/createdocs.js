@@ -1,4 +1,4 @@
-/* global DataTable: false, smoothScroll: false */
+/* global DataTable: false, smoothScroll: false, renderMathInElement: false */
 /* jshint node: true, browser: true, esnext: true */
 (function () {
   "use strict";
@@ -59,7 +59,7 @@
           // Continue without using extras from datatable.js.  Will 
           // still function as a standard html table.
         }
-        
+
         tableDiv.addEventListener('click', entrySelect, false);
         helpNameDiv.innerHTML = importedData[0].Name;
         helpDescDiv.innerHTML = importedData[0].Description;
@@ -67,7 +67,7 @@
         helpExamDiv.innerHTML = importedData[0].Example.split(';').join(';<br>');
         helpSeeaDiv.innerHTML = importedData[0]["See also"].join(', ');
         helpTypeDiv.innerHTML = importedData[0].Type;
-        
+
       } else {
         // Fetch returned a null object for json.
         tableDiv.innerHTML = '<h2 class="title is-2">Unable to locate the document file.</h2>';
@@ -94,6 +94,8 @@
       helpExamDiv.innerHTML = importedData[indexSelected].Example.split(';').join(';<br>');
       helpSeeaDiv.innerHTML = importedData[indexSelected]["See also"].join(', ');
       helpTypeDiv.innerHTML = importedData[indexSelected].Type;
+
+      renderMathInElement(helpDescDiv);
     }
   };
 

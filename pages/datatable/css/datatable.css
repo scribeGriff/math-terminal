@@ -1,7 +1,13 @@
 /* PAGING */
 
+html {
+  height: 100%;
+}
+
 body {
+  background: white;
   font-family: Hack, monospace;
+  height: 100%;
 }
 
 .title, .subtitle, th {

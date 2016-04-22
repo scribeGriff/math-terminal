@@ -20,6 +20,33 @@
     "Type": "function"
   },
   {
+    "Category": "Chart",
+    "Description": "Creates an area chart with space delimited arguments. Individual points are not displayed except on mouse over.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a linear x axis starting from point 0.  If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
+    "Example": "x = -3:16; y1 = square(x); y2 = cube(x); area x y1 x y2",
+    "Name": "area",
+    "See also": [
+      "bar",
+      "column",
+      "curvepts",
+      "curve",
+      "line",
+      "linepts",
+      "sample",
+      "samplen",
+      "polar",
+      "title",
+      "subtitle",
+      "xaxis",
+      "yaxis",
+      "series"
+    ],
+    "Syntax": [
+      "area [1,12,56,102.4,-1]",
+      "area x1 y1 ... xn yn"
+    ],
+    "Type": "command"
+  },
+  {
     "Category": "Utilities",
     "Description": "An optional dark console theme.",
     "Example": "theme arta",
@@ -46,6 +73,7 @@
     "Example": "cat = [\"New York\", \"Los Angeles\", \"Seattle\", \"Boston\", \"Portland\"]; s1 = [47, 25, 102, 16, 33]; s2 = [191, 97, 29, 77, 112]; s3 = [35, 19, 209, 80, 67]; bar cat s1 cat s2 cat s3",
     "Name": "bar",
     "See also": [
+      "area",
       "column",
       "curve",
       "curvepts",
@@ -112,6 +140,7 @@
     "Example": "cat = [\"New York\", \"Los Angeles\", \"Seattle\", \"Boston\", \"Portland\"]; s1 = [47, 25, 102, 16, 33]; s2 = [191, 97, 29, 77, 112]; s3 = [35, 19, 209, 80, 67]; column cat s1 cat s2 cat s3",
     "Name": "column",
     "See also": [
+      "area",
       "bar",
       "curve",
       "curvepts",
@@ -145,7 +174,9 @@
       "deconv",
       "fsps",
       "fft",
-      "corr"
+      "corr",
+      "sample",
+      "samplen"
     ],
     "Syntax": [
       "conv(x, h)",
@@ -156,15 +187,19 @@
   {
     "Category": "Signal Processing",
     "Description": "Performs a crosscorrelation of two sequences or, if only one sequence is defined, performs an autocorrelation of that sequence.  Accepts position information. Returns the complex valued correlation sequence y, and its numeric position sequence n.",
-    "Example": "x = [3, 11, 7, 0, -1, 4, 2]; n = -3:3; nm2 = -1:5; w = gauss(length(x)); seqsum = addseqs(x, w, nm2, nm2); xcorr = corr(x, outy(seqsum), n, outn(seqsum));",
+    "Example": "x = [3, 11, 7, 0, -1, 4, 2]; n = -3:3; nm2 = -1:5; w = gauss(length(x)); seqsum = addseqs(x, w, nm2, nm2); xcorr = corr(x, outy(seqsum), n, outn(seqsum)); yreal = re(outy(xcorr)); n = outn(xcorr); samplen n yreal",
     "Name": "corr",
     "See also": [
       "outy",
       "outn",
+      "re",
+      "im",
       "conv",
       "fsps",
       "fft",
-      "gauss"
+      "gauss",
+      "sample",
+      "samplen"
     ],
     "Syntax": [
       "corr(x1, x2)",
@@ -177,9 +212,10 @@
   {
     "Category": "Chart",
     "Description": "Creates a curve (spline) chart with space delimited arguments. Individual points are not displayed except on mouse over.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a linear x axis starting from point 0.  If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
-    "Example": "x1 = -3:16; y1 = square(x1); y2 = cube(x1); curve x1 y1 x1 y2",
+    "Example": "x = -3:16; y1 = square(x); y2 = cube(x); curve x y1 x y2",
     "Name": "curve",
     "See also": [
+      "area",
       "bar",
       "column",
       "curvepts",
@@ -203,9 +239,10 @@
   {
     "Category": "Chart",
     "Description": "Creates a curve (spline) chart with space delimited arguments. Individual data points are displayed in addition to a spline connecting each point.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a linear x axis starting from point 0. If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
-    "Example": "x1 = -3:16; y1 = square(x1); y2 = cube(x1); curvepts x1 y1 x1 y2",
+    "Example": "x = -3:16; y1 = square(x); y2 = cube(x); curvepts x y1 x y2",
     "Name": "curvepts",
     "See also": [
+      "area",
       "bar",
       "column",
       "curve",
@@ -250,7 +287,7 @@
   {
     "Category": "Utilities",
     "Description": "With no arguments, opens a new window or tab and displays a table of the most recent data imported using the <code>importurl</code> command.  If an importurl data key is known (from the <code>importlog</code> of a previous import), then this key can be provided as the sole argument and the data from that import will be displayed",
-    "Example": "datatable",
+    "Example": "importurl 'http://www.openfisheries.org/api/landings.json' <br> datatable",
     "Name": "datatable",
     "See also": [
       "importurl",
@@ -280,8 +317,8 @@
   },
   {
     "Category": "Signal Processing",
-    "Description": "Performs a deconvolution (polynomial long division) of a numerator and denominator polynomial.  Accepts optional position information.  Returns quotient, q, remainder, r, and position information, qn and rn. First coefficient is assumed to be associated with highest order of the polynomial. If the numerator was given as 1 + 2z^-1 + 2z^-2, then the numerator can be written as <code>num = [1, 2, 2];</code>",
-    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; //num = z^2 + z + 1 + z^-1 + z^-2 +z^-3 den = [1, 2, 1]; dn = -1: 1; //den = z + 2 + z^-1 qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem);",
+    "Description": "Performs a deconvolution (polynomial long division) of a numerator and denominator polynomial.  Accepts optional position information.  Returns quotient, q, remainder, r, and position information, qn and rn. First coefficient is assumed to be associated with highest order of the polynomial.  The example below performs the following polynomial division: $$qrem = \\frac{z^2 + z + 1 + z^{-1} + z^{-2} +z^{-3}}{z + 2 + z^{-1}}$$",
+    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1: 1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem);",
     "Name": "deconv",
     "See also": [
       "outq",
@@ -573,6 +610,7 @@
     "Example": "x1 = -3:16; y1 = square(x1); y2 = cube(x1); line x1 y1 x1 y2",
     "Name": "line",
     "See also": [
+      "area",
       "bar",
       "column",
       "curvepts",
@@ -599,6 +637,7 @@
     "Example": "x1 = -3:16; y1 = square(x1); y2 = cube(x1); linepts x1 y1 x1 y2",
     "Name": "linepts",
     "See also": [
+      "area",
       "bar",
       "column",
       "curve",
@@ -625,6 +664,7 @@
     "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; linlog x1",
     "Name": "linlog",
     "See also": [
+      "area",
       "linlogpts",
       "loglin",
       "loglinpts",
@@ -650,6 +690,7 @@
     "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; linlogpts x1",
     "Name": "linlogpts",
     "See also": [
+      "area",
       "linlog",
       "loglin",
       "loglinpts",
@@ -695,6 +736,7 @@
     "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; loglin x1",
     "Name": "loglin",
     "See also": [
+      "area",
       "linlogpts",
       "linlog",
       "loglinpts",
@@ -720,6 +762,7 @@
     "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; loglinpts x1",
     "Name": "loglinpts",
     "See also": [
+      "area",
       "linlog",
       "loglin",
       "linlogpts",
@@ -745,6 +788,7 @@
     "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; loglog x1",
     "Name": "loglog",
     "See also": [
+      "area",
       "linlogpts",
       "linlog",
       "loglinpts",
@@ -770,6 +814,7 @@
     "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; loglogpts x1",
     "Name": "loglogpts",
     "See also": [
+      "area",
       "linlog",
       "loglin",
       "linlogpts",
@@ -970,6 +1015,7 @@
     "Example": "months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']; data = [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]; pie months data",
     "Name": "pie",
     "See also": [
+      "area",
       "column",
       "curve",
       "curvepts",
@@ -1013,6 +1059,7 @@
     "Example": "x = 0:01:2*pi; polar sin(x) cos(x)",
     "Name": "polar",
     "See also": [
+      "area",
       "column",
       "curve",
       "curvepts",
@@ -1060,6 +1107,7 @@
     "Example": "sample gauss() gauss()",
     "Name": "sample",
     "See also": [
+      "area",
       "column",
       "curve",
       "curvepts",
@@ -1086,6 +1134,7 @@
     "Example": "samplen -3:4  [3,6,-9,2.4,0,0,1,-4,-1,0,12]",
     "Name": "samplen",
     "See also": [
+      "area",
       "column",
       "curve",
       "curvepts",
@@ -1150,6 +1199,7 @@
     "Example": "sample gauss() gauss() <br> series 'random series 1' 'random series 2'",
     "Name": "series",
     "See also": [
+      "area",
       "column",
       "curve",
       "curvepts",
@@ -1267,6 +1317,7 @@
     "Example": "x = 1:10; y = square(x); sample x y <br> title 'The square of x' '#90ed7d' <br> subtitle 'for x from 1 to 10'",
     "Name": "subtitle",
     "See also": [
+      "area",
       "column",
       "curve",
       "curvepts",
@@ -1315,6 +1366,7 @@
     "Example": "x = 1:10; y = square(x); sample x y <br> title 'The square of x' '#90ed7d'",
     "Name": "title",
     "See also": [
+      "area",
       "column",
       "curve",
       "curvepts",
@@ -1400,6 +1452,7 @@
     "Example": "x = 1:10; y = square(x); sample x y <br> xaxis 'samples (n)'",
     "Name": "xaxis",
     "See also": [
+      "area",
       "column",
       "curve",
       "curvepts",
@@ -1446,6 +1499,7 @@
     "Example": "x = 1:10; y = square(x); sample x y <br> yaxis 'square (n)'",
     "Name": "yaxis",
     "See also": [
+      "area",
       "column",
       "curve",
       "curvepts",
