@@ -198,7 +198,9 @@
         outq: q,
         outr: r, 
         outqn: qtime, 
-        outrn: rtime
+        outrn: rtime,
+        outd: den,
+        outdn: denn
       };
     },
 

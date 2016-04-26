@@ -40,6 +40,14 @@
     outz: function outz(object) {
       return math.eval("outz", object);
     },
+    // A shortcut to retrieve the d output.
+    outd: function outd(object) {
+      return math.eval("outd", object);
+    },
+    // A shortcut to retrieve the dn output.
+    outdn: function outdn(object) {
+      return math.eval("outdn", object);
+    },
     // Stores a header token for use with importurl.
     settoken: function settoken(key, token) {
       localStorage.setItem(key, token);
