@@ -317,18 +317,21 @@
   },
   {
     "Category": "Signal Processing",
-    "Description": "Performs a deconvolution (polynomial long division) of a numerator and denominator polynomial.  Accepts optional position information.  Returns quotient, q, remainder, r, and position information, qn and rn. First coefficient is assumed to be associated with highest order of the polynomial.  The example below performs the following polynomial division: $$qrem = \\frac{z^2 + z + 1 + z^{-1} + z^{-2} +z^{-3}}{z + 2 + z^{-1}}$$",
-    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1: 1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem);",
+    "Description": "Performs a deconvolution (polynomial long division) of a numerator and denominator polynomial.  Accepts optional position information.  Returns quotient, q, remainder numerator, r, remainder denominator d, and position information, qn, rn and dn. First coefficient is assumed to be associated with highest order of the polynomial.  The example below performs the following polynomial division: $$qrem = \\frac{z^2 + z + 1 + z^{-1} + z^{-2} +z^{-3}}{z + 2 + z^{-1}}$$",
+    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1: 1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem); d = outd(qrem); dn = outdn(qrem); polystring(q, qn, r, rn, d, dn)",
     "Name": "deconv",
     "See also": [
       "outq",
       "outr",
       "outqn",
       "outrn",
+      "outd",
+      "outdn",
       "conv",
       "fsps",
       "fft",
-      "corr"
+      "corr",
+      "polystring"
     ],
     "Syntax": [
       "deconv(num, den)",
