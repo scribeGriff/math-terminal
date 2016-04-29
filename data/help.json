@@ -393,7 +393,7 @@
   {
     "Category": "Signal Processing",
     "Description": "Implements a 1D transposed direct form II digital filter structure. Supports FIR and IIR filters and inital and final conditions.  Requires b (numerator) coefficients, a (denominator) coefficients and input (for example, step or impulse).  Optionally accepts intial conditions.  Returns the filtered response y, and the final conditions z.",
-    "Example": "x = impulse(141, 20); b = [1]; a = [1, -1, 0.9]; h = filter1d(b, a, x); y = outy(h);  z = outz(h);",
+    "Example": "x = impulse(141, 20); b = [1]; a = [1, -1, 0.9]; h = filter1d(b, a, x); y = outy(h); z = outz(h); sample y",
     "Name": "filter1d",
     "See also": [
       "impulse",
@@ -401,7 +401,10 @@
       "ifft",
       "fsps",
       "conv",
-      "corr"
+      "corr",
+      "outy",
+      "outz",
+      "sample"
     ],
     "Syntax": [
       "filter1d(b, a, x)",
@@ -412,7 +415,7 @@
   {
     "Category": "Signal Processing",
     "Description": "Computes the partial sums of the Fourier series of an input waveform. Accepts optional values for number of sums (default is 3), number of cycles that are represented in the waveform (default is 1) and the fraction of the data to treat as a cycle (default is 1).",
-    "Example": "x = squarewave(); y = fsps(x); curve re(y)",
+    "Example": "x = squarewave(); y = fsps(x); n = 0:length(x) - 1; curve n re(y) n x",
     "Name": "fsps",
     "See also": [
       "squarewave",
@@ -420,7 +423,8 @@
       "ifft",
       "re",
       "im",
-      "curve"
+      "curve",
+      "length"
     ],
     "Syntax": [
       "fsps(x)",
@@ -431,7 +435,7 @@
   {
     "Category": "Waveform Generation",
     "Description": "Generates a random (normal) waveform.  The length of the waveform is optional and by default is set to 512 points.",
-    "Example": "len = 300; gs = gauss(len);",
+    "Example": "len = 300; gs = gauss(len); sample gs",
     "Name": "gauss",
     "See also": [
       "squarewave",
@@ -450,7 +454,7 @@
   {
     "Category": "Utilities",
     "Description": "Functions that return multiple parameters return them as objects (for example, <code>conv</code>, <code>deconv</code>, <code>corr</code>, <code>filter1d</code>). This function allows you to retrieve a specific parameter from the object if the object was stored in a workspace variable.",
-    "Example": "xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = getdata(\"outy\", yc); n = getdata(\"outn\", yc); sample n y",
+    "Example": "xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = getdata(\"outy\", yc); n = getdata(\"outn\", yc); samplen n re(y)",
     "Name": "getdata",
     "See also": [
       "outy",
@@ -459,7 +463,11 @@
       "outqn",
       "outr",
       "outrn",
-      "outz"
+      "outz",
+      "outd",
+      "outdn",
+      "re",
+      "im"
     ],
     "Syntax": [
       "getdata(\"outy\", \"myVarName\")"
@@ -517,6 +525,25 @@
       "help commandOrFunction"
     ],
     "Type": "command"
+  },
+  {
+    "Category": "Signal Processing",
+    "Description": "Computes an inverse fourier transform of an array of arbitrary length.  Uses a radix-2 IFFT algorithm if the length is a power of 2 and an IDFT otherwise. The input is an array of real or complex values. Accepts an optional integer value for the power of the IFFT.",
+    "Example": "y = fft([0,1,2,3]); x = ifft(y);",
+    "Name": "ifft",
+    "See also": [
+      "re",
+      "im",
+      "fft",
+      "fsps",
+      "conv",
+      "corr"
+    ],
+    "Syntax": [
+      "ifft(y)",
+      "ifft(y, 16)"
+    ],
+    "Type": "function"
   },
   {
     "Category": "Utilities",
