@@ -476,7 +476,7 @@
   },
   {
     "Category": "Utilities",
-    "Description": "Retrieves a token using a key which has been set by <code>settoken()</code>.",
+    "Description": "Retrieves a token using a key which has been set by <code>settoken()</code>.  Tokens persist unlike workspace variables.",
     "Example": "settoken('noaa', 'xxxxxxxxxxxxxxxxxxx'); gettoken('noaa')",
     "Name": "gettoken",
     "See also": [
@@ -547,8 +547,8 @@
   },
   {
     "Category": "Utilities",
-    "Description": "Imports a csv file from the local computer to workspace variables.  The csv file is assumed to have the first row as a header.",
-    "Example": "importfile",
+    "Description": "Imports a csv file from the local computer to workspace variables.  The csv file is assumed to have the first row as a header.  This command opens an operating system dialog box for selecting the file to import.  If the dialog box does not open, check the browser pop-up settings.",
+    "Example": "importfile <br> importlog <br> vars",
     "Name": "importfile",
     "See also": [
       "importurl",
@@ -566,7 +566,7 @@
   {
     "Category": "Utilities",
     "Description": "Provides information on the most recent import, either from a local file or a url.",
-    "Example": "importlog",
+    "Example": "importfile <br> importlog <br> vars",
     "Name": "importlog",
     "See also": [
       "importurl",
@@ -584,11 +584,12 @@
   {
     "Category": "Utilities",
     "Description": "Imports JSON formatted data from a url.  Accepts a token as an optional argument for retrieving data from urls that require tokens.",
-    "Example": "importurl 'path/to/url' gettoken('tokenkey')",
+    "Example": "importurl 'http://www.openfisheries.org/api/landings.json' <br> importlog <br> datatable",
     "Name": "importurl",
     "See also": [
       "importlog",
       "importfile",
+      "datatable",
       "vars",
       "loadvars",
       "savevars",
@@ -605,7 +606,7 @@
   {
     "Category": "Waveform Generation",
     "Description": "Generates an impulse waveform.  All parameters are optional.  By default, data length = 512 and impulse position is length / 4.",
-    "Example": "len = 300; position = 50; im = impulse(len, position);",
+    "Example": "len = 300; position = 50; imp = impulse(len, position); sample imp",
     "Name": "impulse",
     "See also": [
       "squarewave",
@@ -613,7 +614,8 @@
       "gauss",
       "step",
       "trianglewave",
-      "sawtoothwave"
+      "sawtoothwave",
+      "sample"
     ],
     "Syntax": [
       "impulse()",
@@ -624,7 +626,7 @@
   {
     "Category": "Utilities",
     "Description": "Returns the length of a one dimensional array.",
-    "Example": "x = squarewave(); len = length(x);",
+    "Example": "x = squarewave(); len = length(x)",
     "Name": "length",
     "See also": [
       "size"
@@ -742,7 +744,7 @@
   },
   {
     "Category": "Utilities",
-    "Description": "Loads the terminal variables that have been saved to local storage using the savevars command.  To permanently remove stored variables, use the console command <code>clear storage</code>.",
+    "Description": "Loads the terminal variables that have been saved to local storage using the <code>savevars</code> command.  To permanently remove stored variables, use the console command <code>clear storage</code>.",
     "Example": "loadvars",
     "Name": "loadvars",
     "See also": [

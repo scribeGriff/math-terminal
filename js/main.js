@@ -1397,7 +1397,7 @@ var awesomplete = true;
               ymTickInterval: 0.1,
               yType: 'logarithmic'
             };
-        if (arguments.length === 0) {
+        if (args.length === 0) {
           return preerr + 'The linlog chart needs to know what data to plot.  Please see <em>help linlog</em> for more information.' + sufans;
         } else {
           // Try to parse the data and format it for plotting.
@@ -1463,7 +1463,7 @@ var awesomplete = true;
               xmTickInterval: 0.1,
               xType: 'logarithmic'
             };
-        if (arguments.length === 0) {
+        if (args.length === 0) {
           return preerr + 'The loglin chart needs to know what data to plot.  Please see <em>help loglin</em> for more information.' + sufans;
         } else {
           // Try to parse the data and format it for plotting.
@@ -1531,7 +1531,7 @@ var awesomplete = true;
               ymTickInterval: 0.1,
               yType: 'logarithmic'
             };
-        if (arguments.length === 0) {
+        if (args.length === 0) {
           return preerr + 'The loglog chart needs to know what data to plot.  Please see <em>help loglog</em> for more information.' + sufans;
         } else {
           // Try to parse the data and format it for plotting.
@@ -1597,7 +1597,7 @@ var awesomplete = true;
               ymTickInterval: 0.1,
               yType: 'logarithmic'
             };
-        if (arguments.length === 0) {
+        if (args.length === 0) {
           return preerr + 'The linlogpts chart needs to know what data to plot.  Please see <em>help linlogpts</em> for more information.' + sufans;
         } else {
           // Try to parse the data and format it for plotting.
@@ -1663,7 +1663,7 @@ var awesomplete = true;
               xmTickInterval: 0.1,
               xType: 'logarithmic'
             };
-        if (arguments.length === 0) {
+        if (args.length === 0) {
           return preerr + 'The loglinpts chart needs to know what data to plot.  Please see <em>help loglinpts</em> for more information.' + sufans;
         } else {
           // Try to parse the data and format it for plotting.
@@ -1731,7 +1731,7 @@ var awesomplete = true;
               ymTickInterval: 0.1,
               yType: 'logarithmic'
             };
-        if (arguments.length === 0) {
+        if (args.length === 0) {
           return preerr + 'The loglogpts chart needs to know what data to plot.  Please see <em>help loglogpts</em> for more information.' + sufans;
         } else {
           // Try to parse the data and format it for plotting.
@@ -2247,7 +2247,7 @@ var awesomplete = true;
         var _buffer = ['<table class="ink-table">'];
         _buffer.push('<tr><td>Variable</td><td>Size</td><td>Type</td></tr>');
         for(var key in parser.scope) {
-          if (parser.scope.hasOwnProperty(key)) {
+          if (parser.scope.hasOwnProperty(key) && typeof parser.eval(key) !== "undefined") {
             _buffer.push('<tr><td class="answer">' + key + '</td><td class="answer">' + math.size(parser.eval(key)) + '</td><td class="answer">' + math.typeof(parser.eval(key)) + '</td></tr>');
           }
         }
