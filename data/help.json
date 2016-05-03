@@ -693,7 +693,7 @@
   {
     "Category": "Chart",
     "Description": "Creates a line chart with a logarithmic y axis with space delimited arguments. Individual points are not displayed except on mouse over.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a linear x axis starting from point 0.  If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
-    "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; linlog x1",
+    "Example": "y = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; linlog y",
     "Name": "linlog",
     "See also": [
       "area",
@@ -711,7 +711,7 @@
       "series"
     ],
     "Syntax": [
-      "linlog x",
+      "linlog y",
       "linlog x1 y1 ... xn yn"
     ],
     "Type": "command"
@@ -719,7 +719,7 @@
   {
     "Category": "Chart",
     "Description": "Creates a line chart with a logarithmic y axis with space delimited arguments. Individual data points are displayed in addition to a spline connecting each point.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a linear x axis starting from point 0. If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
-    "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; linlogpts x1",
+    "Example": "y = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; linlogpts y",
     "Name": "linlogpts",
     "See also": [
       "area",
@@ -737,7 +737,7 @@
       "series"
     ],
     "Syntax": [
-      "linlogpts x",
+      "linlogpts y",
       "linlogpts x1 y1 ... xn yn"
     ],
     "Type": "command"
@@ -764,8 +764,8 @@
   },
   {
     "Category": "Chart",
-    "Description": "Creates a line chart with a logarithmic x axis with space delimited arguments. Individual points are not displayed except on mouse over.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a logarithmic x axis starting from point 0.  If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
-    "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; loglin x1",
+    "Description": "Creates a line chart with a logarithmic x axis with space delimited arguments. Individual points are not displayed except on mouse over.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a logarithmic x axis starting from point 1.  If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
+    "Example": "x = 1:10; xp = dotPow(10,x); y = square(x); loglin xp y",
     "Name": "loglin",
     "See also": [
       "area",
@@ -783,15 +783,15 @@
       "series"
     ],
     "Syntax": [
-      "loglin x",
+      "loglin y",
       "loglin x1 y1 ... xn yn"
     ],
     "Type": "command"
   },
   {
     "Category": "Chart",
-    "Description": "Creates a line chart with a logarithmic x axis with space delimited arguments. Individual data points are displayed in addition to a spline connecting each point.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a logarithmic x axis starting from point 0. If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
-    "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; loglinpts x1",
+    "Description": "Creates a line chart with a logarithmic x axis with space delimited arguments. Individual data points are displayed in addition to a spline connecting each point.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a logarithmic x axis starting from point 1. If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
+    "Example": "x = 1:10; xp = dotPow(10,x); y = square(x); loglinpts xp y",
     "Name": "loglinpts",
     "See also": [
       "area",
@@ -809,15 +809,15 @@
       "series"
     ],
     "Syntax": [
-      "loglinpts x",
+      "loglinpts y",
       "loglinpts x1 y1 ... xn yn"
     ],
     "Type": "command"
   },
   {
     "Category": "Chart",
-    "Description": "Creates a line chart with logarithmic x and y axes with space delimited arguments. Individual points are not displayed except on mouse over.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a logarithmic x axis starting from point 0.  If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
-    "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; loglog x1",
+    "Description": "Creates a line chart with logarithmic x and y axes with space delimited arguments. Individual points are not displayed except on mouse over.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a logarithmic x axis starting from point 1.  If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
+    "Example": "x = 1:10; xp = dotPow(10,x); y = square(x); loglog xp y",
     "Name": "loglog",
     "See also": [
       "area",
@@ -835,15 +835,15 @@
       "series"
     ],
     "Syntax": [
-      "loglog x",
+      "loglog y",
       "loglog x1 y1 ... xn yn"
     ],
     "Type": "command"
   },
   {
     "Category": "Chart",
-    "Description": "Creates a line chart with logarithmic x and y axes with space delimited arguments. Individual data points are displayed in addition to a spline connecting each point.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a logarithmic x axis starting from point 0. If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
-    "Example": "x1 = [1, 2, 4, 8, 16, 32, 64, 128, 256, 512]; loglogpts x1",
+    "Description": "Creates a line chart with logarithmic x and y axes with space delimited arguments. Individual data points are displayed in addition to a spline connecting each point.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a logarithmic x axis starting from point 1. If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
+    "Example": "x = 1:10; xp = dotPow(10,x); y = square(x); loglogpts xp y",
     "Name": "loglogpts",
     "See also": [
       "area",
@@ -861,7 +861,7 @@
       "series"
     ],
     "Syntax": [
-      "loglogpts x",
+      "loglogpts y",
       "loglogpts x1 y1 ... xn yn"
     ],
     "Type": "command"
@@ -911,7 +911,7 @@
   {
     "Category": "Utilities",
     "Description": "For functions that return multiple values, this function retrieves the value whose key is outn. It is a shortcut for <code>getdata(\"outn\", myVar);</code>",
-    "Example": "xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = outy(yc); n = outn(yc); samples n y",
+    "Example": "xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = outy(yc); n = outn(yc); sample re(y)",
     "Name": "outn",
     "See also": [
       "outy",
@@ -920,7 +920,8 @@
       "outqn",
       "outr",
       "outrn",
-      "outz"
+      "outz",
+      "sample"
     ],
     "Syntax": [
       "outn(myVar)"
@@ -939,7 +940,8 @@
       "outqn",
       "outn",
       "outrn",
-      "outz"
+      "outz",
+      "deconv"
     ],
     "Syntax": [
       "outq(myVar)"
