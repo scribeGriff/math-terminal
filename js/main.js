@@ -816,11 +816,11 @@ var awesomplete = true;
         if (args && args[0]) {
           if (args.length > 1) {
             return preerr + 'Too many arguments' + sufans;
-          } else if (args[0].match(/^([0-9]|1[0-6])$/)) { 
+          } else if (parseInt(args[0]) >= 0 && parseInt(args[0]) <= 16) { 
             precisionVar = parseInt(args[0]);
             return ''; 
           } else {
-            return preerr + 'Invalid precision value' + sufans;
+            return preerr + 'Invalid precision value: ' + args[0] + sufans;
           }
         }
         return preans + precisionVar + sufans;
@@ -890,11 +890,14 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // Chart the data in the correct div and with the required options.
-        terminal.setChart(chart);
         chart = createBaseChart(chartDiv, dataSeries, options);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -963,11 +966,14 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // Chart the data in the correct div and with the required options.
-        terminal.setChart(chart);
         chart = createBaseChart(chartDiv, dataSeries, options);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -1035,11 +1041,14 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // Chart the data in the correct div and with the required options.
-        terminal.setChart(chart);
         chart = createBaseChart(chartDiv, dataSeries, options);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -1101,11 +1110,14 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // Chart the data in the correct div and with the required options.
-        terminal.setChart(chart);
         chart = createBaseChart(chartDiv, dataSeries, options);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -1165,11 +1177,14 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // Chart the data in the correct div and with the required options.
-        terminal.setChart(chart);
         chart = createBaseChart(chartDiv, dataSeries, options);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -1230,11 +1245,14 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // Chart the data in the correct div and with the required options.
-        terminal.setChart(chart);
         chart = createBaseChart(chartDiv, dataSeries, options);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -1294,11 +1312,14 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // Chart the data in the correct div and with the required options.
-        terminal.setChart(chart);
         chart = createBaseChart(chartDiv, dataSeries, options);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -1380,11 +1401,14 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // Chart the data in the correct div and with the required options.
-        terminal.setChart(chart);
         chart = createBaseChart(chartDiv, dataSeries, options);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -1446,11 +1470,14 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // Chart the data in the correct div and with the required options.
-        terminal.setChart(chart);
         chart = createBaseChart(chartDiv, dataSeries, options);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -1512,15 +1539,18 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // If we are not providing x axis data, need to make sure it starts counting at 1.  Default is 0.
         if (dataSeries.length === 1) {
           dataSeries[0].pointStart = 1;
         }
         // Chart the data in the correct div and with the required options.
-        terminal.setChart(chart);
         chart = createBaseChart(chartDiv, dataSeries, options);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -1584,7 +1614,10 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // If we are not providing x axis data, need to make sure it starts counting at 1.  Default is 0.
         if (dataSeries.length === 1) {
@@ -1592,8 +1625,8 @@ var awesomplete = true;
         }
 
         // Chart the data in the correct div and with the required options.
-        terminal.setChart(chart);
         chart = createBaseChart(chartDiv, dataSeries, options);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -1655,11 +1688,14 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // Chart the data in the correct div and with the required options.
-        terminal.setChart(chart);
         chart = createBaseChart(chartDiv, dataSeries, options);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -1721,7 +1757,10 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // If we are not providing x axis data, need to make sure it starts counting at 1.  Default is 0.
         if (dataSeries.length === 1) {
@@ -1729,8 +1768,8 @@ var awesomplete = true;
         }
 
         // Chart the data in the correct div and with the required options.
-        terminal.setChart(chart);
         chart = createBaseChart(chartDiv, dataSeries, options);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -1794,7 +1833,10 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // If we are not providing x axis data, need to make sure it starts counting at 1.  Default is 0.
         if (dataSeries.length === 1) {
@@ -1802,8 +1844,8 @@ var awesomplete = true;
         }
 
         // Chart the data in the correct div and with the required options.
-        terminal.setChart(chart);
         chart = createBaseChart(chartDiv, dataSeries, options);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -1890,11 +1932,14 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // Chart the data in the correct div and with the required options.
-        terminal.setChart(chart);
         chart = createBaseChart(chartDiv, dataSeries, options);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -1950,11 +1995,14 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // Chart the data in the correct div.
-        terminal.setChart(chart);
         chart = createPolarChart(chartDiv, dataSeries);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -2012,11 +2060,14 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // Chart the data in the correct div.
-        terminal.setChart(chart);
         chart = createSampleChart(chartDiv, dataSeries);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';
@@ -2072,11 +2123,14 @@ var awesomplete = true;
         }
 
         // Recommended by Highcharts for memory management.
-        if (chart) chart.destroy();
+        if (chart) {
+          chart.destroy();
+          terminal.setChart(chart);
+        }
 
         // Chart the data in the correct div.
-        terminal.setChart(chart);
         chart = createSampleChart(chartDiv, dataSeries);
+        terminal.setChart(chart);
 
         // If all went well, just return an empty string to the terminal.
         return '';

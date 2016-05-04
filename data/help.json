@@ -210,6 +210,20 @@
     "Type": "function"
   },
   {
+    "Category": "Utilities",
+    "Description": "Opens a new tab or window with a showcase of the incredible open source libraries that made Convolv possible.",
+    "Example": "credits",
+    "Name": "credits",
+    "See also": [
+      "help",
+      "docs"
+    ],
+    "Syntax": [
+      "credits"
+    ],
+    "Type": "command"
+  },
+  {
     "Category": "Chart",
     "Description": "Creates a curve (spline) chart with space delimited arguments. Individual points are not displayed except on mouse over.  If only a single argument is provided, it is assumed to be y axis data and is plotted against a linear x axis starting from point 0.  If more than one argument is provided, it is expected to be as alternating arrays of x data and y data.",
     "Example": "x = -3:16; y1 = square(x); y2 = cube(x); curve x y1 x y2",
@@ -298,20 +312,6 @@
     "Syntax": [
       "datatable",
       "datatable importKeyName"
-    ],
-    "Type": "command"
-  },
-  {
-    "Category": "Utilities",
-    "Description": "Opens a new tab or window with a showcase of the incredible open source libraries that made Convolv possible.",
-    "Example": "credits",
-    "Name": "credits",
-    "See also": [
-      "help",
-      "docs"
-    ],
-    "Syntax": [
-      "credits"
     ],
     "Type": "command"
   },
@@ -910,8 +910,52 @@
   },
   {
     "Category": "Utilities",
+    "Description": "For functions that return multiple values, this function retrieves the value whose key is outd. It is a shortcut for <code>getdata(\"outd\", myVar);</code>",
+    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1: 1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem); d = outd(qrem); dn = outdn(qrem); polystring(q, qn, r, rn, d, dn)",
+    "Name": "outd",
+    "See also": [
+      "outy",
+      "getdata",
+      "outq",
+      "outqn",
+      "outn",
+      "outr",
+      "outdn",
+      "outrn",
+      "outz",
+      "polystring"
+    ],
+    "Syntax": [
+      "outd(myVar)"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "For functions that return multiple values, this function retrieves the value whose key is outdn. It is a shortcut for <code>getdata(\"outdn\", myVar);</code>",
+    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1: 1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem); d = outd(qrem); dn = outdn(qrem); polystring(q, qn, r, rn, d, dn)",
+    "Name": "outdn",
+    "See also": [
+      "outy",
+      "getdata",
+      "outq",
+      "outqn",
+      "outn",
+      "outr",
+      "outd",
+      "outrn",
+      "outz",
+      "polystring"
+    ],
+    "Syntax": [
+      "outdn(myVar)"
+    ],
+    "Type": "function"
+  },
+  {
+    "Category": "Utilities",
     "Description": "For functions that return multiple values, this function retrieves the value whose key is outn. It is a shortcut for <code>getdata(\"outn\", myVar);</code>",
-    "Example": "xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = outy(yc); n = outn(yc); sample re(y)",
+    "Example": "xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = outy(yc); n = outn(yc); samplen n re(y)",
     "Name": "outn",
     "See also": [
       "outy",
@@ -920,8 +964,11 @@
       "outqn",
       "outr",
       "outrn",
+      "outd",
+      "outdn",
       "outz",
-      "sample"
+      "conv",
+      "samplen"
     ],
     "Syntax": [
       "outn(myVar)"
@@ -931,7 +978,7 @@
   {
     "Category": "Utilities",
     "Description": "For functions that return multiple values, this function retrieves the value whose key is outq. It is a shortcut for <code>getdata(\"outq\", myVar);</code>",
-    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1:1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem);",
+    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1: 1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem); d = outd(qrem); dn = outdn(qrem); polystring(q, qn, r, rn, d, dn)",
     "Name": "outq",
     "See also": [
       "outy",
@@ -940,8 +987,11 @@
       "outqn",
       "outn",
       "outrn",
+      "outd",
+      "outdn",
       "outz",
-      "deconv"
+      "deconv",
+      "polystring"
     ],
     "Syntax": [
       "outq(myVar)"
@@ -951,7 +1001,7 @@
   {
     "Category": "Utilities",
     "Description": "For functions that return multiple values, this function retrieves the value whose key is outqn. It is a shortcut for <code>getdata(\"outqn\", myVar);</code>",
-    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1:1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem);",
+    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1: 1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem); d = outd(qrem); dn = outdn(qrem); polystring(q, qn, r, rn, d, dn)",
     "Name": "outqn",
     "See also": [
       "outy",
@@ -959,8 +1009,12 @@
       "outq",
       "outrn",
       "outn",
+      "outd",
+      "outdn",
       "outr",
-      "outz"
+      "outz",
+      "deconv",
+      "polystring"
     ],
     "Syntax": [
       "outqn(myVar)"
@@ -970,7 +1024,7 @@
   {
     "Category": "Utilities",
     "Description": "For functions that return multiple values, this function retrieves the value whose key is outr. It is a shortcut for <code>getdata(\"outr\", myVar);</code>",
-    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1:1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem);",
+    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1: 1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem); d = outd(qrem); dn = outdn(qrem); polystring(q, qn, r, rn, d, dn)",
     "Name": "outr",
     "See also": [
       "outy",
@@ -978,8 +1032,11 @@
       "outq",
       "outqn",
       "outn",
+      "outd",
+      "outdn",
       "outrn",
-      "outz"
+      "outz",
+      "polystring"
     ],
     "Syntax": [
       "outr(myVar)"
@@ -989,7 +1046,7 @@
   {
     "Category": "Utilities",
     "Description": "For functions that return multiple values, this function retrieves the value whose key is outrn. It is a shortcut for <code>getdata(\"outrn\", myVar);</code>",
-    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1:1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem);",
+    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1: 1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem); d = outd(qrem); dn = outdn(qrem); polystring(q, qn, r, rn, d, dn)",
     "Name": "outrn",
     "See also": [
       "outy",
@@ -998,7 +1055,10 @@
       "outqn",
       "outn",
       "outr",
-      "outz"
+      "outd",
+      "outdn",
+      "outz",
+      "polystring"
     ],
     "Syntax": [
       "outrn(myVar)"
@@ -1008,7 +1068,7 @@
   {
     "Category": "Utilities",
     "Description": "For functions that return multiple values, this function retrieves the value whose key is outy. It is a shortcut for <code>getdata(\"outy\", myVar);</code>",
-    "Example": "xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = outy(yc); n = outn(yc); samples n y",
+    "Example": "xdata = [3, 11, 7, 0, -1, 4, 2]; hdata = [2, 3, 0, -5, 2, 1]; yc = conv(xdata, hdata); y = outy(yc); sample re(y)",
     "Name": "outy",
     "See also": [
       "outn",
@@ -1017,7 +1077,10 @@
       "outqn",
       "outr",
       "outrn",
-      "outz"
+      "outd",
+      "outdn",
+      "outz",
+      "sample"
     ],
     "Syntax": [
       "outy(myVar)"
@@ -1036,7 +1099,10 @@
       "outqn",
       "outr",
       "outrn",
-      "outn"
+      "outd",
+      "outdn",
+      "outn",
+      "filter1d"
     ],
     "Syntax": [
       "outz(myVar)"
@@ -1090,7 +1156,7 @@
   {
     "Category": "Chart",
     "Description": "Creates a polar chart with space delimited arguments.  Accepts only the radian data as the angular steps are computed internally based on the length of the first argument.",
-    "Example": "x = 0:01:2*pi; polar sin(x) cos(x)",
+    "Example": "x = 0:0.01:2*pi; polar sin(x) cos(x)",
     "Name": "polar",
     "See also": [
       "area",
@@ -1113,6 +1179,28 @@
       "polar rho1 ... rhon"
     ],
     "Type": "command"
+  },
+  {
+    "Category": "Utilities",
+    "Description": "Converts an argument list of arrays to a latex string and displays the results.  The function handles three different scenarios, depending on the number of pairs of arrays in the argument list.  If provided 2 arrays, the output is a polynomial with the coefficients corresponding to the first argument and the exponents corresponding the the second argument.  Passing 4 arrays will utilize the first pair of arrays as the numerator and the second pair as the denominator.  Finally, 6 arrays in the argument list will create a latex string with a quotient and remainder, as in the example below.",
+    "Example": "num = [1, 1, 1, 1, 1, 1]; nn = -2:3; den = [1, 2, 1]; dn = -1: 1; qrem = deconv(num, den, nn, dn); q = outq(qrem); r = outr(qrem); qn = outqn(qrem); rn = outrn(qrem); d = outd(qrem); dn = outdn(qrem); polystring(q, qn, r, rn, d, dn)",
+    "Name": "polystring",
+    "See also": [
+      "outy",
+      "getdata",
+      "outq",
+      "outqn",
+      "outn",
+      "outr",
+      "outd",
+      "outdn",
+      "outz"
+    ],
+    "Syntax": [
+      "polystring(coefficientsArray, exponentialArray)",
+      "polystring([1, 2, 4, 5], [-2, 1, 0, 3])"
+    ],
+    "Type": "function"
   },
   {
     "Category": "Utilities",
