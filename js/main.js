@@ -2322,7 +2322,11 @@ var awesomplete = true;
         _buffer.push('<tr><td>Variable</td><td>Size</td><td>Type</td></tr>');
         for(var key in parser.scope) {
           if (parser.scope.hasOwnProperty(key) && typeof parser.eval(key) !== "undefined") {
-            _buffer.push('<tr><td class="answer">' + key + '</td><td class="answer">' + math.size(parser.eval(key)) + '</td><td class="answer">' + math.typeof(parser.eval(key)) + '</td></tr>');
+            if (math.typeof(parser.eval(key)) === "Object") {
+              _buffer.push('<tr><td class="answer">' + key + '</td><td class="answer">' + Object.keys(parser.eval(key)).length + '</td><td class="answer">' + math.typeof(parser.eval(key)) + '</td></tr>');
+            } else {
+              _buffer.push('<tr><td class="answer">' + key + '</td><td class="answer">' + math.size(parser.eval(key)) + '</td><td class="answer">' + math.typeof(parser.eval(key)) + '</td></tr>');
+            }
           }
         }
         _buffer.push('</table>');

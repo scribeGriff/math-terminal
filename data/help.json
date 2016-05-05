@@ -1299,7 +1299,7 @@
   {
     "Category": "Waveform Generation",
     "Description": "Generates a sawtooth waveform.  All parameters are optional.  By default, amplitude = 1, cycles = 1, and data length = 512.",
-    "Example": "amp = 12; cycles = 4; len = 300; saw = sawtoothwave(amp, cycles, len);",
+    "Example": "amp = 12; cycles = 4; len = 300; saw = sawtoothwave(amp, cycles, len); curve saw",
     "Name": "sawtoothwave",
     "See also": [
       "squarewave",
@@ -1361,7 +1361,7 @@
   {
     "Category": "Waveform Generation",
     "Description": "Generates a sinewave waveform.  All parameters are optional.  By default, amplitude = 1, cycles = 1, and data length = 512.",
-    "Example": "amp = 12; cycles = 4; len = 300; sw = sinewave(amp, cycles, len);",
+    "Example": "amp = 12; cycles = 4; len = 300; sw = sinewave(amp, cycles, len); curve sw",
     "Name": "sinewave",
     "See also": [
       "squarewave",
@@ -1380,7 +1380,7 @@
   {
     "Category": "Waveform Generation",
     "Description": "Generates a squarewave waveform.  All parameters are optional.  By default, amplitude = 1, cycles = 1, data length = 512 and scale = 20 (scale can change edge rate where scale = 1 is a sinewave).",
-    "Example": "amp = 12; cycles = 4; len = 300; scale = 40; sqw = squarewave(amp, cycles, len, scale);",
+    "Example": "amp = 12; cycles = 4; len = 300; scale = 40; sqw = squarewave(amp, cycles, len, scale); curve sqw",
     "Name": "squarewave",
     "See also": [
       "sinewave",
@@ -1399,7 +1399,7 @@
   {
     "Category": "Waveform Generation",
     "Description": "Generates a step waveform.  All parameters are optional.  By default, data length = 512 and step position is length / 4.",
-    "Example": "len = 300; position = 50; st = step(len, position);",
+    "Example": "len = 300; position = 50; st = step(len, position); curve st",
     "Name": "step",
     "See also": [
       "sinewave",
@@ -1418,7 +1418,7 @@
   {
     "Category": "Arithmetic",
     "Description": "Subtracts two sequences (as arrays) including optional timing information.  Sequences do not have to be the same length.",
-    "Example": "x = [3, 11, 7, 0, -1, 4, 2]; n = -3:3; nm2 = -1:5; w = gauss(length(x)); seqsum = subseqs(x, w, nm2, nm2);",
+    "Example": "x = [3, 11, 7, 0, -1, 4, 2]; n = -3:3; nm2 = -1:5; w = gauss(length(x)); seqdiff = subseqs(x, w, nm2, nm2); samplen outn(seqdiff) outy(seqdiff)",
     "Name": "subseqs",
     "See also": [
       "add",
@@ -1436,7 +1436,7 @@
   {
     "Category": "Chart",
     "Description": "Adds a subtitle to the current chart.  Arguments are space delimited.  The subtitle string is required and a color string for styling the subtitle is optional.  String name can be single or double quoted but apostrophes must be escaped with a backslash.",
-    "Example": "x = 1:10; y = square(x); sample x y <br> title 'The square of x' '#90ed7d' <br> subtitle 'for x from 1 to 10'",
+    "Example": "x = 1:10; y = square(x); samplen x y <br> title 'The square of x' '#90ed7d' <br> subtitle 'for x from 1 to 10'",
     "Name": "subtitle",
     "See also": [
       "area",
@@ -1485,7 +1485,7 @@
   {
     "Category": "Chart",
     "Description": "Adds a title to the current chart.  Arguments are space delimited.  The title string is required and a color string for styling the title is optional.  String name can be single or double quoted but apostrophes must be escaped with a backslash.",
-    "Example": "x = 1:10; y = square(x); sample x y <br> title 'The square of x' '#90ed7d'",
+    "Example": "x = 1:10; y = square(x); samplen x y <br> title 'The square of x' '#90ed7d'",
     "Name": "title",
     "See also": [
       "area",
@@ -1512,7 +1512,7 @@
   {
     "Category": "Waveform Generation",
     "Description": "Generates a trianglewave waveform.  All parameters are optional.  By default, amplitude = 1, cycles = 1, and data length = 512.",
-    "Example": "amp = 12; cycles = 4; len = 300; tw = trianglewave(amp, cycles, length);",
+    "Example": "amp = 12; cycles = 4; len = 300; tw = trianglewave(amp, cycles, len); curve tw",
     "Name": "trianglewave",
     "See also": [
       "sinewave",
@@ -1571,7 +1571,7 @@
   {
     "Category": "Chart",
     "Description": "Adds a label to the x axis of the current chart.  The label argument is space delimited.  String name can be single or double quoted but apostrophes must be escaped with a backslash.",
-    "Example": "x = 1:10; y = square(x); sample x y <br> xaxis 'samples (n)'",
+    "Example": "x = 1:10; y = square(x); samplen x y <br> xaxis 'samples (n)'",
     "Name": "xaxis",
     "See also": [
       "area",
@@ -1618,7 +1618,7 @@
   {
     "Category": "Chart",
     "Description": "Adds a label to the y axis of the current chart.  The label argument is space delimited.  String name can be single or double quoted but apostrophes must be escaped with a backslash.",
-    "Example": "x = 1:10; y = square(x); sample x y <br> yaxis 'square (n)'",
+    "Example": "x = 1:10; y = square(x); samplen x y <br> yaxis 'square (n)'",
     "Name": "yaxis",
     "See also": [
       "area",
