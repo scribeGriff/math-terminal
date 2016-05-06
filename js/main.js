@@ -27,9 +27,6 @@ var awesomplete = true;
   var chartDiv1 = document.getElementById('chart-div1');
 
   var matchThemes = /^monokai|^github|^xcode|^obsidian|^vs|^arta|^railcasts|^chalkboard|^dark/;
-  //matchChartCmds = /^line$|^linepts$|^area$|^bar$|^column$|^curve$|^curvepts$|^sample$|^samplen$|^pie$|^polar$|^scatter$|^linlog$|^loglin$|^loglog$|^linlogpts$|^loglinpts$|^loglogpts$|^xaxis$|^yaxis$|^title$|^subtitle$|^series$/,
-  //matchWaveGenCmds = /^sinewave$|^squarewave$|^sawtoothwave$|^trianglewave$|^impulse$|^step$|^gauss$/,
-  //matchMathExtensions = /^fft$|^ifft$|^fsps$|^conv$|^deconv$|^corr$|^filter1d$|^length$|^addseqs$|^subseqs$|^getdata$|^outy$|^outn$|^outq$|^outqn$|^outr$|^outrn$|^outz$|^vars$|^loadvars$|^savevars$|^importfile$|^importurl$|^importlog$|^settoken$|^gettoken$/;
 
   var bgcolors = {
     monokai: "#272822",

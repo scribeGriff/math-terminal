@@ -191,13 +191,27 @@ body {
 /* Github theme */
 
 .terminal-github {
-  background: #f8f8f8;
+  background-color: #f8f8f8;
   border: 1px solid #303438;
   color: #333;
 }
 
+.terminal-github div.awesomplete > ul {
+  background-color: lightgray;
+}
+
+.terminal-github div.awesomplete > ul > li[aria-selected="true"] {
+  background-color: #767F88;
+  color: white;
+}
+
+.terminal-github div.awesomplete mark {
+  background-color: #0086b3;
+  background-color: rgba(0, 134, 179, 0.3);
+}
+
 .terminal-github .answer {
-  color: #0086b3
+  color: #0086b3;
 }
 
 .terminal-github a {
@@ -205,16 +219,16 @@ body {
 }
 
 .terminal-github-background {
-  background: #767F88;
+  background-color: #767F88;
 }
 
 .terminal-github ::-moz-selection {
-  background: #458;
+  background-color: #458;
   color: #dfd;
 }
 
 .terminal-github ::selection {
-  background: #458;
+  background-color: #458;
   color: #dfd;
 }
 
@@ -231,16 +245,30 @@ body {
 }
 
 .chart-github {
-  background: #f8f8f8;
+  background-color: #f8f8f8;
   border: 1px solid #303438;
 }
 
 /* XCode theme */
 
 .terminal-xcode {
-  background: #fff;
+  background-color: #fff;
   border: 1px solid #1C140D;
   color: black;
+}
+
+.terminal-xcode div.awesomplete > ul {
+  background-color: lightgray;
+}
+
+.terminal-xcode div.awesomplete > ul > li[aria-selected="true"] {
+  background-color: #515151;
+  color: white;
+}
+
+.terminal-xcode div.awesomplete mark {
+  background-color: #9b703f;
+  background-color: rgba(155, 112, 63, 0.3);
 }
 
 .terminal-xcode .answer {
@@ -252,16 +280,16 @@ body {
 }
 
 .terminal-xcode-background {
-  background: #515151;
+  background-color: #515151;
 }
 
 .terminal-xcode ::-moz-selection {
-  background: #643820;
+  background-color: #643820;
   color: #c5af75;
 }
 
 .terminal-xcode ::selection {
-  background: #643820;
+  background-color: #643820;
   color: #c5af75;
 }
 
@@ -278,16 +306,30 @@ body {
 }
 
 .chart-xcode {
-  background: #fff;
+  background-color: #fff;
   border: 1px solid #1C140D;
 }
 
 /* Obsidian theme */
 
 .terminal-obsidian {
-  background: #282b2e;
+  background-color: #282b2e;
   border: 1px solid #734E4E;
   color: #e0e2e4;
+}
+
+.terminal-obsidian div.awesomplete > ul {
+  background-color: #323B39;
+}
+
+.terminal-obsidian div.awesomplete > ul > li[aria-selected="true"] {
+  background-color: #272822;
+  color: white;
+}
+
+.terminal-obsidian div.awesomplete mark {
+  background-color: #93c763;
+  background-color: rgba(147, 199, 99, 0.3);
 }
 
 .terminal-obsidian .answer {
@@ -299,16 +341,16 @@ body {
 }
 
 .terminal-obsidian-background {
-  background: #323B39;
+  background-color: #323B39;
 }
 
 .terminal-obsidian ::-moz-selection {
-  background:  #e8e2b7;
+  background-color: #e8e2b7;
   color:  #557182;
 }
 
 .terminal-obsidian ::selection {
-  background: #e8e2b7;
+  background-color: #e8e2b7;
   color: #557182;
 }
 
@@ -325,16 +367,30 @@ body {
 }
 
 .chart-obsidian {
-  background: #282b2e;
+  background-color: #282b2e;
   border: 1px solid #734E4E;
 }
 
 /* Visual Studio theme */
 
 .terminal-vs {
-  background: white;
+  background-color: white;
   border: 1px solid #A1C1BE;
   color: black;
+}
+
+.terminal-vs div.awesomplete > ul {
+  background-color: lightgray;
+}
+
+.terminal-vs div.awesomplete > ul > li[aria-selected="true"] {
+  background-color: #59554E;
+  color: white;
+}
+
+.terminal-vs div.awesomplete mark {
+  background-color: #557182;
+  background-color: rgba(85, 113, 130, 0.3);
 }
 
 .terminal-vs .answer {
@@ -346,16 +402,16 @@ body {
 }
 
 .terminal-vs-background {
-  background: #59554E;
+  background-color: #59554E;
 }
 
 .terminal-vs ::-moz-selection {
-  background: #00b0e8;
+  background-color: #00b0e8;
   color: white;
 }
 
 .terminal-vs ::selection {
-  background: #00b0e8;
+  background-color: #00b0e8;
   color: #557182;
 }
 
@@ -372,16 +428,30 @@ body {
 }
 
 .chart-vs {
-  background: white;
+  background-color: white;
   border: 1px solid #A1C1BE;
 }
 
 /* Arta theme */
 
 .terminal-arta {
-  background: #222;
+  background-color: #222;
   border: 1px solid #921129;
   color: #fff;
+}
+
+.terminal-arta div.awesomplete > ul {
+  background-color: #756657;
+}
+
+.terminal-arta div.awesomplete > ul > li[aria-selected="true"] {
+  background-color: #272822;
+  color: white;
+}
+
+.terminal-arta div.awesomplete mark {
+  background-color: #aaa;
+  background-color: rgba(170, 170, 170, 0.3);
 }
 
 .terminal-arta .answer {
@@ -393,16 +463,16 @@ body {
 }
 
 .terminal-arta-background {
-  background: #756657;
+  background-color: #756657;
 }
 
 .terminal-arta ::-moz-selection {
-  background: #ffcc33;
+  background-color: #ffcc33;
   color: #444;
 }
 
 .terminal-arta ::selection {
-  background: #ffcc33;
+  background-color: #ffcc33;
   color: #444;
 }
 
@@ -419,16 +489,30 @@ body {
 }
 
 .chart-arta {
-  background: #222;
+  background-color: #222;
   border: 1px solid #921129;
 }
 
 /* Railcasts theme */
 
 .terminal-railcasts {
-  background: #232323;
+  background-color: #232323;
   border: 1px solid #111E17;
   color: #e6e1dc;
+}
+
+.terminal-railcasts div.awesomplete > ul {
+  background-color: #4B4545;
+}
+
+.terminal-railcasts div.awesomplete > ul > li[aria-selected="true"] {
+  background-color: #272822;
+  color: white;
+}
+
+.terminal-railcasts div.awesomplete mark {
+  background-color: #6d9cbe;
+  background-color: rgba(109, 156, 190, 0.3);
 }
 
 .terminal-railcasts .answer {
@@ -440,16 +524,16 @@ body {
 }
 
 .terminal-railcasts-background {
-  background: #4B4545;
+  background-color: #4B4545;
 }
 
 .terminal-railcasts ::-moz-selection {
-  background: #bc9458;
+  background-color: #bc9458;
   color: #d0d0ff;
 }
 
 .terminal-railcasts ::selection {
-  background: #ffcc33;
+  background-color: #ffcc33;
   color: #444;
 }
 
@@ -466,16 +550,30 @@ body {
 }
 
 .chart-railcasts {
-  background: #232323;
+  background-color: #232323;
   border: 1px solid #111E17;
 }
 
 /* Chalkboard theme */
 
 .terminal-chalkboard {
-  background: darkslategray;
+  background-color: darkslategray;
   border: 1px solid #1A2E2E;
   color: #F8F8F2;
+}
+
+.terminal-chalkboard div.awesomplete > ul {
+  background-color: #151C1C;
+}
+
+.terminal-chalkboard div.awesomplete > ul > li[aria-selected="true"] {
+  background-color: #1A2E2E;
+  color: white;
+}
+
+.terminal-chalkboard div.awesomplete mark {
+  background-color: #a8a8a2;
+  background-color: rgba(168, 168, 162, 0.3);
 }
 
 .terminal-chalkboard .answer {
@@ -487,16 +585,16 @@ body {
 }
 
 .terminal-chalkboard-background {
-  background: #151C1C;
+  background-color: #151C1C;
 }
 
 .terminal-chalkboard ::-moz-selection {
-  background: #75715e;
+  background-color: #75715e;
   color: #e6db74;
 }
 
 .terminal-chalkboard ::selection {
-  background: #75715e;
+  background-color: #75715e;
   color: #e6db74;
 }
 
@@ -513,16 +611,30 @@ body {
 }
 
 .chart-chalkboard {
-  background: darkslategray;
+  background-color: darkslategray;
   border: 1px solid #1A2E2E;
 }
 
 /* dark theme */
 
 .terminal-dark {
-  background: #040004;
+  background-color: #040004;
   border: 1px solid #040004;
   color: #F8F8F2;
+}
+
+.terminal-dark div.awesomplete > ul {
+  background-color: #413D3D;
+}
+
+.terminal-dark div.awesomplete > ul > li[aria-selected="true"] {
+  background-color: #040004;
+  color: white;
+}
+
+.terminal-dark div.awesomplete mark {
+  background-color: #66D9EF;
+  background-color: rgba(102, 217, 239, 0.3);
 }
 
 .terminal-dark .answer {
@@ -534,16 +646,16 @@ body {
 }
 
 .terminal-dark-background {
-  background: #413D3D;
+  background-color: #413D3D;
 }
 
 .terminal-dark ::-moz-selection {
-  background: #75715e;
+  background-color: #75715e;
   color: #e6db74;
 }
 
 .terminal-dark ::selection {
-  background: #75715e;
+  background-color: #75715e;
   color: #e6db74;
 }
 
@@ -560,7 +672,7 @@ body {
 }
 
 .chart-dark {
-  background: #040004;
+  background-color: #040004;
   border: 1px solid #040004;
 }
 
@@ -580,10 +692,6 @@ body {
 
 ::-webkit-scrollbar-track {
   background: transparent;
-  /*background:#eee;*/
-  /*border: thin solid lightgray;
-  box-shadow: 0px 0px 3px #dfdfdf inset;
-  border-radius:10px;*/
 }
 
 ::-webkit-scrollbar-thumb {
