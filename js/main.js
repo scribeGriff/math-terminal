@@ -22,7 +22,7 @@ var awesomplete = true;
       hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348', "#3E6B48", "#009989"];
 
   var terminal1, bgcolor, lineShape, points, cmdinput, autocompleter, helpExt, parseData, isValidColor, awesompleteDivUl, allCommands,
-      parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart, consoleCommands;
+      parseDataPolar, parseDataSample, parseDataSamplen, createBaseChart, createPolarChart, createSampleChart, consoleCommands, welcome;
 
   var chartDiv1 = document.getElementById('chart-div1');
 
@@ -39,6 +39,14 @@ var awesomplete = true;
     chalkboard: "darkslategray",
     dark: "#040004"
   };
+  
+  if (localStorage.getItem("visitor") === null) {
+    welcome = "Welcome to The Data Console at Convolv.<br>To get started, type help at the prompt.";
+  } else {
+    welcome = "Your last visit was on " + localStorage.getItem("visitor") + ".";
+  }
+
+  localStorage.setItem("visitor", moment().format('MMM Do, YYYY [at] h:mm a'));
 
   Highcharts.setOptions({
     colors: hccolors,
@@ -187,37 +195,38 @@ var awesomplete = true;
       // Awesomplete was clobbering the autofocus attribute in FF so fix was to focus in JS.
       cmdinput.focus();
 
-      // Fetch the external help files.
-      fetch("data/help.json")
-        .then(function(response) {
-        return response.json();
-      }).then(function(json) {
-        helpExt = json;
-      }, function(error) {
-        // Continue without help files.
-      }).catch(function(ex) {
-        // Continue without help files.
-      });
-
-      // Fetch the command list for awesomplete.
-      fetch("data/aclist.json")
-        .then(function(response) {
-        return response.json();
-      }).then(function(json) {
-        autocompleter.list = json;
-        allCommands = json;
-      }, function(error) {
-        // Continue without autocompleter.
-      }).catch(function(ex) {
-        // Continue without autocompleter.
-        // TODO: Should set awesomplete = false?
-      });
-
       // For terminal to detect if command completion should be above or below input
       // TODO: This needs to be modified to handle multiple terminals.
       awesompleteDivUl = document.querySelector('div.awesomplete > ul');
       terminal1.setAwesompleteDiv(awesompleteDivUl);
     }
+
+    // Fetch the external help files.
+    fetch("data/help.json")
+      .then(function(response) {
+      return response.json();
+    }).then(function(json) {
+      helpExt = json;
+    }, function(error) {
+      // Continue without help files.
+    }).catch(function(ex) {
+      // Continue without help files.
+      // TODO: what about docs command?
+    });
+
+    // Fetch the command list for awesomplete.
+    fetch("data/aclist.json")
+      .then(function(response) {
+      return response.json();
+    }).then(function(json) {
+      autocompleter.list = json;
+      allCommands = json;
+    }, function(error) {
+      // Continue without autocompleter.
+    }).catch(function(ex) {
+      // Continue without autocompleter.
+      // TODO: Should set awesomplete = false?
+    });
   };
 
   // Set default data type for mathjs to 'Array' to be compatible with vanilla js.
@@ -226,7 +235,7 @@ var awesomplete = true;
   });
 
   // Convert the termName1 DOM element into an interactive terminal.
-  terminal1 = new Terminal(termName1, {}, {
+  terminal1 = new Terminal(termName1, {welcome: welcome}, {
     execute: function execute(cmd, args) {
       var parser = terminal1.getParser();
       var cmds = consoleCommands(cmd, args, terminal1, chartDiv1, parser, termName1);

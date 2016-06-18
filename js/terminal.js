@@ -321,7 +321,9 @@
     function clear() {
       _output.innerHTML = '';
       _cmdLine.value = '';
-      _awesompleteDivUl.classList.remove('bottom50');
+      if (_awesompleteDivUl !== null) {
+        _awesompleteDivUl.classList.remove('bottom50');
+      }
     }
 
     function output(html) {

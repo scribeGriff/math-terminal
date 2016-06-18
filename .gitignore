@@ -44,3 +44,12 @@ Temporary Items
 
 # Brackets Preferences
 .brackets.json
+
+# favicons
+android*
+apple*
+favicon*
+mstile*
+safari*
+manifest.json
+browserconfig.xml
