@@ -1,9 +1,10 @@
-![Convolv Logo](https://convo.lv/img/convolv-logo.png) 
-# The Math Terminal
+![Convolv Icon](https://convo.lv/img/convolv-avatar.png) ![Convolv Logo](https://convo.lv/img/convolv-logo.png) 
+# The Math Terminal 
 
-### is now on the web at [Convolv](https://convo.lv/) ![Convolv Icon](https://convo.lv/img/convolv-avatar.png)
+### is now on the web at [Convolv](https://convo.lv/) 
 
-## Overview ##
+
+## Overview
 Convolv is a web application that provides a console for the analysis of data. Built with vanilla JS and incorporating more than a dozen open-source libraries, the application allows a user to import data, perform numerical analyses and chart the results.
 
 
