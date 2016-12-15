@@ -13,10 +13,7 @@ var awesomplete = true;
       sufans = '</span>',
       precisionVar = 8;  // default output format significant digits.
 
-  var termName1 = 'terminal1',
-      termName2 = 'terminal2',
-      termName3 = 'terminal3',
-      termName4 = 'terminal4';
+  var termName1 = 'terminal1';
 
   var colors = ["#261C21", "#B0254F", "#DE4126", "#EB9605", "#3E6B48", "#CE1836", "#F85931", "#009989"],
       hccolors = ['#7cb5ec', '#90ed7d', '#f7a35c', '#8085e9', '#f15c80', '#e4d354', '#2b908f', '#f45b5b', '#91e8e1', '#434348', "#3E6B48", "#009989"];
@@ -39,7 +36,7 @@ var awesomplete = true;
     chalkboard: "darkslategray",
     dark: "#040004"
   };
-  
+
   if (localStorage.getItem("visitor") === null) {
     welcome = "Welcome to The Data Console at Convolv.<br>To get started, type help at the prompt.";
   } else {
@@ -53,6 +50,14 @@ var awesomplete = true;
     chart: {
       backgroundColor: 'transparent',
       plotBorderWidth: 0
+    },
+    exporting: {
+      filename: "convolv-chart",
+      chartOptions: {
+        chart: {
+          backgroundColor: "#FFFFFF"
+        }
+      }
     },
     plotOptions: {
       series: {

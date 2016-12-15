@@ -1,7 +1,8 @@
-![Convolv Icon](https://convo.lv/img/convolv-avatar.png) ![Convolv Logo](https://convo.lv/img/convolv-logo.png) 
-# The Math Terminal 
+![Convolv Logo](https://convo.lv/img/convolv-logo.png)
 
-### is now on the web at [Convolv](https://convo.lv/) 
+# The Math Terminal
+
+###![Convolv Icon](https://convo.lv/img/convolv-avatar-forall.png) is now on the web at [Convolv](https://convo.lv/)
 
 
 ## Overview
